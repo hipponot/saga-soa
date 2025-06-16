@@ -1,5 +1,5 @@
-import { z, ZodObject, ZodRawShape } from 'zod';
-import dotenvFlow                    from 'dotenv-flow';
+import { z, ZodObject, ZodRawShape, ZodLiteral } from 'zod';
+import dotenvFlow                                from 'dotenv-flow';
 
 export class ConfigValidationError extends Error {
   constructor(public readonly configType: string, public readonly validationError: z.ZodError) {
@@ -8,6 +8,10 @@ export class ConfigValidationError extends Error {
   }
 }
 
+type HasConfigType = ZodRawShape & {
+  configType: ZodLiteral<any>;
+};
+
 export class ConfigManager {
   /**
    * Loads and validates configuration from environment variables using the provided Zod object schema.
@@ -15,7 +19,7 @@ export class ConfigManager {
    * @returns Strongly typed config object
    * @throws ConfigValidationError if validation fails
    */
-  static get<T extends ZodRawShape>(schema: ZodObject<T>): z.infer<ZodObject<T>> {
+  static get<T extends HasConfigType>(schema: ZodObject<T>): z.infer<ZodObject<T>> {
     dotenvFlow.config();
     // Extract configType from schema (assumes a literal field named configType)
     const configType = (schema.shape as any).configType.value as string;
