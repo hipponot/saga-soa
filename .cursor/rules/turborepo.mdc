@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Turborepo Specification Rule
+
+Always read and apply the specifications in memory-bank/01.turborepo.md for all code, configuration, and documentation related to monorepo management, project structure, and Turborepo usage in this project.

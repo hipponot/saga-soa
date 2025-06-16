@@ -1,5 +1,20 @@
 ---
-description:
+description: Always apply the naming conventions in memory-bank/01.naming-conventions.md to all code and documentation.
 globs:
-alwaysApply: false
+alwaysApply: true
 ---
+
+# Naming Conventions Rule
+
+Always read and apply the naming conventions in memory-bank/01.naming-conventions.md for all code, file, and documentation naming in this project. This includes:
+- File naming
+- Type and interface naming
+- Class and method naming
+- Variable and constant naming
+- Generic type parameters
+- Decorator naming
+- Module naming
+- Environment variable naming
+- Error type naming
+
+If you are unsure about a naming decision, refer to memory-bank/01.naming-conventions.md and follow its guidance.

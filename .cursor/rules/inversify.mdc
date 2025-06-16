@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Inversify Specification Rule
+
+Always read and apply the specifications in memory-bank/02.inversify.md for all code, design, and documentation related to dependency injection, service abstraction, and Inversify usage in this project.
