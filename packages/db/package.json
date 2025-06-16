@@ -1,0 +1,26 @@
+{
+  "name": "@saga/db",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "exports": {
+    "./mongo": {
+      "types": "./src/mongo.ts",
+      "default": "./dist/mongo.js"
+    },
+    "./sql": {
+      "types": "./src/sql.ts",
+      "default": "./dist/sql.js"
+    },
+    "./redis": {
+      "types": "./src/redis.ts",
+      "default": "./dist/redis.js"
+    }
+  },
+  "devDependencies": {
+    "@saga/typescript-config": "workspace:*",
+    "typescript": "latest"
+  }
+}
