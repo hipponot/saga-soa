@@ -5,23 +5,23 @@ import dotenv                                   from 'dotenv-flow';
 import { ConfigManager, ConfigValidationError } from '../config-manager';
 
 describe('ConfigManager', () => {
-  const envPath = path.join(__dirname, '../../.env.test');
-  const originalEnv = process.env;
 
+  const originalEnv = process.env;
+  const dotEnvPath = path.join(__dirname,'.env.test')
   beforeAll(() => {
     // Write a .env.test file for the test
-    fs.writeFileSync(envPath, [
+    fs.writeFileSync(dotEnvPath, [
       'TEST_CONFIG_STRING=hello',
       'TEST_CONFIG_NUMBER=42',
       'TEST_CONFIG_BOOL=true',
       'TEST_CONFIG_OPTIONAL=optional-value',
       'TEST_CONFIG_ENUM=option2',
     ].join('\n'));
-    dotenv.config({ path: envPath, override: true });
+    dotenv.config({ path: __dirname });
   });
 
   afterAll(() => {
-    fs.unlinkSync(envPath);
+    fs.unlinkSync(path.join(dotEnvPath));
     process.env = originalEnv;
   });
 
@@ -36,15 +36,7 @@ describe('ConfigManager', () => {
     });
 
     type TestConfig = z.infer<typeof TestSchema>;
-
-    // Simulate the environment variables as loaded by ConfigManager
-    process.env.TEST_CONFIG_STRING = 'hello';
-    process.env.TEST_CONFIG_NUMBER = '42';
-    process.env.TEST_CONFIG_BOOL = 'true';
-    process.env.TEST_CONFIG_OPTIONAL = 'optional-value';
-    process.env.TEST_CONFIG_ENUM = 'option2';
-
-    const config = ConfigManager.get(TestSchema);
+    const config:TestConfig = ConfigManager.get(TestSchema);
 
     expect(config).toEqual({
       configType: 'TEST_CONFIG',
