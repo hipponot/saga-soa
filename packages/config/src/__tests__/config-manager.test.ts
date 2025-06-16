@@ -7,7 +7,7 @@ import { ConfigManager, ConfigValidationError } from '../config-manager';
 describe('ConfigManager', () => {
 
   const originalEnv = process.env;
-  const dotEnvPath = path.join(__dirname,'.env.test')
+  const dotEnvPath = path.join(__dirname,'../../', '.env.test')
   beforeAll(() => {
     // Write a .env.test file for the test
     fs.writeFileSync(dotEnvPath, [
@@ -17,7 +17,7 @@ describe('ConfigManager', () => {
       'TEST_CONFIG_OPTIONAL=optional-value',
       'TEST_CONFIG_ENUM=option2',
     ].join('\n'));
-    dotenv.config({ path: __dirname });
+    dotenv.config();
   });
 
   afterAll(() => {
