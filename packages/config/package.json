@@ -1,6 +1,5 @@
 {
-  "name": "@saga/config",
-  "type": "module",
+  "name": "@saga-soa/config",
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",

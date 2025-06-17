@@ -3,3 +3,6 @@ description:
 globs:
 alwaysApply: false
 ---
+# Unit Testing Specification Rule
+
+Always read and apply the specification in memory-bank/03.unit-testing.md for all unit tests, test configuration, and test file naming in this project.

@@ -1,0 +1,11 @@
+{
+  "extends": "./packages/typescript-config/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@saga-soa/config": ["packages/config/src"],
+      "@saga-soa/config/*": ["packages/config/src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+} 

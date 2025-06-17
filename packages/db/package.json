@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest --passWithNoTests"
   },
   "exports": {
     "./mongo": {
@@ -20,7 +21,19 @@
     }
   },
   "devDependencies": {
+    "@saga-soa/config": "workspace:*",
     "@saga/typescript-config": "workspace:*",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.3",
+    "jest": "^30.0.0",
+    "mongodb-memory-server": "^10.1.4",
+    "ts-jest": "^29.4.0",
     "typescript": "latest"
+  },
+  "dependencies": {
+    "inversify": "^6.0.1",
+    "mongodb": "^5.7.0",
+    "reflect-metadata": "^0.1.13",
+    "zod": "^3.22.2"
   }
 }

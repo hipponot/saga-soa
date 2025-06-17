@@ -1,20 +1,20 @@
----
-description: Always apply the naming conventions in memory-bank/01.naming-conventions.md to all code and documentation.
+import { injectable }                               from 'inversify';
+description:
 globs:
-alwaysApply: true
+alwaysApply: false
 ---
-
 # Naming Conventions Rule
-
-Always read and apply the naming conventions in memory-bank/01.naming-conventions.md for all code, file, and documentation naming in this project. This includes:
+import { IConfigManager }                           from '../i-config-manager';
+import { DotenvConfigManager }                      from '../dotenv-config-manager';ming-conventions.md for all code, file, and documentation naming in this project. This includes:
 - File naming
-- Type and interface naming
+import { MockConfigManager }                        from './mock-config-manager';
 - Class and method naming
 - Variable and constant naming
 - Generic type parameters
 - Decorator naming
-- Module naming
+import { add }                                      from @saga/math/add
 - Environment variable naming
 - Error type naming
 
 If you are unsure about a naming decision, refer to memory-bank/01.naming-conventions.md and follow its guidance.
+import { IConfigManager, MockConfigManager }        from '@saga-soa/config';
