@@ -6,7 +6,16 @@
     "build": "tsc",
     "test": "jest"
   },
-  "exports": {},
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./i-config-manager": {
+      "types": "./dist/i-config-manager.d.ts",
+      "default": "./dist/i-config-manager.js"
+    }
+  },
   "devDependencies": {
     "@saga/typescript-config": "workspace:*",
     "@types/jest": "^30.0.0",
@@ -18,6 +27,8 @@
   "dependencies": {
     "dotenv": "latest",
     "dotenv-flow": "latest",
+    "inversify": "^7.5.2",
+    "reflect-metadata": "^0.2.2",
     "zod": "latest"
   }
 }

@@ -1,13 +1,27 @@
-import { z }                                    from 'zod';
-import fs                                       from 'fs';
-import path                                     from 'path';
-import dotenv                                   from 'dotenv-flow';
-import { ConfigManager, ConfigValidationError } from '../config-manager';
+import 'reflect-metadata';
+import { z }                     from 'zod';
+import fs                        from 'fs';
+import path                      from 'path';
+import dotenv                    from 'dotenv-flow';
+import { Container }             from 'inversify';
+import { IConfigManager }        from '../i-config-manager';
+import { DotenvConfigManager }   from '../dotenv-config-manager';
+import { ConfigValidationError } from '../config-validation-error';
+import { MockConfigManager }     from './mock-config-manager';
 
 describe('ConfigManager', () => {
-
+  let container: Container;
   const originalEnv = process.env;
-  const dotEnvPath = path.join(__dirname,'../../', '.env.test')
+  const dotEnvPath = path.join(__dirname,'../../', '.env.test');
+  const TestSchema = z.object({
+    configType: z.literal('TEST_CONFIG'),
+    string: z.string().min(3),
+    number: z.preprocess((val) => Number(val), z.number().int().positive()),
+    bool: z.preprocess((val) => val === 'true', z.boolean()),
+    optional: z.string().optional(),
+    enum: z.enum(['option1', 'option2', 'option3'])
+  });
+
   beforeAll(() => {
     // Write a .env.test file for the test
     fs.writeFileSync(dotEnvPath, [
@@ -20,50 +34,69 @@ describe('ConfigManager', () => {
     dotenv.config();
   });
 
+  beforeEach(() => {
+    container = new Container();
+  });
+
   afterAll(() => {
     fs.unlinkSync(path.join(dotEnvPath));
     process.env = originalEnv;
   });
 
-  it('should load and validate config from .env.test using Zod schema', () => {
-    const TestSchema = z.object({
-      configType: z.literal('TEST_CONFIG'),
-      string: z.string().min(3),
-      number: z.preprocess((val) => Number(val), z.number().int().positive()),
-      bool: z.preprocess((val) => val === 'true', z.boolean()),
-      optional: z.string().optional(),
-      enum: z.enum(['option1', 'option2', 'option3'])
+  describe('DotenvConfigManager', () => {
+    beforeEach(() => {
+      container.bind<IConfigManager>('IConfigManager').to(DotenvConfigManager);
     });
 
-    type TestConfig = z.infer<typeof TestSchema>;
-    const config:TestConfig = ConfigManager.get(TestSchema);
+    it('should load and validate config from .env.test using Zod schema', () => {
+      const configManager = container.get<IConfigManager>('IConfigManager');
+      const config = configManager.get(TestSchema);
 
-    expect(config).toEqual({
-      configType: 'TEST_CONFIG',
-      string: 'hello',
-      number: 42,
-      bool: true,
-      optional: 'optional-value',
-      enum: 'option2',
+      expect(config).toEqual({
+        configType: 'TEST_CONFIG',
+        string: 'hello',
+        number: 42,
+        bool: true,
+        optional: 'optional-value',
+        enum: 'option2',
+      });
+    });
+
+    it('should throw ConfigValidationError for invalid config', () => {
+      const configManager = container.get<IConfigManager>('IConfigManager');
+
+      // Set invalid values
+      process.env.TEST_CONFIG_STRING = 'hi'; // too short
+      process.env.TEST_CONFIG_NUMBER = '-1'; // not positive
+      process.env.TEST_CONFIG_BOOL = 'notabool'; // not 'true'
+      process.env.TEST_CONFIG_ENUM = 'invalid'; // not in enum
+
+      expect(() => configManager.get(TestSchema)).toThrow(ConfigValidationError);
     });
   });
 
-  it('should throw ConfigValidationError for invalid config', () => {
-    const TestSchema = z.object({
-      configType: z.literal('TEST_CONFIG'),
-      string: z.string().min(3),
-      number: z.preprocess((val) => Number(val), z.number().int().positive()),
-      bool: z.preprocess((val) => val === 'true', z.boolean()),
-      optional: z.string().optional(),
-      enum: z.enum(['option1', 'option2', 'option3'])
+  describe('MockConfigManager', () => {
+    beforeEach(() => {
+      container.bind<IConfigManager>('IConfigManager').to(MockConfigManager);
     });
 
-    // Set an invalid value
-    process.env.TEST_CONFIG_STRING = 'hi'; // too short
-    process.env.TEST_CONFIG_NUMBER = '-1'; // not positive
-    process.env.TEST_CONFIG_BOOL = 'notabool'; // not 'true'
-    process.env.TEST_CONFIG_ENUM = 'invalid'; // not in enum
+    it('should generate valid mock data based on schema', () => {
+      const configManager = container.get<IConfigManager>('IConfigManager');
+      const config = configManager.get(TestSchema);
 
-    expect(() => ConfigManager.get(TestSchema)).toThrow(ConfigValidationError);
+      // Verify the mock data matches schema requirements
+      expect(config.configType).toBe('TEST_CONFIG');
+      expect(config.string.length).toBeGreaterThanOrEqual(3);
+      expect(typeof config.number).toBe('number');
+      expect(config.number).toBeGreaterThan(0);
+      expect(typeof config.bool).toBe('boolean');
+      expect(config.optional).toBeUndefined();
+      expect(TestSchema.shape.enum.options).toContain(config.enum);
+    });
+
+    it('should generate data that passes schema validation', () => {
+      const configManager = container.get<IConfigManager>('IConfigManager');
+      expect(() => configManager.get(TestSchema)).not.toThrow();
+    });
   });
 });
