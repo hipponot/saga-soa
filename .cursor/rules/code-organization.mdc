@@ -1,0 +1,32 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Code Organization and Cleanup Rules
+
+## Overview
+
+This rule enforces the code organization and cleanup practices defined in the memory bank.
+
+## Key Rules
+
+1. Follow the process defined in `memory-bank/code-cleanup-org.md` for:
+   - Splitting files
+   - Moving functionality
+   - Interface separation
+   - Code cleanup
+
+2. Always complete all phases:
+   - Planning Phase
+   - Implementation Phase
+   - Cleanup Phase
+   - Verification
+
+3. Use the verification checklist from `memory-bank/code-cleanup-org.md` to ensure completeness
+
+## References
+
+For complete details, refer to:
+- `memory-bank/code-cleanup-org.md` - Primary documentation
+- `memory-bank/02.inversify.md` - Interface separation specifics
