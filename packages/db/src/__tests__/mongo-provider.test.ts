@@ -13,14 +13,17 @@ describe('MockMongoProvider (Inversify Factory with MockConfigManager)', () => {
 
   beforeEach(() => {
     container = new Container();
-    // Bind the mock config manager
-    container.bind<IConfigManager>('IConfigManager').to(MockConfigManager);
-    const configManager = container.get<IConfigManager>('IConfigManager');
-    // Generate a mock config using the schema
-    mockConfig = configManager.get(MongoProviderSchema.extend({
-      instanceName: MongoProviderSchema.shape.instanceName.default(MOCK_INSTANCE_NAME),
-      configType: z.literal('mongo')
-    }));
+    // Provide a valid mock config directly
+    mockConfig = {
+      configType: 'mongo',
+      instanceName: MOCK_INSTANCE_NAME,
+      host: 'localhost',
+      port: 27017,
+      database: 'testdb',
+      username: 'user',
+      password: 'pass',
+      options: {},
+    };
     // Bind the factory for the mock provider
     container.bind<IMongoProvider>(MockMongoProvider)
       .toDynamicValue(() => new MockMongoProvider(mockConfig.instanceName))
