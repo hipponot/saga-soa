@@ -1,10 +1,11 @@
 import 'reflect-metadata';
-import { Container }                                from 'inversify';
-import { IMongoProvider }                           from '../i-mongo-connection-manager';
-import { MockMongoProvider }                        from './mock-mongo-provider';
-import { IConfigManager, MockConfigManager }        from '@saga-soa/config';
-import { MongoProviderSchema, MongoProviderConfig } from '../mongo';
-import { z }                                        from 'zod';
+import { Container } from 'inversify';
+import { IMongoProvider } from '../i-mongo-connection-manager';
+import { MockMongoProvider } from './mock-mongo-provider';
+import { IConfigManager, MockConfigManager } from '@saga-soa/config';
+import { MongoProviderSchema } from '../mongo-provider-config';
+import type { MongoProviderConfig } from '../mongo-provider-config';
+import { z } from 'zod';
 
 describe('MockMongoProvider (Inversify Factory with MockConfigManager)', () => {
   const MOCK_INSTANCE_NAME = 'MockMongoDB';
