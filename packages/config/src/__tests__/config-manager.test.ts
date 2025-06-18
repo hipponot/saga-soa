@@ -7,7 +7,7 @@ import { Container }             from 'inversify';
 import { IConfigManager }        from '../i-config-manager';
 import { DotenvConfigManager }   from '../dotenv-config-manager';
 import { ConfigValidationError } from '../config-validation-error';
-import { MockConfigManager }     from './mock-config-manager';
+import { MockConfigManager }     from '../mocks/mock-config-manager';
 
 describe('ConfigManager', () => {
 

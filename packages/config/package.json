@@ -13,6 +13,10 @@
     "./i-config-manager": {
       "types": "./dist/i-config-manager.d.ts",
       "default": "./dist/i-config-manager.js"
+    },
+    "./mocks/mock-config-manager": {
+      "types": "./dist/mocks/mock-config-manager.d.ts",
+      "default": "./dist/mocks/mock-config-manager.js"
     }
   },
   "devDependencies": {
