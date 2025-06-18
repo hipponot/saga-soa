@@ -4,11 +4,11 @@ globs:
 alwaysApply: false
 ---
 ---
-description: Enforces Inversify dependency injection patterns and best practices as defined in memory-bank/02.inversify.md
+description: Enforces Inversify dependency injection patterns and best practices as defined in memory-bank/inversify.md
 globs: ["**/src/**/*.ts", "**/src/**/*.tsx", "!**/*.test.ts", "!**/*.spec.ts", "!**/__tests__/**/*"]
 alwaysApply: true
 ---
 
 # Inversify Specification Rule
 
-Always read and apply the specifications in memory-bank/02.inversify.md for all code, design, and documentation related to dependency injection, service abstraction, and Inversify usage in this project.
+Always read and apply the specifications in memory-bank/inversify.md for all code, design, and documentation related to dependency injection, service abstraction, and Inversify usage in this project.

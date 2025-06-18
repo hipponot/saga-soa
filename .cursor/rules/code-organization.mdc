@@ -29,4 +29,4 @@ This rule enforces the code organization and cleanup practices defined in the me
 
 For complete details, refer to:
 - `memory-bank/code-cleanup-org.md` - Primary documentation
-- `memory-bank/02.inversify.md` - Interface separation specifics
+- `memory-bank/inversify.md` - Interface separation specifics
