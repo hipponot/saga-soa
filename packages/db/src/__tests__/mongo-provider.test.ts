@@ -15,7 +15,7 @@ describe('MockMongoProvider (Inversify Factory with MockConfigManager)', () => {
     container = new Container();
     // Provide a valid mock config directly
     mockConfig = {
-      configType: 'mongo',
+      configType: 'MONGO',
       instanceName: MOCK_INSTANCE_NAME,
       host: 'localhost',
       port: 27017,

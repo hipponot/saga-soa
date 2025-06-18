@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { IMongoProvider } from './i-mongo-connection-manager';
 
 export const MongoProviderSchema = z.object({
-  configType: z.literal('mongo'),
+  configType: z.literal('MONGO'),
   instanceName: z.string().min(1),
   host: z.string().min(1),
   port: z.number().int().positive(),
@@ -28,7 +28,7 @@ export class MongoProvider implements IMongoProvider {
   }
 
   async connect(): Promise<void> {
-    if (this.client && this.isConnected()) return;
+    if (this.isConnected()) return;
     const uri = this._buildConnectionString();
     this.client = new MongoClient(uri, this.config.options);
     await this.client.connect();
@@ -76,3 +76,4 @@ export type MongoProviderFactory = (config: MongoProviderConfig) => MongoProvide
 //       .whenTargetNamed(config.instanceName);
 //     return instance;
 //   });
+import { z }                                   from 'zod';import { Container }                           from 'inversify';import { AppConfigSchema }                     from './app-config';import { Container }                           from 'inversify';import { IConfigManager, MockConfigManager }   from '@saga-soa/config';import { z }                                   from 'zod';import { Container }                           from 'inversify';import { AppConfigSchema }                     from './app-config';import { Container }                           from 'inversify';import { IConfigManager, MockConfigManager }   from '@saga-soa/config';

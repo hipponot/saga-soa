@@ -10,9 +10,12 @@ import { ConfigValidationError } from '../config-validation-error';
 import { MockConfigManager }     from './mock-config-manager';
 
 describe('ConfigManager', () => {
+
   let container: Container;
   const originalEnv = process.env;
   const dotEnvPath = path.join(__dirname,'../../', '.env.test');
+
+  // This is the schema that drives the initialization of the TEST_CONFIG
   const TestSchema = z.object({
     configType: z.literal('TEST_CONFIG'),
     string: z.string().min(3),
