@@ -1,0 +1,36 @@
+{
+  "name": "@saga-soa/logger",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./mocks": {
+      "types": "./dist/mocks/mock-logger.d.ts",
+      "default": "./dist/mocks/mock-logger.js"
+    }
+  },
+  "dependencies": {
+    "inversify": "^6.0.1",
+    "pino": "^8.15.0",
+    "reflect-metadata": "^0.1.13",
+    "zod": "^3.22.2"
+  },
+  "devDependencies": {
+    "@saga-soa/config": "workspace:*",
+    "@saga/typescript-config": "workspace:*",
+    "@types/jest": "^29.5.3",
+    "@types/node": "latest",
+    "jest": "^29.6.2",
+    "pino-pretty": "^10.2.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.1.6"
+  }
+} 
