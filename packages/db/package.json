@@ -2,15 +2,11 @@
   "name": "@saga/db",
   "type": "module",
   "scripts": {
-    "dev": "tsc --watch",
-    "build": "tsc",
-    "test": "jest --passWithNoTests"
+    "dev": "bunchee --watch",
+    "build": "bunchee",
+    "test": "jest"
   },
   "exports": {
-    "./mongo": {
-      "types": "./src/mongo.ts",
-      "default": "./dist/mongo.js"
-    },
     "./sql": {
       "types": "./src/sql.ts",
       "default": "./dist/sql.js"
@@ -25,6 +21,7 @@
     "@saga/typescript-config": "workspace:*",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.3",
+    "bunchee": "^6.5.4",
     "jest": "^30.0.0",
     "mongodb-memory-server": "^10.1.4",
     "ts-jest": "^29.4.0",

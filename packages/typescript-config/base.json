@@ -9,13 +9,14 @@
     "lib": ["es2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleDetection": "force",
-    "moduleResolution": "bundler",
+    "moduleResolution": "Bundler",
     "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2022",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "noEmit": true
   }
 }

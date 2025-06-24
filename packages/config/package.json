@@ -1,8 +1,8 @@
 {
   "name": "@saga-soa/config",
   "scripts": {
-    "dev": "tsc --watch",
-    "build": "tsc",
+    "dev": "bunchee --watch",
+    "build": "bunchee",
     "test": "jest"
   },
   "exports": {
@@ -23,6 +23,7 @@
     "@saga/typescript-config": "workspace:*",
     "@types/jest": "^30.0.0",
     "@types/node": "latest",
+    "bunchee": "^6.5.4",
     "jest": "^30.0.0",
     "ts-jest": "^29.4.0",
     "typescript": "^5.8.3"

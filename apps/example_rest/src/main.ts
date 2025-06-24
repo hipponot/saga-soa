@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import express               from 'express';
-import { container, TYPES }  from './inversify.config.js';
-import { RestRouter }        from '@saga-soa/core-api/rest/rest-router';
+import express from 'express';
+import { container, TYPES } from './inversify.config.js';
+import { RestRouter } from '@saga-soa/core-api/rest/rest-router';
 import { RestEndpointGroup } from '@saga-soa/core-api/rest/rest-endpoint-group';
 
 const app = express();
