@@ -18,7 +18,8 @@
   "scripts": {
     "dev": "bunchee --watch",
     "build": "bunchee",
-    "test": "jest"
+    "test": "jest",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@saga-soa/config": "workspace:*",

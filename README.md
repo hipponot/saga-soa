@@ -22,29 +22,7 @@ For more details and project tracking, see the [Project Board](https://github.co
 
 ## Getting Started
 
-### 1. Install pnpm (if not already installed)
-
-```sh
-npm install -g pnpm
-```
-
-### 2. Install dependencies
-
-```sh
-pnpm install
-```
-
-### 3. Build all packages and apps
-
-```sh
-pnpm build
-```
-
-### 4. Run all tests
-
-```sh
-pnpm test
-```
+[➡️ See Getting Started & Build Cheatsheet](docs/GETTING-STARTED.md)
 
 ## Architecture
 
