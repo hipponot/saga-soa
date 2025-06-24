@@ -1,4 +1,3 @@
-import { PinoLogger }                           from '../pino-logger';
 import { injectable, inject }                   from 'inversify';
 import pino, { Logger, TransportTargetOptions } from 'pino';
 import { ILogger }                              from './i-logger';

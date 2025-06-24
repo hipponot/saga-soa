@@ -55,6 +55,28 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
 
+  apps/example_rest:
+    dependencies:
+      '@saga-soa/core-api':
+        specifier: workspace:*
+        version: link:../../packages/core-api
+      express:
+        specifier: ^4.18.2
+        version: 4.21.2
+      inversify:
+        specifier: ^6.0.1
+        version: 6.2.2(reflect-metadata@0.1.14)
+      reflect-metadata:
+        specifier: ^0.1.13
+        version: 0.1.14
+    devDependencies:
+      '@types/express':
+        specifier: ^5.0.3
+        version: 5.0.3
+      '@types/node':
+        specifier: ^24.0.3
+        version: 24.0.3
+
   apps/web:
     dependencies:
       '@saga/ui':
@@ -140,6 +162,9 @@ importers:
       express:
         specifier: ^4.18.2
         version: 4.21.2
+      figlet:
+        specifier: ^1.8.1
+        version: 1.8.1
       inversify:
         specifier: ^6.0.1
         version: 6.2.2(reflect-metadata@0.1.14)
@@ -153,6 +178,9 @@ importers:
       '@types/express':
         specifier: ^5.0.3
         version: 5.0.3
+      '@types/figlet':
+        specifier: ^1.7.0
+        version: 1.7.0
       '@types/jest':
         specifier: ^29.5.3
         version: 29.5.14
@@ -1043,6 +1071,9 @@ packages:
 
   '@types/express@5.0.3':
     resolution: {integrity: sha512-wGA0NX93b19/dZC1J18tKWVIYWyyF2ZjT9vin/NRu0qzzvfVzWjs04iq2rQ3H65vCTQYlRqs3YHfY7zjdV+9Kw==}
+
+  '@types/figlet@1.7.0':
+    resolution: {integrity: sha512-KwrT7p/8Eo3Op/HBSIwGXOsTZKYiM9NpWRBJ5sVjWP/SmlS+oxxRvJht/FNAtliJvja44N3ul1yATgohnVBV0Q==}
 
   '@types/glob@7.2.0':
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
@@ -2078,6 +2109,11 @@ packages:
 
   fb-watchman@2.0.2:
     resolution: {integrity: sha512-p5161BqbuCaSnB8jIbzQHOlpgsPmK5rJVDfDKO91Axs5NC1uu3HRQm6wt9cd9/+GtQQIO53JdGXXoyDpTAsgYA==}
+
+  figlet@1.8.1:
+    resolution: {integrity: sha512-kEC3Sme+YvA8Hkibv0NR1oClGcWia0VB2fC1SlMy027cwe795Xx40Xiv/nw/iFAwQLupymWh+uhAAErn/7hwPg==}
+    engines: {node: '>= 0.4.0'}
+    hasBin: true
 
   figures@3.2.0:
     resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}
@@ -5112,6 +5148,8 @@ snapshots:
       '@types/express-serve-static-core': 5.0.6
       '@types/serve-static': 1.15.8
 
+  '@types/figlet@1.7.0': {}
+
   '@types/glob@7.2.0':
     dependencies:
       '@types/minimatch': 5.1.2
@@ -6347,6 +6385,8 @@ snapshots:
   fb-watchman@2.0.2:
     dependencies:
       bser: 2.1.1
+
+  figlet@1.8.1: {}
 
   figures@3.2.0:
     dependencies:
