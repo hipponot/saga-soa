@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import figlet from 'figlet';
+import { getRestRouteDefinitions } from './rest-decorators';
 
 export abstract class RestEndpointGroup {
   public readonly sectorName: string;
@@ -38,11 +39,23 @@ export abstract class RestEndpointGroup {
     const sectorBase = `${this.apiBaseUrl}/${this.sectorName}`;
     router.get(`${sectorBase}/alive`, this.aliveRoute());
     router.get(sectorBase, this.sectorHomeRoute());
-    this.registerSectorRoutes(router, sectorBase);
+
+    // Auto-register decorated routes
+    const routes = getRestRouteDefinitions(this);
+    if (routes.length > 0) {
+      for (const route of routes) {
+        // Compose full path relative to sectorBase if not absolute
+        const fullPath = route.path.startsWith('/') ? route.path : `${sectorBase}${route.path}`;
+        (router as any)[route.method](fullPath, (this as any)[route.handlerName].bind(this));
+      }
+    } else {
+      // Fallback to manual registration
+      this.registerSectorRoutes(router, sectorBase);
+    }
   }
 
   /**
    * Implement in subclass to register sector-specific routes.
    */
   protected abstract registerSectorRoutes(router: Router, sectorBase: string): void;
-} 
+}

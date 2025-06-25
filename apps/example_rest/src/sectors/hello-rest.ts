@@ -1,20 +1,9 @@
-import { Router, Request, Response } from 'express';
-import { injectable } from 'inversify';
-import { RestEndpointGroup } from '@saga-soa/core-api/rest/rest-endpoint-group';
+import { Controller, Get } from 'routing-controllers';
 
-@injectable()
-export class HelloRest extends RestEndpointGroup {
-  constructor() {
-    super('hello');
-  }
-
-  protected registerSectorRoutes(router: Router, sectorBase: string): void {
-    router.get(`${sectorBase}/hello`, this.helloRoute());
-  }
-
-  private helloRoute() {
-    return (req: Request, res: Response) => {
-      res.send('Hello');
-    };
+@Controller('/saga-soa/hello')
+export class HelloRest {
+  @Get('/hello')
+  helloRoute() {
+    return 'Hello';
   }
 } 
