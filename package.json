@@ -8,10 +8,13 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "test": "pnpm -r --if-present test",
-    "clean": "pnpm -r --if-present clean"
+    "clean": "pnpm -r --if-present clean",
+    "dep:list": "pnpm syncpack list",
+    "dep:fix": "pnpm syncpack fix"
   },
   "devDependencies": {
     "prettier": "^3.5.3",
+    "syncpack": "14.0.0-alpha.16",
     "turbo": "^2.5.4",
     "typescript": "5.8.2"
   },

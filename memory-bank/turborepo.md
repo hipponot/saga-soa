@@ -1,5 +1,3 @@
-
-
 # Turborepo & pnpm Workspace Specification
 
 ## Overview
