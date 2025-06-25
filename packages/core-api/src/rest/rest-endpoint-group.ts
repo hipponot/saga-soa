@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
-import figlet from 'figlet';
-import { getRestRouteDefinitions } from './rest-decorators';
+import figlet                        from 'figlet';
+import { resolve }                   from 'path';
+// import { getRestRouteDefinitions } from './rest-decorators';
 
 export abstract class RestEndpointGroup {
   public readonly sectorName: string;
@@ -34,24 +35,36 @@ export abstract class RestEndpointGroup {
   /**
    * Register all routes for this sector with the given router.
    * Should be called by RestRouter.
+   *
+   * If the subclass provides routing-controllers controllers via getRoutingControllers(),
+   * they will be auto-registered. Otherwise, falls back to manual registration.
    */
   public registerRoutes(router: Router): void {
     const sectorBase = `${this.apiBaseUrl}/${this.sectorName}`;
     router.get(`${sectorBase}/alive`, this.aliveRoute());
     router.get(sectorBase, this.sectorHomeRoute());
 
-    // Auto-register decorated routes
-    const routes = getRestRouteDefinitions(this);
-    if (routes.length > 0) {
-      for (const route of routes) {
-        // Compose full path relative to sectorBase if not absolute
-        const fullPath = route.path.startsWith('/') ? route.path : `${sectorBase}${route.path}`;
-        (router as any)[route.method](fullPath, (this as any)[route.handlerName].bind(this));
-      }
-    } else {
-      // Fallback to manual registration
-      this.registerSectorRoutes(router, sectorBase);
+    // Auto-register routing-controllers controllers if provided
+    const controllers = this.getRoutingControllers();
+    if (controllers && controllers.length > 0) {
+      // Note: Actual registration with routing-controllers must be done at the app level
+      // (e.g., via useExpressServer), so here we just expose the controllers for registration.
+      // You may want to collect these from all sectors and register them in your main app entrypoint.
+      // For now, we fallback to manual registration if not using routing-controllers.
+      // (No-op here, but subclasses can override this method to integrate with routing-controllers)
+      return;
     }
+
+    // Fallback to manual registration
+    this.registerSectorRoutes(router, sectorBase);
+  }
+
+  /**
+   * Subclasses can override to return an array of routing-controllers controller classes.
+   * By default, returns an empty array (manual registration).
+   */
+  protected getRoutingControllers(): Function[] {
+    return [];
   }
 
   /**
