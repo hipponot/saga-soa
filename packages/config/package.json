@@ -36,5 +36,6 @@
     "reflect-metadata": "^0.2.2",
     "routing-controllers": "^0.11.2",
     "zod": "latest"
-  }
+  },
+  "version": "1.0.0"
 }
