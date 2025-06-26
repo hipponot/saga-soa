@@ -58,11 +58,11 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
 
-  apps/example_rest:
+  apps/examples/rest_api:
     dependencies:
       '@saga-soa/core-api':
         specifier: workspace:*
-        version: link:../../packages/core-api
+        version: link:../../../packages/core-api
       express:
         specifier: ^4.18.2
         version: 4.21.2

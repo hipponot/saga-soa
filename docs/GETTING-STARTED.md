@@ -48,12 +48,12 @@ turbo run test
 - **Build:**
   ```sh
   turbo run build --filter=packages/logger
-  turbo run build --filter=apps/example_rest
+  turbo run build --filter=apps/examples/rest_api
   ```
 - **Test:**
   ```sh
   turbo run test --filter=packages/config
-  turbo run test --filter=apps/example_rest
+  turbo run test --filter=apps/examples/rest_api
   ```
 
 ### Other Useful Commands

@@ -17,7 +17,7 @@
 
 ## Monorepo Structure
 
-- `apps/` — Applications (web, docs, example_rest, etc.)
+- `apps/` — Applications (web, docs, examples/rest_api, etc.)
 - `packages/` — Core libraries (config, db, logger, core-api, UI, etc.)
 - `docs/` — Project documentation (this directory)
 - `memory-bank/` — Design notes, architecture, and technical context
