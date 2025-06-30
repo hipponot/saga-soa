@@ -24,6 +24,7 @@
   },
   "version": "1.0.0",
   "dependencies": {
-    "@swc/helpers": "^0.5.17"
+    "@swc/helpers": "^0.5.17",
+    "bunchee": "^6.5.4"
   }
 }

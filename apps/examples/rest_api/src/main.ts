@@ -1,8 +1,10 @@
-import express              from 'express';
-import { useExpressServer } from 'routing-controllers';
+import express                from 'express';
+import { useExpressServer }   from 'routing-controllers';
 import { RestControllerBase } from '@saga-soa/core-api/rest-controller';
 import './sectors/hello-rest';
 import './sectors/hello-again-rest';
+import { container }          from './inversify.config';
+import type { ILogger }       from '@saga-soa/logger';
 
 const app = express();
 
@@ -12,7 +14,7 @@ useExpressServer(app, {
 });
 
 const PORT = process.env.PORT || 3000;
+const logger = container.get<ILogger>('ILogger');
 app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Example REST server running at http://localhost:${PORT}/saga-soa/hello`);
+  logger.info(`Example REST server running at http://localhost:${PORT}/saga-soa/hello`);
 });
