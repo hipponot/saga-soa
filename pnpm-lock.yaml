@@ -67,6 +67,9 @@ importers:
       '@saga-soa/core-api':
         specifier: workspace:*
         version: link:../../../packages/core-api
+      '@saga-soa/logger':
+        specifier: workspace:^
+        version: link:../../../packages/logger
       express:
         specifier: ^4.18.2
         version: 4.21.2
