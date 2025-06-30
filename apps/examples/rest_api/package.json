@@ -17,6 +17,7 @@
   "dependencies": {
     "@saga-soa/core-api": "workspace:*",
     "express": "^4.18.2",
+    "figlet": "^1.8.1",
     "inversify": "^6.0.1",
     "reflect-metadata": "^0.1.14",
     "routing-controllers": "^0.11.2"

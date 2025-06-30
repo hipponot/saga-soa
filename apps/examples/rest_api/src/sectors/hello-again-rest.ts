@@ -1,14 +1,15 @@
-import { Controller, Get } from 'routing-controllers';
+import { Get }                                                      from 'routing-controllers';
+import { RestController, RestSectorController, REST_API_BASE_PATH } from '@saga-soa/core-api/rest-controller';
 
-@Controller('/saga-soa/hello-again')
-export class HelloAgainRest {
-  @Get('/hello-again')
-  helloAgainRoute() {
+const SECTOR = 'hello-again';
+
+@RestSectorController(`/${REST_API_BASE_PATH}/${SECTOR}`)
+export class HelloAgainRest extends RestController {
+  readonly sectorName = SECTOR;
+  constructor() { super(SECTOR); }
+
+  @Get('/test-route')
+  testRoute() {
     return 'Hello again!';
-  }
-
-  @Get('/goodbye')
-  goodbyeRoute() {
-    return 'Goodbye!';
   }
 }

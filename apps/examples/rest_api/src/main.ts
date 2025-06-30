@@ -1,14 +1,14 @@
-import 'reflect-metadata';
-import express from 'express';
+import express              from 'express';
 import { useExpressServer } from 'routing-controllers';
-import { HelloRest } from './sectors/hello-rest.js';
-import { HelloAgainRest } from './sectors/hello-again-rest.js';
+import { RestController }   from '@saga-soa/core-api/rest-controller';
+import './sectors/hello-rest';
+import './sectors/hello-again-rest';
 
 const app = express();
 
 // Register controllers with routing-controllers
 useExpressServer(app, {
-  controllers: [HelloRest, HelloAgainRest],
+  controllers: RestController.getRegisteredControllers(),
 });
 
 const PORT = process.env.PORT || 3000;

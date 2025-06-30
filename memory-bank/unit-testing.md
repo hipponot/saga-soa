@@ -64,3 +64,6 @@ describe('myFunction', () => {
 ## 9. Documentation and Enforcement
 - This specification is documented in `memory-bank/03.unit-testing.md`.
 - A corresponding rule file `.cursor/rules/unit-testing.mdc` enforces these conventions across the project. 
+
+## Build and Test Verification Rule
+After each revision to the project, verify that the project builds and all tests pass. This ensures code quality and prevents regressions. 

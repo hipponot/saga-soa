@@ -13,6 +13,10 @@
     "./rest/rest-router": {
       "types": "./dist/rest/rest-router.d.ts",
       "default": "./dist/rest/rest-router.js"
+    },
+    "./rest-controller": {
+      "types": "./dist/rest/rest-controller.d.ts",
+      "default": "./dist/rest/rest-controller.js"
     }
   },
   "scripts": {
@@ -41,5 +45,10 @@
     "ts-jest": "^29.1.1",
     "tsup": "^7.2.0",
     "typescript": "^5.1.6"
+  },
+  "typesVersions": {
+    "*": {
+      "rest-controller": ["dist/rest-controller.d.ts"]
+    }
   }
 }
