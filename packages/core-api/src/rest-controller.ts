@@ -1,9 +1,9 @@
 import { Get } from 'routing-controllers';
-import figlet from 'figlet';
+import figlet  from 'figlet';
 
 export const REST_API_BASE_PATH = 'saga-soa';
 
-export function RestSectorController(path: string) {
+export function RestController(path: string) {
   return function (target: any) {
     if (typeof target.registerController === 'function') {
       target.registerController(target);
@@ -11,15 +11,15 @@ export function RestSectorController(path: string) {
   };
 }
 
-export abstract class RestController {
+export abstract class RestControllerBase {
   private static _controllers: Function[] = [];
 
   static registerController(controller: Function) {
-    RestController._controllers.push(controller);
+    RestControllerBase._controllers.push(controller);
   }
 
   static getRegisteredControllers() {
-    return RestController._controllers;
+    return RestControllerBase._controllers;
   }
 
   abstract readonly sectorName: string;
@@ -36,4 +36,4 @@ export abstract class RestController {
   alive() {
     return { status: 'alive', sector: this.sectorName };
   }
-} 
+}

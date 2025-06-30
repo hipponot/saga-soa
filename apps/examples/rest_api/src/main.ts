@@ -1,6 +1,6 @@
 import express              from 'express';
 import { useExpressServer } from 'routing-controllers';
-import { RestController }   from '@saga-soa/core-api/rest-controller';
+import { RestControllerBase } from '@saga-soa/core-api/rest-controller';
 import './sectors/hello-rest';
 import './sectors/hello-again-rest';
 
@@ -8,7 +8,7 @@ const app = express();
 
 // Register controllers with routing-controllers
 useExpressServer(app, {
-  controllers: RestController.getRegisteredControllers(),
+  controllers: RestControllerBase.getRegisteredControllers(),
 });
 
 const PORT = process.env.PORT || 3000;
