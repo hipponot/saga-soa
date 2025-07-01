@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug rest-api (with libraries)",
+      "program": "${workspaceFolder}/apps/examples/rest-api/dist/main.js",
+      "cwd": "${workspaceFolder}/apps/examples/rest-api",
+      "outFiles": [
+        "${workspaceFolder}/apps/examples/rest-api/dist/**/*.js",
+        "${workspaceFolder}/packages/core-api/dist/**/*.js",
+        "${workspaceFolder}/packages/logger/dist/**/*.js"
+      ],
+      "console": "integratedTerminal",
+      "smartStep": true,
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    }
+  ]
+} 
