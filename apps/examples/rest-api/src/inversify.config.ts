@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Container } from 'inversify';
 import { ILogger, PinoLogger, PinoLoggerConfig } from '@saga-soa/logger';
 import * as controllers from './sectors';
@@ -15,9 +16,12 @@ const loggerConfig: PinoLoggerConfig = {
 container.bind<PinoLoggerConfig>('PinoLoggerConfig').toConstantValue(loggerConfig);
 container.bind<ILogger>('ILogger').to(PinoLogger).inSingletonScope();
 
-// Auto-bind all controllers in sectors
+// Auto-bind only classes decorated with @Controller
 Object.values(controllers).forEach(ctrl => {
-  if (typeof ctrl === 'function') {
+  if (
+    typeof ctrl === 'function' &&
+    Reflect.hasMetadata('routing-controllers:controller', ctrl)
+  ) {
     container.bind(ctrl).toSelf();
   }
 });
