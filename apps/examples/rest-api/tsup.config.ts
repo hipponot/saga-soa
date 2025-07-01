@@ -4,5 +4,6 @@ export default defineConfig((options: Options) => ({
   entry: ["src/**/*"],
   clean: true,
   format: ["esm"],
+  sourcemap: true,
   ...options,
 })); 

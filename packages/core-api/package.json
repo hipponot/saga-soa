@@ -3,25 +3,25 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/rest-controller.js",
+  "types": "dist/rest-controller.d.ts",
   "exports": {
-    "./rest/rest-endpoint-group": {
-      "types": "./dist/rest/rest-endpoint-group.d.ts",
-      "default": "./dist/rest/rest-endpoint-group.js"
-    },
-    "./rest/rest-router": {
-      "types": "./dist/rest/rest-router.d.ts",
-      "default": "./dist/rest/rest-router.js"
-    },
     "./rest-controller": {
-      "types": "./dist/rest/rest-controller.d.ts",
-      "default": "./dist/rest/rest-controller.js"
+      "types": "./dist/rest-controller.d.ts",
+      "default": "./dist/rest-controller.js"
+    },
+    "./express-server": {
+      "types": "./dist/express-server.d.ts",
+      "default": "./dist/express-server.js"
+    },
+    "./express-server-schema": {
+      "types": "./dist/express-server-schema.d.ts",
+      "default": "./dist/express-server-schema.js"
     }
   },
   "scripts": {
     "dev": "bunchee --watch",
-    "build": "bunchee",
+    "build": "tsup",
     "test": "jest",
     "clean": "rm -rf dist"
   },

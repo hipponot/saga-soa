@@ -1,13 +1,15 @@
-import express                from 'express';
-import { useExpressServer }   from 'routing-controllers';
-import { RestControllerBase } from '@saga-soa/core-api/rest-controller';
+import express                              from 'express';
+import { useExpressServer, useContainer }   from 'routing-controllers';
+import { RestControllerBase }               from '@saga-soa/core-api/rest-controller';
 import './sectors/hello-rest';
 import './sectors/hello-again-rest';
-import { container }          from './inversify.config';
-import type { ILogger }       from '@saga-soa/logger';
+import { container }                        from './inversify.config';
+import type { ILogger }                     from '@saga-soa/logger';
 
 const app = express();
 
+// Enable Inversify DI for routing-controllers
+useContainer(container);
 // Register controllers with routing-controllers
 useExpressServer(app, {
   controllers: RestControllerBase.getRegisteredControllers(),
