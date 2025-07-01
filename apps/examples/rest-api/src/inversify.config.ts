@@ -1,6 +1,6 @@
 import { Container } from 'inversify';
 import { ILogger, PinoLogger, PinoLoggerConfig } from '@saga-soa/logger';
-import { HelloRest } from './sectors/hello-rest';
+import * as controllers from './sectors';
 
 const container = new Container();
 
@@ -15,7 +15,11 @@ const loggerConfig: PinoLoggerConfig = {
 container.bind<PinoLoggerConfig>('PinoLoggerConfig').toConstantValue(loggerConfig);
 container.bind<ILogger>('ILogger').to(PinoLogger).inSingletonScope();
 
-// Bind HelloRest controller for DI
-container.bind(HelloRest).toSelf();
+// Auto-bind all controllers in sectors
+Object.values(controllers).forEach(ctrl => {
+  if (typeof ctrl === 'function') {
+    container.bind(ctrl).toSelf();
+  }
+});
 
 export { container };
