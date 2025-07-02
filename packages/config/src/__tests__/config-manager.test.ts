@@ -102,4 +102,83 @@ describe('ConfigManager', () => {
       expect(() => configManager.get(TestSchema)).not.toThrow();
     });
   });
+
+  describe('Edge cases for environment variables', () => {
+    const dotEnvPath = path.join(__dirname, '../../', '.env.edge');
+    const EdgeSchema = z.object({
+      configType: z.literal('EDGE_CONFIG'),
+      required: z.string(),
+      number: z.preprocess((val) => Number(val), z.number().int()),
+    });
+
+    afterEach(() => {
+      if (fs.existsSync(dotEnvPath)) fs.unlinkSync(dotEnvPath);
+      delete process.env.EDGE_CONFIG_REQUIRED;
+      delete process.env.EDGE_CONFIG_NUMBER;
+    });
+
+    it('throws ConfigValidationError when required env vars are missing', () => {
+      const configManager = new DotenvConfigManager();
+      process.env.EDGE_CONFIG_NUMBER = '123';
+      expect(() => configManager.get(EdgeSchema)).toThrow(ConfigValidationError);
+    });
+
+    it('throws ConfigValidationError for partial env var set', () => {
+      const configManager = new DotenvConfigManager();
+      process.env.EDGE_CONFIG_REQUIRED = 'present';
+      expect(() => configManager.get(EdgeSchema)).toThrow(ConfigValidationError);
+    });
+
+    it('throws ConfigValidationError for malformed .env values', () => {
+      fs.writeFileSync(dotEnvPath, [
+        'EDGE_CONFIG_REQUIRED=present',
+        'EDGE_CONFIG_NUMBER=notanumber',
+      ].join('\n'));
+      dotenv.config({ path: dotEnvPath });
+      const configManager = new DotenvConfigManager();
+      expect(() => configManager.get(EdgeSchema)).toThrow(ConfigValidationError);
+    });
+
+    it('throws ConfigValidationError when .env file is missing', () => {
+      const configManager = new DotenvConfigManager();
+      expect(() => configManager.get(EdgeSchema)).toThrow(ConfigValidationError);
+    });
+  });
+
+  describe('Advanced Zod schema (array, nested object, enum)', () => {
+    const AdvancedSchema = z.object({
+      configType: z.literal('ADVANCED_CONFIG'),
+      tags: z.string().array(),
+      database: z.object({ host: z.string(), port: z.preprocess((val) => Number(val), z.number().int()) }),
+      env: z.enum(['dev', 'prod', 'test'])
+    });
+
+    it('parses valid env values correctly', () => {
+      process.env.ADVANCED_CONFIG_TAGS = 'foo,bar,baz';
+      process.env.ADVANCED_CONFIG_DATABASE = JSON.stringify({ host: 'localhost', port: 1234 });
+      process.env.ADVANCED_CONFIG_ENV = 'prod';
+      const configManager = new DotenvConfigManager();
+      // Simulate parsing array and object from env
+      const schemaWithTransform = AdvancedSchema.extend({
+        tags: z.string().transform(s => s.split(',')),
+        database: z.string().transform(s => JSON.parse(s)),
+      });
+      const config = configManager.get(schemaWithTransform as any);
+      expect(config.tags).toEqual(['foo', 'bar', 'baz']);
+      expect(config.database).toEqual({ host: 'localhost', port: 1234 });
+      expect(config.env).toBe('prod');
+    });
+
+    it('throws ConfigValidationError for invalid enum or missing nested fields', () => {
+      process.env.ADVANCED_CONFIG_TAGS = 'foo,bar';
+      process.env.ADVANCED_CONFIG_DATABASE = JSON.stringify({ host: 'localhost' }); // missing port
+      process.env.ADVANCED_CONFIG_ENV = 'invalid';
+      const configManager = new DotenvConfigManager();
+      const schemaWithTransform = AdvancedSchema.extend({
+        tags: z.string().transform(s => s.split(',')),
+        database: z.string().transform(s => JSON.parse(s)),
+      });
+      expect(() => configManager.get(schemaWithTransform as any)).toThrow(ConfigValidationError);
+    });
+  });
 });
