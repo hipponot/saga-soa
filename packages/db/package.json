@@ -2,20 +2,10 @@
   "name": "@saga/db",
   "type": "module",
   "scripts": {
-    "dev": "bunchee --watch",
-    "build": "bunchee",
+    "dev": "bunchee --entry src/index.ts --watch --out-dir dist",
+    "build": "bunchee --entry src/index.ts --out-dir dist",
     "test": "jest",
     "clean": "rm -rf dist"
-  },
-  "exports": {
-    "./sql": {
-      "types": "./src/sql.ts",
-      "default": "./dist/sql.js"
-    },
-    "./redis": {
-      "types": "./src/redis.ts",
-      "default": "./dist/redis.js"
-    }
   },
   "devDependencies": {
     "@saga-soa/config": "workspace:*",
