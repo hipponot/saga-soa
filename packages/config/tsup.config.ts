@@ -15,4 +15,5 @@ export default defineConfig({
   outDir: 'dist',
   splitting: false,
   skipNodeModulesBundle: true,
+  target: 'node16',
 }); 

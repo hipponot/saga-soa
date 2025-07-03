@@ -15,7 +15,7 @@
     "jest": "^30.0.0",
     "mongodb-memory-server": "^10.1.4",
     "ts-jest": "^29.4.0",
-    "typescript": "latest",
+    "typescript": "^5.8.3",
     "tsup": "^8.5.0"
   },
   "dependencies": {

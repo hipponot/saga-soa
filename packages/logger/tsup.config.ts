@@ -9,4 +9,6 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   outExtension: ({ format }) => ({ js: '.js' }),
+  splitting: false,
+  skipNodeModulesBundle: true,
 }); 
