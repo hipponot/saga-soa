@@ -1,7 +1,6 @@
 import { z, ZodObject } from 'zod';
-import { HasConfigType } from '@saga-soa/config';
 
-export const PinoLoggerSchema: ZodObject<HasConfigType> = z.object({
+export const PinoLoggerSchema = z.object({
   configType: z.literal('PINO_LOGGER'),
   level: z.enum(['debug', 'info', 'warn', 'error']),
   isExpressContext: z.boolean(),
@@ -9,4 +8,4 @@ export const PinoLoggerSchema: ZodObject<HasConfigType> = z.object({
   logFile: z.string().optional(),
 });
 
-export type PinoLoggerConfig = z.infer<typeof PinoLoggerSchema>; 
+export type PinoLoggerConfig = z.infer<typeof PinoLoggerSchema>;

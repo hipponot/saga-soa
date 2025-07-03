@@ -26,7 +26,6 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "@saga-soa/config": "workspace:*",
     "@saga/typescript-config": "workspace:*",
     "@types/jest": "^29.5.3",
     "@types/node": "latest",
