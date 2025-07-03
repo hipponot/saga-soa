@@ -22,11 +22,10 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "test": "jest",
+    "test": "vitest run",
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@saga-soa/logger": "workspace:*",
     "express": "^4.18.2",
     "figlet": "^1.8.1",
     "inversify": "^6.0.1",
@@ -35,18 +34,27 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@saga-soa/logger": "workspace:*",
     "@types/express": "^5.0.3",
     "@types/figlet": "^1.7.0",
-    "@types/jest": "^29.5.3",
     "@types/node": "latest",
-    "jest": "^29.6.2",
-    "ts-jest": "^29.1.1",
+    "@types/supertest": "^6.0.3",
+    "@vitest/coverage-v8": "^1.5.0",
+    "figlet": "^1.8.1",
+    "inversify": "^6.0.1",
+    "reflect-metadata": "^0.1.14",
+    "routing-controllers": "^0.11.2",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "undici": "^7.11.0",
+    "vitest": "^1.5.0",
+    "zod": "^3.22.2"
   },
   "typesVersions": {
     "*": {
-      "rest-controller": ["dist/rest-controller.d.ts"]
+      "rest-controller": [
+        "dist/rest-controller.d.ts"
+      ]
     }
   }
 }

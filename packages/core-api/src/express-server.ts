@@ -2,6 +2,8 @@ import express, { Application } from 'express';
 import { injectable, inject } from 'inversify';
 import type { ExpressServerConfig } from './express-server-schema';
 import type { ILogger } from '@saga-soa/logger';
+import { useContainer, createExpressServer, Action, RoutingControllersOptions } from 'routing-controllers';
+import { Container } from 'inversify';
 
 @injectable()
 export class ExpressServer {
@@ -36,4 +38,12 @@ export class ExpressServer {
   public getApp(): Application {
     return this.app;
   }
+}
+
+export function createTestExpressServer(options: Partial<RoutingControllersOptions> = {}) {
+  const testContainer = new Container();
+  useContainer(testContainer);
+  return createExpressServer({
+    ...options,
+  });
 } 
