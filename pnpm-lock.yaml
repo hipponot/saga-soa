@@ -181,9 +181,6 @@ importers:
 
   packages/core-api:
     dependencies:
-      '@saga-soa/config':
-        specifier: workspace:*
-        version: link:../config
       '@saga-soa/logger':
         specifier: workspace:*
         version: link:../logger
