@@ -2,8 +2,8 @@
   "name": "@saga/db",
   "type": "module",
   "scripts": {
-    "dev": "bunchee --entry src/index.ts --watch --out-dir dist",
-    "build": "bunchee --entry src/index.ts --out-dir dist",
+    "dev": "tsup --watch",
+    "build": "tsup",
     "test": "jest",
     "clean": "rm -rf dist"
   },
@@ -12,11 +12,11 @@
     "@saga/typescript-config": "workspace:*",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.3",
-    "bunchee": "^6.5.4",
     "jest": "^30.0.0",
     "mongodb-memory-server": "^10.1.4",
     "ts-jest": "^29.4.0",
-    "typescript": "latest"
+    "typescript": "latest",
+    "tsup": "^8.5.0"
   },
   "dependencies": {
     "inversify": "^6.0.1",
