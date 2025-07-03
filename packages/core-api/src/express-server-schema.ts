@@ -1,11 +1,11 @@
-import { z, ZodObject } from 'zod';
-import { HasConfigType } from '@saga-soa/config';
+import { z, ZodObject }       from 'zod';
+import { injectable }         from 'inversify';
 
-export const ExpressServerSchema: ZodObject<HasConfigType> = z.object({
+export const ExpressServerSchema = z.object({
   configType: z.literal('EXPRESS_SERVER'),
   port: z.number().int().positive(),
   logLevel: z.enum(['debug', 'info', 'warn', 'error']),
   name: z.string().min(1),
 });
 
-export type ExpressServerConfig = z.infer<typeof ExpressServerSchema>; 
+export type ExpressServerConfig = z.infer<typeof ExpressServerSchema>;

@@ -1,21 +1,16 @@
-import express                            from 'express';
-import { useExpressServer, useContainer } from 'routing-controllers';
-import * as controllers                   from './sectors';
-import { container }                      from './inversify.config';
-import type { ILogger }                   from '@saga-soa/logger';
+import { container }                from './inversify.config';
+import { ExpressServer }            from '@saga-soa/core-api/express-server';
+import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
 
-const app = express();
+// Example config for ExpressServer
+const expressConfig: ExpressServerConfig = {
+  configType: 'EXPRESS_SERVER',
+  port: Number(process.env.PORT) || 3000,
+  logLevel: 'info',
+  name: 'Example REST API',
+};
 
-// Enable Inversify DI for routing-controllers
-useContainer(container);
+container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
 
-// Register controllers with routing-controllers
-useExpressServer(app, {
-  controllers: Object.values(controllers).filter(c => typeof c === 'function'),
-});
-
-const PORT = process.env.PORT || 3000;
-const logger = container.get<ILogger>('ILogger');
-app.listen(PORT, () => {
-  logger.info(`Example REST server running at http://localhost:${PORT}/saga-soa/hello`);
-});
+const server = container.resolve(ExpressServer);
+server.start();
