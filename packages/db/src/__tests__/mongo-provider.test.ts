@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
 import { IMongoConnMgr } from '../i-mongo-conn-mgr';
-import { MockMongoProvider } from './mock-mongo-provider';
+import { MockMongoProvider } from '../mocks/mock-mongo-provider';
 import { IConfigManager } from '@saga-soa/config';
 import { MockConfigManager } from '@saga-soa/config/mocks/mock-config-manager';
 import { MongoProviderSchema } from '../mongo-provider-config';
