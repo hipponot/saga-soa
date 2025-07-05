@@ -29,6 +29,10 @@
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.js"
+    },
+    "./mocks/mock-mongo-provider": {
+      "import": "./dist/mocks/mock-mongo-provider.js",
+      "require": "./dist/mocks/mock-mongo-provider.js"
     }
   }
 }

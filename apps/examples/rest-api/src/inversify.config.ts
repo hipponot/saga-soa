@@ -1,9 +1,11 @@
 import { Container }                 from 'inversify';
 import { injectable, inject }        from 'inversify';
 import type { MongoClient }          from 'mongodb';
-import { MockMongoProvider }         from '@saga-soa/db/src/__tests__/mock-mongo-provider';
+import { MockMongoProvider }         from '@saga-soa/db/mocks/mock-mongo-provider';
 import { MONGO_CLIENT }              from '@saga-soa/db';
 import * as controllers              from './sectors';
+import { PinoLogger }                from '@saga-soa/logger';
+import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
 
 const container = new Container();
 
