@@ -27,3 +27,21 @@ For more details and project tracking, see the [Project Board](https://github.co
 ## Architecture
 
 ![alt text](arc.png)
+
+## Monorepo Consistency Check
+
+Run the following command from the root to ensure the entire monorepo builds and all tests pass:
+
+```sh
+pnpm check
+```
+
+This will:
+- Force a full, no-cache build of all packages and apps
+- Run all unit tests in all packages and apps
+
+**When to use:**
+- Before opening a PR
+- After major refactors
+- Before a release
+- Any time you want to verify monorepo health
