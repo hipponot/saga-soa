@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
-import { IMongoProvider } from '../i-mongo-connection-manager';
+import { IMongoConnMgr } from '../i-mongo-conn-mgr';
 import { MockMongoProvider } from './mock-mongo-provider';
 import { IConfigManager } from '@saga-soa/config';
 import { MockConfigManager } from '@saga-soa/config/mocks/mock-config-manager';
@@ -27,7 +27,7 @@ describe('MockMongoProvider (Inversify Factory with MockConfigManager)', () => {
       options: {},
     };
     // Bind the factory for the mock provider
-    container.bind<IMongoProvider>(MockMongoProvider)
+    container.bind<IMongoConnMgr>(MockMongoProvider)
       .toDynamicValue(() => new MockMongoProvider(mockConfig.instanceName))
       .whenTargetNamed(MOCK_INSTANCE_NAME);
   });
@@ -37,7 +37,7 @@ describe('MockMongoProvider (Inversify Factory with MockConfigManager)', () => {
   });
 
   it('should connect, check isConnected, getClient, and disconnect', async () => {
-    const provider = container.getNamed<IMongoProvider>(MockMongoProvider, MOCK_INSTANCE_NAME);
+    const provider = container.getNamed<IMongoConnMgr>(MockMongoProvider, MOCK_INSTANCE_NAME);
     expect(provider.isConnected()).toBe(false);
     await provider.connect();
     expect(provider.isConnected()).toBe(true);
@@ -48,7 +48,7 @@ describe('MockMongoProvider (Inversify Factory with MockConfigManager)', () => {
   });
 
   it('should throw if getClient is called before connect', () => {
-    const provider = container.getNamed<IMongoProvider>(MockMongoProvider, MOCK_INSTANCE_NAME);
+    const provider = container.getNamed<IMongoConnMgr>(MockMongoProvider, MOCK_INSTANCE_NAME);
     expect(() => provider.getClient()).toThrow('MongoClient is not connected');
   });
 });

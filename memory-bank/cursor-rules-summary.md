@@ -38,4 +38,15 @@ This file summarizes the essential rules and patterns from `.cursor/rules/` for 
 - Structure: `projectbrief.md`, `productContext.md`, `activeContext.md`, `systemPatterns.md`, `techContext.md`, `progress.md`.
 - Additional context files are encouraged for complex features, integrations, APIs, testing, and deployment.
 - Workflows for Plan Mode and Act Mode are defined, including when and how to update the Memory Bank.
-- `.cursor/rules` is a learning journal for project intelligence, capturing patterns, preferences, and decisions. 
+- `.cursor/rules` is a learning journal for project intelligence, capturing patterns, preferences, and decisions.
+
+## Monorepo Consistency Check Rule
+
+- The `check` command must be run at key event points (e.g., before PR, after major refactor, before release).
+- The `check` command performs:
+  1. A full, no-cache, forced build of the entire monorepo from the root using TurboRepo:
+     `turbo run build --no-cache --force`
+  2. A run of all unit tests in all packages and apps:
+     `pnpm test`
+- The process must halt and report if any build or test fails.
+- The command can be triggered by the user at any time by requesting "check". 

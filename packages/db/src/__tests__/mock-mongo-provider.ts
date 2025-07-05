@@ -1,8 +1,8 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient } from 'mongodb';
-import { IMongoProvider } from '../i-mongo-connection-manager';
+import { IMongoConnMgr } from '../i-mongo-conn-mgr';
 
-export class MockMongoProvider implements IMongoProvider {
+export class MockMongoProvider implements IMongoConnMgr {
   public readonly instanceName: string;
   private client: MongoClient | null = null;
   private mongoServer: MongoMemoryServer | null = null;

@@ -17,11 +17,14 @@
   "dependencies": {
     "@saga-soa/core-api": "workspace:*",
     "@saga-soa/logger": "workspace:^",
+    "@types/mongodb": "^4.0.7",
     "express": "^4.18.2",
     "figlet": "^1.8.1",
     "inversify": "^6.0.1",
+    "mongodb": "^5.7.0",
     "reflect-metadata": "^0.1.14",
-    "routing-controllers": "^0.11.2"
+    "routing-controllers": "^0.11.2",
+    "@saga-soa/db": "workspace:*"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

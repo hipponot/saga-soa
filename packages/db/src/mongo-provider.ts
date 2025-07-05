@@ -1,10 +1,10 @@
 import { injectable } from 'inversify';
 import { MongoClient } from 'mongodb';
-import { IMongoProvider } from './i-mongo-connection-manager';
 import type { MongoProviderConfig } from './mongo-provider-config';
+import { IMongoConnMgr } from './i-mongo-conn-mgr';
 
 @injectable()
-export class MongoProvider implements IMongoProvider {
+export class MongoProvider implements IMongoConnMgr {
   public readonly instanceName: string;
   private client: MongoClient | null = null;
   private config: MongoProviderConfig;

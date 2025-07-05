@@ -1,6 +1,9 @@
-import { Container } from 'inversify';
-import { ILogger, PinoLogger, PinoLoggerConfig } from '@saga-soa/logger';
-import * as controllers from './sectors';
+import { Container }                 from 'inversify';
+import { injectable, inject }        from 'inversify';
+import type { MongoClient }          from 'mongodb';
+import { MockMongoProvider }         from '@saga-soa/db/src/__tests__/mock-mongo-provider';
+import { MONGO_CLIENT }              from '@saga-soa/db';
+import * as controllers              from './sectors';
 
 const container = new Container();
 
@@ -15,11 +18,18 @@ const loggerConfig: PinoLoggerConfig = {
 container.bind<PinoLoggerConfig>('PinoLoggerConfig').toConstantValue(loggerConfig);
 container.bind<ILogger>('ILogger').to(PinoLogger).inSingletonScope();
 
-// Auto-bind all controllers in sectors
-Object.values(controllers).forEach(ctrl => {
-  if (typeof ctrl === 'function') {
-    container.bind(ctrl).toSelf();
-  }
+// MongoDB binding
+const mongoProvider = new MockMongoProvider('MockMongoDB');
+mongoProvider.connect().then(() => {
+  container.bind<MockMongoProvider>('MongoProvider').toConstantValue(mongoProvider);
+  container.bind<MongoClient>(MONGO_CLIENT).toConstantValue(mongoProvider.getClient());
+
+  // Auto-bind all controllers in sectors
+  Object.values(controllers).forEach(ctrl => {
+    if (typeof ctrl === 'function') {
+      container.bind(ctrl).toSelf();
+    }
+  });
 });
 
 export { container };
