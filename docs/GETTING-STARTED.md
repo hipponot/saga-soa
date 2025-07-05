@@ -1,5 +1,21 @@
 # Getting Started & Build Cheatsheet
 
+## Quickstart
+
+1. Install dependencies:
+   ```sh
+   pnpm install
+   ```
+2. Verify everything works:
+   ```sh
+   pnpm check
+   ```
+
+- Always run `pnpm install` before building or running any commands for the first time.
+- Run `pnpm check` before every commit or PR to ensure you haven't regressed functionality.
+
+---
+
 This guide covers initial setup and common build/test commands for the saga-soa monorepo.
 
 ---

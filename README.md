@@ -1,5 +1,15 @@
 # saga-soa
 
+## Quickstart
+
+```sh
+pnpm install
+pnpm check
+```
+
+- Always run `pnpm install` before building or running any commands for the first time.
+- Run `pnpm check` before every commit or PR to ensure you haven't regressed functionality.
+
 ## Introduction
 
 **saga-soa** is a modern, modular monorepo for building service-oriented architectures (SOA) in educational and experimental environments. It leverages [Turborepo](https://turbo.build/), [pnpm](https://pnpm.io/), and a collection of composable packages to enable scalable, introspectable, and schema-driven APIs. The project is organized into apps (web, docs) and packages (config, db, UI, etc.), supporting both serverless and traditional deployments.
