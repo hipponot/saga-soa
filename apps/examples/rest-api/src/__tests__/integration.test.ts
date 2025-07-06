@@ -24,6 +24,8 @@ beforeAll(async () => {
   const { MONGO_CLIENT } = await import('@saga-soa/db');
   const mongoProvider = new MockMongoProvider('MockMongoDB');
   await mongoProvider.connect();
+  if (container.isBound(MockMongoProvider)) container.unbind(MockMongoProvider);
+  if (container.isBound(MONGO_CLIENT)) container.unbind(MONGO_CLIENT);
   container.bind(MockMongoProvider).toConstantValue(mongoProvider);
   container.bind(MONGO_CLIENT).toConstantValue(mongoProvider.getClient());
 
