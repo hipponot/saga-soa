@@ -8,7 +8,7 @@ const TEST_COLLECTION = 'hello_mongo_test';
 const TEST_DOC = { _id: new ObjectId('64b7f8f8f8f8f8f8f8f8f8f8'), message: 'Hello from Mongo!' };
 
 @injectable()
-export class HelloMongoSector {
+export class HelloMongo {
   public readonly router: Router;
 
   constructor(@inject(MONGO_CLIENT) private client: MongoClient) {

@@ -3,10 +3,13 @@ import request from 'supertest';
 import { container } from '../inversify.config';
 import { ExpressServer } from '@saga-soa/core-api/express-server';
 import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
+import { useContainer, createExpressServer } from 'routing-controllers';
+import * as controllers from '../sectors';
+import { HelloMongo } from '../sectors/hello-mongo';
 
-let app: ReturnType<ExpressServer['getApp']>;
+let app: ReturnType<typeof createExpressServer>;
 
-beforeAll(() => {
+beforeAll(async () => {
   // Use the same config as main.ts
   const expressConfig: ExpressServerConfig = {
     configType: 'EXPRESS_SERVER',
@@ -15,19 +18,36 @@ beforeAll(() => {
     name: 'Test REST API',
   };
   container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
-  const server = container.resolve(ExpressServer);
-  app = server.getApp();
+
+  // Wait for MongoProvider to connect and bind MongoClient
+  const { MockMongoProvider } = await import('@saga-soa/db/mocks/mock-mongo-provider');
+  const { MONGO_CLIENT } = await import('@saga-soa/db');
+  const mongoProvider = new MockMongoProvider('MockMongoDB');
+  await mongoProvider.connect();
+  container.bind(MockMongoProvider).toConstantValue(mongoProvider);
+  container.bind(MONGO_CLIENT).toConstantValue(mongoProvider.getClient());
+
+  useContainer(container);
+  const controllerClasses = Object.values(controllers).filter(
+    (ctrl) => typeof ctrl === 'function'
+  );
+  app = createExpressServer({
+    controllers: controllerClasses,
+  });
+  // Mount HelloMongo router for /hello-mongo endpoints
+  const helloMongo = container.get(HelloMongo);
+  app.use(helloMongo.router);
 });
 
 describe('REST API Integration', () => {
-  it('GET /api/hello/test-route', async () => {
-    const res = await request(app).get('/api/hello/test-route');
+  it('GET /saga-soa/hello/test-route', async () => {
+    const res = await request(app).get('/saga-soa/hello/test-route');
     expect(res.status).toBe(200);
     expect(res.text).toContain('Hello');
   });
 
-  it('GET /api/hello-again/test-route', async () => {
-    const res = await request(app).get('/api/hello-again/test-route');
+  it('GET /saga-soa/hello-again/test-route', async () => {
+    const res = await request(app).get('/saga-soa/hello-again/test-route');
     expect(res.status).toBe(200);
     expect(res.text).toContain('Hello again');
   });
