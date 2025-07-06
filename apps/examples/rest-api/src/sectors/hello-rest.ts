@@ -17,5 +17,9 @@ export class HelloRest extends RestControllerBase {
     this.logger.info('Hello route hit');
     return 'Hello';
   }
+
+  async init() {
+    // Async setup if needed
+  }
 }
 

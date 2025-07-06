@@ -4,13 +4,18 @@ import { MONGO_CLIENT }                   from '@saga-soa/db';
 import * as controllers                   from './sectors';
 import { PinoLogger }                     from '@saga-soa/logger';
 import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
-import { HelloMongo }               from './sectors/hello-mongo';
+import { HelloMongo }                     from './sectors/hello-mongo';
 import type { MongoClient }               from 'mongodb';
+import type { IMongoConnMgr }                from '@saga-soa/db';
 
 const container = new Container();
-if (!container.isBound(HelloMongo)) {
-  container.bind<HelloMongo>(HelloMongo).toSelf();
-}
+
+// Synchronously bind all controllers
+Object.values(controllers).forEach(ctrl => {
+  if (typeof ctrl === 'function' && !container.isBound(ctrl)) {
+    container.bind(ctrl).toSelf();
+  }
+});
 
 // Example config for PinoLogger
 const loggerConfig: PinoLoggerConfig = {
@@ -23,18 +28,11 @@ const loggerConfig: PinoLoggerConfig = {
 container.bind<PinoLoggerConfig>('PinoLoggerConfig').toConstantValue(loggerConfig);
 container.bind<ILogger>('ILogger').to(PinoLogger).inSingletonScope();
 
-// MongoDB binding
-const mongoProvider = new MockMongoProvider('MockMongoDB');
-mongoProvider.connect().then(() => {
-  container.bind<MockMongoProvider>('MongoProvider').toConstantValue(mongoProvider);
-  container.bind<MongoClient>(MONGO_CLIENT).toConstantValue(mongoProvider.getClient());
-
-  // Auto-bind all controllers in sectors
-  Object.values(controllers).forEach(ctrl => {
-    if (typeof ctrl === 'function' && !container.isBound(ctrl)) {
-      container.bind(ctrl).toSelf();
-    }
-  });
-});
+// Bind MongoProvider to IMongoConnMgr using async factory (toDynamicValue)
+container.bind<IMongoConnMgr>('IMongoConnMgr').toDynamicValue(async () => {
+  const provider = new MockMongoProvider('MockMongoDB');
+  await provider.connect();
+  return provider;
+}).inSingletonScope();
 
 export { container };

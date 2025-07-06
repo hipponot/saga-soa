@@ -17,6 +17,10 @@ export class HelloMongo {
     this.router.get('/hello-mongo', this.readDoc);
   }
 
+  async init() {
+    // Async setup if needed
+  }
+
   writeDoc = async (req: Request, res: Response) => {
     try {
       const db = this.client.db();

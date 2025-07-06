@@ -15,4 +15,8 @@ export class HelloAgainRest extends RestControllerBase {
     this.logger.info('Hello again route hit');
     return 'Hello again!';
   }
+
+  async init() {
+    // Async setup if needed
+  }
 }
