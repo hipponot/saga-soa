@@ -15,13 +15,13 @@
     "jest": "^30.0.0",
     "mongodb-memory-server": "^10.1.4",
     "ts-jest": "^29.4.0",
-    "typescript": "^5.8.3",
-    "tsup": "^8.5.0"
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
-    "inversify": "^6.0.1",
+    "inversify": "^6.2.2",
     "mongodb": "^5.7.0",
-    "reflect-metadata": "^0.1.13",
+    "reflect-metadata": "^0.2.2",
     "zod": "^3.22.2"
   },
   "version": "1.0.0",

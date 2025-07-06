@@ -4,8 +4,6 @@ import * as controllers                   from './sectors';
 import { container }                      from './inversify.config';
 import type { ExpressServerConfig }       from '@saga-soa/core-api/express-server-schema';
 import type { ILogger }                   from '@saga-soa/logger';
-import { MONGO_CLIENT }                   from '@saga-soa/db';
-import type { MongoClient }               from 'mongodb';
 import type { IMongoConnMgr }             from '@saga-soa/db';
 
 const expressConfig: ExpressServerConfig = {
@@ -20,10 +18,7 @@ container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expre
 async function start() {
   // Get the singleton Mongo provider from DI (already connected)
   const mongoProvider = await container.getAsync<IMongoConnMgr>('IMongoConnMgr');
-  // Optionally bind the MongoClient if needed elsewhere
-  if (!container.isBound(MONGO_CLIENT)) {
-    container.bind<MongoClient>(MONGO_CLIENT).toConstantValue(mongoProvider.getClient());
-  }
+  // No need to bind MongoClient; use the factory provider pattern instead
 
   // Ensure routing-controllers uses Inversify for controller resolution
   useContainer(container);
@@ -35,7 +30,7 @@ async function start() {
 
   // Resolve and initialize all controllers
   for (const Ctrl of controllerClasses) {
-    const instance = container.get(Ctrl);
+    const instance = await container.getAsync(Ctrl);
     if (typeof instance.init === 'function') {
       await instance.init();
     }

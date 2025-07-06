@@ -1,12 +1,13 @@
 import { Container }                      from 'inversify';
+import { injectable, inject }             from 'inversify';
 import { MockMongoProvider }              from '@saga-soa/db/mocks/mock-mongo-provider';
-import { MONGO_CLIENT }                   from '@saga-soa/db';
-import * as controllers                   from './sectors';
-import { PinoLogger }                     from '@saga-soa/logger';
-import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
-import { HelloMongo }                     from './sectors/hello-mongo';
 import type { MongoClient }               from 'mongodb';
-import type { IMongoConnMgr }                from '@saga-soa/db';
+import { MONGO_CLIENT }                   from '@saga-soa/db';
+import type { IMongoConnMgr }             from '@saga-soa/db';
+import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
+import { PinoLogger }                     from '@saga-soa/logger';
+import * as controllers                   from './sectors';
+import { HelloMongo }                     from './sectors/hello-mongo';
 
 const container = new Container();
 
@@ -28,11 +29,17 @@ const loggerConfig: PinoLoggerConfig = {
 container.bind<PinoLoggerConfig>('PinoLoggerConfig').toConstantValue(loggerConfig);
 container.bind<ILogger>('ILogger').to(PinoLogger).inSingletonScope();
 
-// Bind MongoProvider to IMongoConnMgr using async factory (toDynamicValue)
+// Bind MongoProvider to IMongoConnMgr using async factory (toDynamicValue, Inversify v6.x)
 container.bind<IMongoConnMgr>('IMongoConnMgr').toDynamicValue(async () => {
   const provider = new MockMongoProvider('MockMongoDB');
   await provider.connect();
   return provider;
+}).inSingletonScope();
+
+// Bind MongoClient to an async factory that returns the connected client
+container.bind<MongoClient>(MONGO_CLIENT).toDynamicValue(async () => {
+  const mgr = await container.getAsync<IMongoConnMgr>('IMongoConnMgr');
+  return mgr.getClient();
 }).inSingletonScope();
 
 export { container };
