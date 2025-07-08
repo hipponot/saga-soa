@@ -1,9 +1,9 @@
-import express, { Application } from 'express';
-import { injectable, inject } from 'inversify';
-import type { ExpressServerConfig } from './express-server-schema';
-import type { ILogger } from '@saga-soa/logger';
-import { useContainer, createExpressServer, Action, RoutingControllersOptions } from 'routing-controllers';
-import { Container } from 'inversify';
+import express, { Application }                                                 from 'express';
+import { injectable, inject }                                                   from 'inversify';
+import type { ExpressServerConfig }                                             from './express-server-schema';
+import type { ILogger }                                                         from '@saga-soa/logger';
+import { useContainer, useExpressServer }                                        from 'routing-controllers';
+import { Container }                                                            from 'inversify';
 
 @injectable()
 export class ExpressServer {
@@ -15,6 +15,31 @@ export class ExpressServer {
     @inject('ILogger') private logger: ILogger
   ) {
     this.app = express();
+  }
+
+  public async init(container: Container, controllersModule: any): Promise<void> {
+    // Ensure routing-controllers uses Inversify for controller resolution
+    useContainer(container);
+
+    // Discover all sector controller classes (extending RestControllerBase)
+    const controllerClasses = Object.values(controllersModule).filter(
+      (ctrl): ctrl is new (...args: any[]) => any => typeof ctrl === 'function' && ctrl.prototype && ctrl.prototype.init
+    );
+
+    // Remove controller binding logic from here
+
+    // Resolve and initialize all controllers
+    for (const Ctrl of controllerClasses) {
+      const instance = await container.getAsync<any>(Ctrl);
+      if (typeof instance.init === 'function') {
+        await instance.init();
+      }
+    }
+
+    // Register controller classes with routing-controllers
+    useExpressServer(this.app, {
+      controllers: controllerClasses as Function[],
+    });
   }
 
   public start(): void {
@@ -40,10 +65,3 @@ export class ExpressServer {
   }
 }
 
-export function createTestExpressServer(options: Partial<RoutingControllersOptions> = {}) {
-  const testContainer = new Container();
-  useContainer(testContainer);
-  return createExpressServer({
-    ...options,
-  });
-} 

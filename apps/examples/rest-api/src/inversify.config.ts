@@ -1,13 +1,12 @@
 import { Container }                      from 'inversify';
-import { injectable, inject }             from 'inversify';
-import { MockMongoProvider }              from '@saga-soa/db/mocks/mock-mongo-provider';
 import type { MongoClient }               from 'mongodb';
 import { MONGO_CLIENT }                   from '@saga-soa/db';
 import type { IMongoConnMgr }             from '@saga-soa/db';
+import { MockMongoProvider }              from '@saga-soa/db/mocks/mock-mongo-provider';
 import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
 import { PinoLogger }                     from '@saga-soa/logger';
+import { ExpressServer }                  from '@saga-soa/core-api/express-server';
 import * as controllers                   from './sectors';
-import { HelloMongo }                     from './sectors/hello-mongo';
 
 const container = new Container();
 
@@ -41,5 +40,7 @@ container.bind<MongoClient>(MONGO_CLIENT).toDynamicValue(async () => {
   const mgr = await container.getAsync<IMongoConnMgr>('IMongoConnMgr');
   return mgr.getClient();
 }).inSingletonScope();
+
+container.bind(ExpressServer).toSelf().inSingletonScope();
 
 export { container };
