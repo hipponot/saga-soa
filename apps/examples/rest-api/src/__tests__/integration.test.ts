@@ -4,7 +4,7 @@ import { container } from '../inversify.config';
 import { ExpressServer } from '@saga-soa/core-api/express-server';
 import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
 import { useContainer, createExpressServer } from 'routing-controllers';
-import * as controllers from '../sectors';
+import * as sectorControllers from '../sectors';
 import { HelloMongo } from '../sectors/hello-mongo';
 import express from 'express';
 
@@ -32,6 +32,7 @@ beforeAll(async () => {
 
   // Use ExpressServer from DI, initialize with controllers, and get the app instance
   const expressServer = container.get(ExpressServer);
+  const controllers = Object.values(sectorControllers);
   await expressServer.init(container, controllers);
   app = expressServer.getApp();
 });

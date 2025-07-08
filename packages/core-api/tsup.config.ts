@@ -4,7 +4,8 @@ export default defineConfig({
   entry: [
     'src/express-server.ts',
     'src/express-server-schema.ts',
-    'src/rest-controller.ts'
+    'src/rest-controller.ts',
+    'src/sectors-controller.ts'
   ],
   format: ['esm'],
   dts: true,

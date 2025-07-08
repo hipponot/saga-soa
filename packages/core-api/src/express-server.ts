@@ -4,6 +4,7 @@ import type { ExpressServerConfig }                                             
 import type { ILogger }                                                          from '@saga-soa/logger';
 import { useContainer, useExpressServer }                                        from 'routing-controllers';
 import { Container }                                                             from 'inversify';
+import { SectorsController }                                                     from './sectors-controller';
 
 @injectable()
 export class ExpressServer {
@@ -17,12 +18,12 @@ export class ExpressServer {
     this.app = express();
   }
 
-  public async init(container: Container, controllersModule: any): Promise<void> {
+  public async init(container: Container, controllers: Array<new (...args: any[]) => any>): Promise<void> {
     // Ensure routing-controllers uses Inversify for controller resolution
     useContainer(container);
 
-    // Discover all sector controller classes (extending RestControllerBase)
-    const controllerClasses = Object.values(controllersModule).filter(
+    // Always add SectorsController to the list
+    const controllerClasses = [...controllers, SectorsController].filter(
       (ctrl): ctrl is new (...args: any[]) => any => typeof ctrl === 'function' && ctrl.prototype && ctrl.prototype.init
     );
 

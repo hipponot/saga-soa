@@ -1,6 +1,27 @@
 # Dynamic Controller Loader and Plugin Discovery Plan
 
-## Feature Requirements
+## Current Implementation (Static Controller Loading)
+
+- **Controller Discovery:**
+  - All controllers are statically imported and re-exported from `apps/examples/rest-api/src/sectors/index.ts`.
+  - There is no dynamic directory scanning or runtime plugin discovery.
+- **Loading in ExpressServer:**
+  - In `main.ts`, all exports from the `controllers` module (the sectors index) are passed to `ExpressServer.init`.
+- **Binding and Instantiation:**
+  - In `ExpressServer.init`, all controller classes are:
+    1. Bound to the DI container (if not already).
+    2. Instantiated via `container.getAsync`.
+    3. If they have an `init()` method, it is awaited.
+    4. Registered with `routing-controllers` via `useExpressServer`.
+- **No Dynamic Directory Scanning:**
+  - All controllers must be known at build time and exported from the sectors index.
+  - There is no registry, repeated invocation, or hot reloading support.
+
+> **Note:** This pattern is suitable for static, monolithic apps. For plugin-based or hot-reload scenarios, see the future enhancements below.
+
+---
+
+## Feature Requirements (Future/Planned)
 
 1. **Multiple Plugin Directories**
    - Support specifying one or more directories containing extensions of `RestControllerBase`.
@@ -24,7 +45,7 @@
 - For hot reloading, a new Express app instance must be created and all controllers re-registered.
 - Swapping the app instance in a running server is non-trivial and may require additional infrastructure.
 
-## Suggested Implementation Plan
+## Suggested Implementation Plan (Future)
 
 ### A. Controller Loader Utility
 - Implement a static method (e.g., `RestControllerBase.loadControllers(pluginDir, container)`) that:
@@ -67,13 +88,14 @@
 
 | Feature/Requirement         | Supported? | Notes                                                                 |
 |----------------------------|------------|-----------------------------------------------------------------------|
-| Multiple plugin dirs       | Yes        | Call loader for each dir, aggregate results                           |
-| Dynamic loading            | Yes        | Use dynamic import, filter for RestControllerBase subclasses          |
-| Repeated invocation        | Yes        | Registry tracks per-dir, supports add/remove                          |
-| Robust to non-controllers  | Yes        | Filter for class, subclass of RestControllerBase                      |
+| Static controller loading   | Yes        | All controllers imported/exported from sectors index                  |
+| Multiple plugin dirs        | No         | Future enhancement                                                    |
+| Dynamic loading            | No         | Future enhancement                                                    |
+| Repeated invocation        | No         | Future enhancement                                                    |
+| Robust to non-controllers  | N/A        | All controllers are statically known                                  |
 | Inversify DI               | Yes        | Register with container, instantiate via container                    |
 | Async init                 | Yes        | Await `init()` after construction                                     |
-| Hot reloading              | Partial    | Requires new Express app, not natively supported by useExpressServer  |
+| Hot reloading              | No         | Future enhancement                                                    |
 
 ---
 

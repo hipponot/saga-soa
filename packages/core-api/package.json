@@ -17,6 +17,10 @@
     "./express-server-schema": {
       "types": "./dist/express-server-schema.d.ts",
       "default": "./dist/express-server-schema.js"
+    },
+    "./sectors-controller": {
+      "types": "./dist/sectors-controller.d.ts",
+      "default": "./dist/sectors-controller.js"
     }
   },
   "scripts": {
