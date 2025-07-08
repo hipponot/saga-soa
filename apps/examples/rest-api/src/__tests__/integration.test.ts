@@ -6,8 +6,9 @@ import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-sche
 import { useContainer, createExpressServer } from 'routing-controllers';
 import * as controllers from '../sectors';
 import { HelloMongo } from '../sectors/hello-mongo';
+import express from 'express';
 
-let app: ReturnType<typeof createExpressServer>;
+let app: express.Application;
 
 beforeAll(async () => {
   // Use the same config as main.ts
@@ -29,16 +30,10 @@ beforeAll(async () => {
   container.bind(MockMongoProvider).toConstantValue(mongoProvider);
   container.bind(MONGO_CLIENT).toConstantValue(mongoProvider.getClient());
 
-  useContainer(container);
-  const controllerClasses = Object.values(controllers).filter(
-    (ctrl) => typeof ctrl === 'function'
-  );
-  app = createExpressServer({
-    controllers: controllerClasses,
-  });
-  // Mount HelloMongo router for /hello-mongo endpoints
-  const helloMongo = container.get(HelloMongo);
-  app.use(helloMongo.router);
+  // Use ExpressServer from DI, initialize with controllers, and get the app instance
+  const expressServer = container.get(ExpressServer);
+  await expressServer.init(container, controllers);
+  app = expressServer.getApp();
 });
 
 describe('REST API Integration', () => {
@@ -56,12 +51,12 @@ describe('REST API Integration', () => {
 
   it('POST /hello-mongo then GET /hello-mongo', async () => {
     // Write test doc
-    const postRes = await request(app).post('/hello-mongo');
+    const postRes = await request(app).post('/saga-soa/hello-mongo/test-write');
     expect(postRes.status).toBe(201);
     expect(postRes.body.ok).toBe(true);
 
     // Read test doc
-    const getRes = await request(app).get('/hello-mongo');
+    const getRes = await request(app).get('/saga-soa/hello-mongo/test-read');
     expect(getRes.status).toBe(200);
     expect(getRes.body.message).toBe('Hello from Mongo!');
   });

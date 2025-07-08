@@ -1,9 +1,9 @@
-import express, { Application }                                                 from 'express';
-import { injectable, inject }                                                   from 'inversify';
-import type { ExpressServerConfig }                                             from './express-server-schema';
-import type { ILogger }                                                         from '@saga-soa/logger';
+import express, { Application }                                                  from 'express';
+import { injectable, inject }                                                    from 'inversify';
+import type { ExpressServerConfig }                                              from './express-server-schema';
+import type { ILogger }                                                          from '@saga-soa/logger';
 import { useContainer, useExpressServer }                                        from 'routing-controllers';
-import { Container }                                                            from 'inversify';
+import { Container }                                                             from 'inversify';
 
 @injectable()
 export class ExpressServer {
@@ -26,13 +26,18 @@ export class ExpressServer {
       (ctrl): ctrl is new (...args: any[]) => any => typeof ctrl === 'function' && ctrl.prototype && ctrl.prototype.init
     );
 
-    // Remove controller binding logic from here
+    // Step 1: Register all controllers with the DI container
+    for (const ControllerClass of controllerClasses) {
+      container.bind(ControllerClass).toSelf();
+    }
 
-    // Resolve and initialize all controllers
-    for (const Ctrl of controllerClasses) {
-      const instance = await container.getAsync<any>(Ctrl);
-      if (typeof instance.init === 'function') {
-        await instance.init();
+    // Step 2: Instantiate and initialize all controllers
+    for (const ControllerClass of controllerClasses) {
+      // Instantiate the controller (resolving all async dependencies)
+      const controllerInstance = await container.getAsync<any>(ControllerClass);
+      // If the controller has an async init method, call it now
+      if (typeof controllerInstance.init === 'function') {
+        await controllerInstance.init();
       }
     }
 

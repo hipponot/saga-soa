@@ -10,13 +10,6 @@ import * as controllers                   from './sectors';
 
 const container = new Container();
 
-// Synchronously bind all controllers
-Object.values(controllers).forEach(ctrl => {
-  if (typeof ctrl === 'function' && !container.isBound(ctrl)) {
-    container.bind(ctrl).toSelf();
-  }
-});
-
 // Example config for PinoLogger
 const loggerConfig: PinoLoggerConfig = {
   configType: 'PINO_LOGGER',
