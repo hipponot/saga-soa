@@ -1,7 +1,13 @@
 import { ExpressServer }            from '@saga-soa/core-api/express-server';
 import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
 import { container }                from './inversify.config.js';
-import * as sectorControllers       from './sectors/index.js';
+import { loadControllers }          from '@saga-soa/core-api/utils/loadControllers';
+import { RestControllerBase }       from '@saga-soa/core-api/rest-controller';
+import path                         from 'node:path';
+import { fileURLToPath }            from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const expressConfig: ExpressServerConfig = {
   configType: 'EXPRESS_SERVER',
@@ -13,8 +19,11 @@ const expressConfig: ExpressServerConfig = {
 container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
 
 async function start() {
-  // Compose array of all controllers (sector controllers only)
-  const controllers = Object.values(sectorControllers);
+  // Dynamically load all sector controllers
+  const controllers = await loadControllers(
+    path.resolve(__dirname, './sectors/*.js'),
+    RestControllerBase
+  );
   // Get the ExpressServer instance from DI
   const expressServer = container.get(ExpressServer);
   // Initialize and register controllers via ExpressServer

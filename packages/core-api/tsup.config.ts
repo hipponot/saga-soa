@@ -5,7 +5,8 @@ export default defineConfig({
     'src/express-server.ts',
     'src/express-server-schema.ts',
     'src/rest-controller.ts',
-    'src/sectors-controller.ts'
+    'src/sectors-controller.ts',
+    'src/utils/loadControllers.ts'
   ],
   format: ['esm'],
   dts: true,

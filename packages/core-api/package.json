@@ -21,6 +21,10 @@
     "./sectors-controller": {
       "types": "./dist/sectors-controller.d.ts",
       "default": "./dist/sectors-controller.js"
+    },
+    "./utils/loadControllers": {
+      "types": "./dist/utils/loadControllers.d.ts",
+      "default": "./dist/utils/loadControllers.js"
     }
   },
   "scripts": {
@@ -31,6 +35,7 @@
   },
   "dependencies": {
     "express": "^4.18.2",
+    "fast-glob": "^3.3.3",
     "figlet": "^1.8.1",
     "inversify": "^6.2.2",
     "reflect-metadata": "^0.2.2",
