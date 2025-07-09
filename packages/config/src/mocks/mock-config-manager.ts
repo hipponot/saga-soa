@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { z, ZodObject } from 'zod';
 import { injectable } from 'inversify';
-import { IConfigManager, HasConfigType } from '../i-config-manager';
-import { ConfigValidationError } from '../config-validation-error';
+import { IConfigManager, HasConfigType } from '../i-config-manager.js';
+import { ConfigValidationError } from '../config-validation-error.js';
 
 @injectable()
 export class MockConfigManager implements IConfigManager {

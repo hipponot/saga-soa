@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { MongoClient } from 'mongodb';
-import type { MongoProviderConfig } from './mongo-provider-config';
-import { IMongoConnMgr } from './i-mongo-conn-mgr';
+import type { MongoProviderConfig } from './mongo-provider-config.js';
+import { IMongoConnMgr } from './i-mongo-conn-mgr.js';
 
 @injectable()
 export class MongoProvider implements IMongoConnMgr {

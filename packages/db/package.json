@@ -4,17 +4,14 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "test": "jest",
+    "test": "vitest run src/__tests__/**/*.test.ts",
     "clean": "rm -rf dist"
   },
   "devDependencies": {
     "@saga-soa/config": "workspace:*",
     "@saga/typescript-config": "workspace:*",
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.0.3",
-    "jest": "^30.0.0",
     "mongodb-memory-server": "^10.1.4",
-    "ts-jest": "^29.4.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   },
@@ -35,4 +32,4 @@
       "require": "./dist/mocks/mock-mongo-provider.js"
     }
   }
-}
+} 

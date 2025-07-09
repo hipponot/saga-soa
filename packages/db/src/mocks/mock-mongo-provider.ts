@@ -1,6 +1,6 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient } from 'mongodb';
-import { IMongoConnMgr } from '../i-mongo-conn-mgr';
+import { IMongoConnMgr } from '../i-mongo-conn-mgr.js';
 
 export class MockMongoProvider implements IMongoConnMgr {
   public readonly instanceName: string;

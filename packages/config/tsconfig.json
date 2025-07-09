@@ -5,7 +5,7 @@
     "declarationMap": true,
     "outDir": "dist",
     "rootDir": "src",
-    "types": ["node", "jest"],
+    "types": ["node", "vitest"],
     "noEmit": false
   },
   "include": ["src/**/*"]

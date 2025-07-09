@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { ILogger, LogLevel } from '../i-logger';
+import { ILogger, LogLevel } from '../i-logger.js';
 
 interface LogEntry {
   level: LogLevel;

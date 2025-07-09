@@ -1,5 +1,6 @@
-import { PinoLogger } from '../pino-logger';
-import { PinoLoggerConfig } from '../pino-logger-schema';
+import { PinoLogger } from '../pino-logger.js';
+import { PinoLoggerConfig } from '../pino-logger-schema.js';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 
 // Helper to mock process.stdout.isTTY
 function withTTY(value: boolean, fn: () => void) {
@@ -22,7 +23,7 @@ describe('PinoLogger', () => {
   };
 
   afterEach(() => {
-    jest.resetModules();
+    vi.resetModules();
     delete process.env.NODE_ENV;
   });
 

@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "test": "jest",
+    "test": "vitest run src/__tests__/**/*.test.ts",
     "clean": "rm -rf dist"
   },
   "exports": {
@@ -22,10 +22,7 @@
   },
   "devDependencies": {
     "@saga/typescript-config": "workspace:*",
-    "@types/jest": "^30.0.0",
     "@types/node": "latest",
-    "jest": "^30.0.0",
-    "ts-jest": "^29.4.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   },
@@ -38,4 +35,4 @@
     "zod": "latest"
   },
   "version": "1.0.0"
-}
+} 

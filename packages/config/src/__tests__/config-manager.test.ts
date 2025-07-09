@@ -4,10 +4,11 @@ import fs                        from 'fs';
 import path                      from 'path';
 import dotenv                    from 'dotenv-flow';
 import { Container }             from 'inversify';
-import { IConfigManager }        from '../i-config-manager';
-import { DotenvConfigManager }   from '../dotenv-config-manager';
-import { ConfigValidationError } from '../config-validation-error';
-import { MockConfigManager }     from '../mocks/mock-config-manager';
+import { IConfigManager }        from '../i-config-manager.js';
+import { DotenvConfigManager }   from '../dotenv-config-manager.js';
+import { ConfigValidationError } from '../config-validation-error.js';
+import { MockConfigManager }     from '../mocks/mock-config-manager.js';
+import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach } from 'vitest';
 
 describe('ConfigManager', () => {
 
@@ -34,7 +35,7 @@ describe('ConfigManager', () => {
       'TEST_CONFIG_OPTIONAL=optional-value',
       'TEST_CONFIG_ENUM=option2',
     ].join('\n'));
-    dotenv.config();
+    dotenv.config({ path: path.dirname(dotEnvPath) });
   });
 
   beforeEach(() => {

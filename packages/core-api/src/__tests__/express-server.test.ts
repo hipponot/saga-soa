@@ -1,9 +1,11 @@
+import { describe, it, expect } from 'vitest';
 import 'reflect-metadata';
-import { describe, it, expect }              from 'vitest';
-import { createExpressServer, useContainer } from 'routing-controllers';
-import { Container }                         from 'inversify';
-import { TestSector }                        from './test-sector.js';
-import { fetch }                             from 'undici';
+import type { Request, Response } from 'express';
+import { injectable, inject, Container } from 'inversify';
+import type { ILogger } from '@saga-soa/logger';
+import { TestSector } from './test-sector.js';
+import { fetch } from 'undici';
+import { useContainer, createExpressServer } from 'routing-controllers';
 
 function getRandomPort() {
   return Math.floor(Math.random() * 10000) + 20000;

@@ -4,7 +4,7 @@
     "declaration": true,
     "declarationMap": true,
     "outDir": "dist",
-    "types": ["node", "jest"],
+    "types": ["node", "vitest"],
     "noEmit": false,
     "rootDir": "src"
   },
