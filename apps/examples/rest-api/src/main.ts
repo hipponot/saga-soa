@@ -1,7 +1,7 @@
 import { ExpressServer }            from '@saga-soa/core-api/express-server';
 import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
-import { container }                from './inversify.config';
-import * as sectorControllers       from './sectors';
+import { container }                from './inversify.config.js';
+import * as sectorControllers       from './sectors/index.js';
 
 const expressConfig: ExpressServerConfig = {
   configType: 'EXPRESS_SERVER',
