@@ -1,1 +1,1 @@
-export * from './sectors-controller'; 
+export * from './sectors-controller.js'; 

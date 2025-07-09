@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { describe, it, expect }              from 'vitest';
 import { createExpressServer, useContainer } from 'routing-controllers';
 import { Container }                         from 'inversify';
-import { TestSector }                        from './test-sector';
+import { TestSector }                        from './test-sector.js';
 import { fetch }                             from 'undici';
 
 function getRandomPort() {
