@@ -8,7 +8,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "test": "vitest run $(find packages apps -type f -name '*.test.ts')",
+    "test": "vitest run",
     "clean": "pnpm -r --if-present clean",
     "dep:list": "pnpm syncpack list",
     "dep:fix": "pnpm syncpack fix",

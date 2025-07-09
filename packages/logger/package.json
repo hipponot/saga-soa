@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "test": "vitest run src/__tests__/**/*.test.ts",
+    "test": "vitest run",
     "clean": "rm -rf dist"
   },
   "exports": {
