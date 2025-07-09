@@ -147,10 +147,10 @@ importers:
   packages/config:
     dependencies:
       dotenv:
-        specifier: latest
+        specifier: 17.2.0
         version: 17.2.0
       dotenv-flow:
-        specifier: latest
+        specifier: 4.1.0
         version: 4.1.0
       inversify:
         specifier: ^6.2.2
@@ -162,14 +162,14 @@ importers:
         specifier: ^0.11.2
         version: 0.11.2(class-transformer@0.5.1)(class-validator@0.14.2)
       zod:
-        specifier: latest
-        version: 4.0.0
+        specifier: 3.25.67
+        version: 3.25.67
     devDependencies:
       '@saga/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@types/node':
-        specifier: latest
+        specifier: 24.0.12
         version: 24.0.12
       tsup:
         specifier: ^8.5.0
@@ -4465,9 +4465,6 @@ packages:
 
   zod@3.25.67:
     resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
-
-  zod@4.0.0:
-    resolution: {integrity: sha512-9diLdTPc/L7w/5jI4C3gHYNiGHDV9IZYxo1e5LSD8cabi65WVTWWb+g2BGPEpUUCOxR4D+6O5B0AzyMdUAXwrw==}
 
 snapshots:
 
@@ -9037,5 +9034,3 @@ snapshots:
   yocto-queue@1.2.1: {}
 
   zod@3.25.67: {}
-
-  zod@4.0.0: {}
