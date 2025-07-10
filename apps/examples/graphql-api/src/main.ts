@@ -12,6 +12,10 @@ import path                         from 'node:path';
 import { fileURLToPath }            from 'url';
 import express                      from 'express';
 
+// In ESM (ECMAScript Modules), __filename and __dirname are not available by default as they are in CommonJS.
+// The following workaround uses import.meta.url and path utilities to replicate their behavior:
+//   - __filename: the absolute path to the current module file
+//   - __dirname: the directory name of the current module file
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -26,7 +30,7 @@ container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expre
 
 async function start() {
   // Dynamically load all REST controllers from user and session sectors
-  const controllers = await loadControllers(
+  const controllers = await loadControllers<RestControllerBase>(
     [
       path.resolve(__dirname, './sectors/user/rest/*.js'),
       path.resolve(__dirname, './sectors/session/rest/*.js'),
@@ -43,7 +47,7 @@ async function start() {
   app.use(express.json());
 
   // Dynamically load all GQL resolvers from user and session sectors
-  const resolvers = await loadControllers(
+  const resolvers = await loadControllers<GQLControllerBase>(
     [
       path.resolve(__dirname, './sectors/user/gql/*.js'),
       path.resolve(__dirname, './sectors/session/gql/*.js'),
@@ -52,7 +56,7 @@ async function start() {
   );
   // Build TypeGraphQL schema with dynamically loaded resolvers
   const schema = await buildSchema({
-    resolvers,
+    resolvers: resolvers as unknown as [Function, ...Function[]],
     emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
   });
 
