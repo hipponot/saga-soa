@@ -6,7 +6,6 @@ import { MockMongoProvider }              from '@saga-soa/db/mocks/mock-mongo-pr
 import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
 import { PinoLogger }                     from '@saga-soa/logger';
 import { ExpressServer }                  from '@saga-soa/core-api/express-server';
-import * as controllers                   from './sectors';
 
 const container = new Container();
 
