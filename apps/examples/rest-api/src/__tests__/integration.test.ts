@@ -23,11 +23,11 @@ beforeAll(async () => {
   };
   container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
 
-  
   // Dynamically load all sector controllers (match main.ts logic)
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   const controllers = await loadControllers(
+    // Note this is a vitest so we load the TS files - vitest uses esbuild to transpile ts files on the fly for testing
     path.resolve(__dirname, '../sectors/*.ts'),
     RestControllerBase
   );

@@ -3,10 +3,12 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 export async function loadControllers<T>(
-  globPattern: string,
+  globPatterns: string | string[],
   baseClass: abstract new (...args: any[]) => T
 ): Promise<Array<new (...args: any[]) => T>> {
-  const files = await fg(globPattern, { absolute: true });
+  // Support single string, array, or varargs
+  const patterns = Array.isArray(globPatterns) ? globPatterns : [globPatterns];
+  const files = await fg(patterns, { absolute: true });
   const controllers: Array<new (...args: any[]) => T> = [];
 
   for (const file of files) {

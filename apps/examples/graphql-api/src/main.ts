@@ -2,8 +2,8 @@ import 'reflect-metadata';
 import { ExpressServer }            from '@saga-soa/core-api/express-server';
 import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
 import { container }                from './inversify.config.js';
-import * as userControllers         from './sectors/user/rest/index.js';
-import * as sessionControllers      from './sectors/session/rest/index.js';
+import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
+import { RestControllerBase } from '@saga-soa/core-api/rest-controller';
 import { UserResolver }             from './sectors/user/gql/user.resolver.js';
 import { SessionResolver }          from './sectors/session/gql/session.resolver.js';
 import { ApolloServer }             from '@apollo/server';
@@ -26,11 +26,14 @@ const expressConfig: ExpressServerConfig = {
 container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
 
 async function start() {
-  // Compose array of all REST controllers from user and session sectors
-  const controllers = [
-    ...Object.values(userControllers),
-    ...Object.values(sessionControllers),
-  ];
+  // Dynamically load all REST controllers from user and session sectors
+  const controllers = await loadControllers(
+    [
+      path.resolve(__dirname, './sectors/user/rest/*.js'),
+      path.resolve(__dirname, './sectors/session/rest/*.js'),
+    ],
+    RestControllerBase
+  );
   // Get the ExpressServer instance from DI
   const expressServer = container.get(ExpressServer);
   // Initialize and register REST controllers
