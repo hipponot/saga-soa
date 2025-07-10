@@ -6,6 +6,14 @@
   "main": "dist/rest-controller.js",
   "types": "dist/rest-controller.d.ts",
   "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./gql-controller": {
+      "types": "./dist/gql-controller.d.ts",
+      "default": "./dist/gql-controller.js"
+    },
     "./rest-controller": {
       "types": "./dist/rest-controller.d.ts",
       "default": "./dist/rest-controller.js"

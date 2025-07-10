@@ -4,8 +4,7 @@ import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-sche
 import { container }                from './inversify.config.js';
 import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
 import { RestControllerBase } from '@saga-soa/core-api/rest-controller';
-import { UserResolver }             from './sectors/user/gql/user.resolver.js';
-import { SessionResolver }          from './sectors/session/gql/session.resolver.js';
+import { GQLControllerBase } from '@saga-soa/core-api/gql-controller';
 import { ApolloServer }             from '@apollo/server';
 import { expressMiddleware }        from '@apollo/server/express4';
 import { buildSchema }              from 'type-graphql';
@@ -43,9 +42,17 @@ async function start() {
   // Add express.json() middleware before Apollo middleware
   app.use(express.json());
 
-  // Build TypeGraphQL schema with explicit resolver imports
+  // Dynamically load all GQL resolvers from user and session sectors
+  const resolvers = await loadControllers(
+    [
+      path.resolve(__dirname, './sectors/user/gql/*.js'),
+      path.resolve(__dirname, './sectors/session/gql/*.js'),
+    ],
+    GQLControllerBase
+  );
+  // Build TypeGraphQL schema with dynamically loaded resolvers
   const schema = await buildSchema({
-    resolvers: [UserResolver, SessionResolver],
+    resolvers: resolvers as unknown as [Function, ...Function[]],
     emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
   });
 
