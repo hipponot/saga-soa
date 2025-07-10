@@ -30,7 +30,7 @@ container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expre
 
 async function start() {
   // Dynamically load all REST controllers from user and session sectors
-  const controllers = await loadControllers<RestControllerBase>(
+  const controllers = await loadControllers(
     [
       path.resolve(__dirname, './sectors/user/rest/*.js'),
       path.resolve(__dirname, './sectors/session/rest/*.js'),
@@ -47,7 +47,7 @@ async function start() {
   app.use(express.json());
 
   // Dynamically load all GQL resolvers from user and session sectors
-  const resolvers = await loadControllers<GQLControllerBase>(
+  const resolvers = await loadControllers(
     [
       path.resolve(__dirname, './sectors/user/gql/*.js'),
       path.resolve(__dirname, './sectors/session/gql/*.js'),
@@ -56,7 +56,8 @@ async function start() {
   );
   // Build TypeGraphQL schema with dynamically loaded resolvers
   const schema = await buildSchema({
-    resolvers: resolvers as unknown as [Function, ...Function[]],
+    // @ts-expect-error - loadControllers returns a tuple, but buildSchema expects an array
+    resolvers: resolvers,
     emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
   });
 

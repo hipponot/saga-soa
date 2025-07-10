@@ -2,17 +2,17 @@ import fg from 'fast-glob';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-export async function loadControllers<T>(
+export async function loadControllers<TBase>(
   globPatterns: string | string[],
-  baseClass: abstract new (...args: any[]) => T
+  baseClass: abstract new (...args: any[]) => TBase
 ): Promise<[
-  new (...args: any[]) => T,
-  ...Array<new (...args: any[]) => T>
+  new (...args: any[]) => TBase,
+  ...Array<new (...args: any[]) => TBase>
 ]> {
   // Support single string, array, or varargs
   const patterns = Array.isArray(globPatterns) ? globPatterns : [globPatterns];
   const files = await fg(patterns, { absolute: true });
-  const controllers: Array<new (...args: any[]) => T> = [];
+  const controllers: Array<new (...args: any[]) => TBase> = [];
 
   for (const file of files) {
     const mod = await import(pathToFileURL(file).href);
@@ -39,5 +39,5 @@ export async function loadControllers<T>(
   if (controllers.length === 0) {
     throw new Error(`No controllers found for patterns: ${patterns.join(', ')}`);
   }
-  return controllers as [new (...args: any[]) => T, ...Array<new (...args: any[]) => T>];
+  return controllers as [new (...args: any[]) => TBase, ...Array<new (...args: any[]) => TBase>];
 }
