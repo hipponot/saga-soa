@@ -52,7 +52,7 @@ async function start() {
   );
   // Build TypeGraphQL schema with dynamically loaded resolvers
   const schema = await buildSchema({
-    resolvers: resolvers as unknown as [Function, ...Function[]],
+    resolvers,
     emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
   });
 

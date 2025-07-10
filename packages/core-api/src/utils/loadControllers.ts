@@ -5,7 +5,10 @@ import { pathToFileURL } from 'node:url';
 export async function loadControllers<T>(
   globPatterns: string | string[],
   baseClass: abstract new (...args: any[]) => T
-): Promise<Array<new (...args: any[]) => T>> {
+): Promise<[
+  new (...args: any[]) => T,
+  ...Array<new (...args: any[]) => T>
+]> {
   // Support single string, array, or varargs
   const patterns = Array.isArray(globPatterns) ? globPatterns : [globPatterns];
   const files = await fg(patterns, { absolute: true });
@@ -33,5 +36,8 @@ export async function loadControllers<T>(
       }
     }
   }
-  return controllers;
-} 
+  if (controllers.length === 0) {
+    throw new Error(`No controllers found for patterns: ${patterns.join(', ')}`);
+  }
+  return controllers as [new (...args: any[]) => T, ...Array<new (...args: any[]) => T>];
+}
