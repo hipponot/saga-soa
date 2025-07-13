@@ -58,7 +58,6 @@ async function start() {
   const schema = await buildSchema({
     // @ts-expect-error - loadControllers returns a tuple, but buildSchema expects an array
     resolvers: resolvers,
-    emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
   });
 
   // Set up ApolloServer v4+ on /graphql

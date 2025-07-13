@@ -20,6 +20,19 @@
       "env": {
         "NODE_ENV": "development"
       }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug emit-schema.ts (tsx)",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "exec",
+        "tsx",  
+        "scripts/emit-schema.ts"
+      ],
+      "cwd": "${workspaceFolder}/apps/examples/graphql-api",
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
-} 
+}
