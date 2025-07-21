@@ -1,7 +1,6 @@
 {
   "name": "@saga/soa-core-api",
   "version": "1.0.0",
-  "private": true,
   "type": "module",
   "main": "dist/rest-controller.js",
   "types": "dist/rest-controller.d.ts",
