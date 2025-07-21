@@ -1,10 +1,10 @@
-import { Get, Post, Controller, HttpCode }        from 'routing-controllers';
-import { injectable, inject }                     from 'inversify';
-import type { MongoClient }                       from 'mongodb';
-import { ObjectId }                               from 'mongodb';
-import { MONGO_CLIENT }                           from '@saga-soa/db';
-import type { ILogger }                           from '@saga-soa/logger';
-import { RestControllerBase, REST_API_BASE_PATH } from '@saga-soa/core-api/rest-controller';
+import { Get, Post, Controller, HttpCode } from 'routing-controllers';
+import { injectable, inject } from 'inversify';
+import type { MongoClient } from 'mongodb';
+import { ObjectId } from 'mongodb';
+import { MONGO_CLIENT } from '@saga/soa-db';
+import type { ILogger } from '@saga/soa-logger';
+import { RestControllerBase, REST_API_BASE_PATH } from '@saga/soa-core-api/rest-controller';
 
 const SECTOR = 'hello-mongo';
 const TEST_COLLECTION = 'hello_mongo_test';

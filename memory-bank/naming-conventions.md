@@ -144,15 +144,15 @@ f
   ```typescript
   // package.json
   {
-    "name": "@saga-soa/config",
+    "name": "@saga/soa-config",
     "dependencies": {
-      "@saga-soa/mongo-connection": "1.0.0"
+      "@saga/soa-mongo-connection": "1.0.0"
     }
   }
 
   // import statements
-  import { ConfigProvider  } from '@saga-soa/config'
-  import { MongoConnection } from '@saga-soa/mongo-connection'
+  import { ConfigProvider  } from '@saga/soa-config'
+  import { MongoConnection } from '@saga/soa-mongo-connection'
   ```
 
 ## Environment Variables

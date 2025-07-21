@@ -1,16 +1,16 @@
 import 'reflect-metadata';
-import { ExpressServer }            from '@saga-soa/core-api/express-server';
-import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
-import { container }                from './inversify.config.js';
-import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
-import { RestControllerBase } from '@saga-soa/core-api/rest-controller';
-import { GQLControllerBase } from '@saga-soa/core-api/gql-controller';
-import { ApolloServer }             from '@apollo/server';
-import { expressMiddleware }        from '@apollo/server/express4';
-import { buildSchema }              from 'type-graphql';
-import path                         from 'node:path';
-import { fileURLToPath }            from 'url';
-import express                      from 'express';
+import { ExpressServer } from '@saga/soa-core-api/express-server';
+import type { ExpressServerConfig } from '@saga/soa-core-api/express-server-schema';
+import { container } from './inversify.config.js';
+import { loadControllers } from '@saga/soa-core-api/utils/loadControllers';
+import { RestControllerBase } from '@saga/soa-core-api/rest-controller';
+import { GQLControllerBase } from '@saga/soa-core-api/gql-controller';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
+import { buildSchema } from 'type-graphql';
+import path from 'node:path';
+import { fileURLToPath } from 'url';
+import express from 'express';
 
 // In ESM (ECMAScript Modules), __filename and __dirname are not available by default as they are in CommonJS.
 // The following workaround uses import.meta.url and path utilities to replicate their behavior:

@@ -5,7 +5,7 @@ This guide explains how to add a new reusable library to the `packages/` directo
 ## 1. Create the Package Directory
 - Add a new folder under `packages/` (e.g., `packages/my-lib`).
 - Add a `package.json` with at least:
-  - `name`: e.g., `@saga-soa/my-lib`
+  - `name`: e.g., `@saga/soa-my-lib`
   - `type`: `module`
   - `main`, `types`, and `exports` fields (see below)
   - `build`, `dev`, and `test` scripts (see below)
@@ -40,7 +40,7 @@ This guide explains how to add a new reusable library to the `packages/` directo
 - To depend on another package in the monorepo, add it to `dependencies` in `package.json`:
   ```json
   "dependencies": {
-    "@saga-soa/config": "workspace:*"
+    "@saga/soa-config": "workspace:*"
   }
   ```
 - Use `import` statements as normal in your TypeScript code.

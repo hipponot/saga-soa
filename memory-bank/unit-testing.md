@@ -22,7 +22,7 @@
 - Aim for high coverage, but prioritize meaningful tests over 100% coverage.
 
 ## 5. Jest Configuration
-- Extend a shared Jest base config (e.g., `@saga-soa/jest-config`).
+- Extend a shared Jest base config (e.g., `@saga/soa-jest-config`).
 - Configure TypeScript support via `ts-jest`.
 - Set up coverage reporting and test environment (e.g., `node`).
 
@@ -40,7 +40,7 @@ packages/
 
 ## 7. Sample Jest Config (`jest.config.ts`)
 ```typescript
-import baseConfig from '@saga-soa/jest-config';
+import baseConfig from '@saga/soa-jest-config';
 
 export default {
   ...baseConfig,

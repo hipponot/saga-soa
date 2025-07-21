@@ -12,7 +12,10 @@
     "clean": "pnpm -r --if-present clean",
     "dep:list": "pnpm syncpack list",
     "dep:fix": "pnpm syncpack fix",
-    "check": "turbo run build --no-cache --force && pnpm test"
+    "check": "turbo run build --no-cache --force && pnpm test",
+    "prepare": "npm run co:login",
+    "preinstall": "npm run co:login",
+    "co:login": "export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain saga --query authorizationToken --output text) && npm config set //saga-531314149529.d.codeartifact.us-west-2.amazonaws.com/npm/saga_js/:_authToken=$CODEARTIFACT_AUTH_TOKEN"
   },
   "devDependencies": {
     "prettier": "^3.5.3",

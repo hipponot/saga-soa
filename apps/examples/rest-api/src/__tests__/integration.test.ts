@@ -1,14 +1,14 @@
 import { describe, it, beforeAll, afterAll, expect } from 'vitest';
 import request from 'supertest';
 import { container } from '../inversify.config.js';
-import { ExpressServer } from '@saga-soa/core-api/express-server';
-import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
-import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
-import { RestControllerBase } from '@saga-soa/core-api/rest-controller';
+import { ExpressServer } from '@saga/soa-core-api/express-server';
+import type { ExpressServerConfig } from '@saga/soa-core-api/express-server-schema';
+import { loadControllers } from '@saga/soa-core-api/utils/loadControllers';
+import { RestControllerBase } from '@saga/soa-core-api/rest-controller';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import express from 'express';
-import { MONGO_CLIENT } from '@saga-soa/db';
+import { MONGO_CLIENT } from '@saga/soa-db';
 
 let app: express.Application;
 

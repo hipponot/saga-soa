@@ -1,12 +1,15 @@
 {
-  "name": "@saga-soa/logger",
+  "name": "@saga/soa-logger",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
     "test": "vitest run",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prepare": "npm run co:login",
+    "preinstall": "npm run co:login",
+    "co:login": "export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain saga --query authorizationToken --output text) && npm config set //saga-531314149529.d.codeartifact.us-west-2.amazonaws.com/npm/saga_js/:_authToken=$CODEARTIFACT_AUTH_TOKEN"
   },
   "exports": {
     ".": {
@@ -35,4 +38,4 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module"
-} 
+}

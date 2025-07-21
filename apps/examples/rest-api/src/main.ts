@@ -1,10 +1,10 @@
-import { ExpressServer }            from '@saga-soa/core-api/express-server';
-import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
-import { container }                from './inversify.config.js';
-import { loadControllers }          from '@saga-soa/core-api/utils/loadControllers';
-import { RestControllerBase }       from '@saga-soa/core-api/rest-controller';
-import path                         from 'node:path';
-import { fileURLToPath }            from 'node:url';
+import { ExpressServer } from '@saga/soa-core-api/express-server';
+import type { ExpressServerConfig } from '@saga/soa-core-api/express-server-schema';
+import { container } from './inversify.config.js';
+import { loadControllers } from '@saga/soa-core-api/utils/loadControllers';
+import { RestControllerBase } from '@saga/soa-core-api/rest-controller';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

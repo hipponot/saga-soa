@@ -1,6 +1,6 @@
 # TypeScript Type Resolution Checklist for Local Packages
 
-This checklist documents the step-by-step process to ensure TypeScript correctly resolves types for local packages in the saga-soa monorepo. Use this whenever introducing a new import from a local package (e.g., `@saga-soa/logger`) in any application under `apps/`.
+This checklist documents the step-by-step process to ensure TypeScript correctly resolves types for local packages in the saga-soa monorepo. Use this whenever introducing a new import from a local package (e.g., `@saga/soa-logger`) in any application under `apps/`.
 
 ---
 
@@ -24,7 +24,7 @@ This checklist documents the step-by-step process to ensure TypeScript correctly
      ```sh
      pnpm add <package-name>@workspace:* --filter <app-path>
      ```
-   - Example: `pnpm add @saga-soa/logger@workspace:* --filter ./apps/examples/rest_api`
+   - Example: `pnpm add @saga/soa-logger@workspace:* --filter ./apps/examples/rest_api`
 
 5. **Symlink and Node Modules**
    - Confirm that the app's `node_modules` contains a symlink to the local package, and that the `dist/` directory is present and correct under the symlink.

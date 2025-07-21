@@ -5,7 +5,7 @@ This guide explains how to add a new Express-based API application to the `apps/
 ## 1. Create the App Directory
 - Add a new folder under `apps/` (e.g., `apps/my-api`).
 - Add a `package.json` with at least:
-  - `name`: e.g., `@saga-soa/my-api`
+  - `name`: e.g., `@saga/soa-my-api`
   - `type`: `module`
   - `main` and `scripts` fields (see below)
 
@@ -38,13 +38,13 @@ This guide explains how to add a new Express-based API application to the `apps/
 - To use a package from `packages/`, add it to `dependencies` in `package.json`:
   ```json
   "dependencies": {
-    "@saga-soa/core-api": "workspace:*",
-    "@saga-soa/logger": "workspace:*"
+    "@saga/soa-core-api": "workspace:*",
+    "@saga/soa-logger": "workspace:*"
   }
   ```
 - Use imports as normal in your code:
   ```ts
-  import { RestRouter } from '@saga-soa/core-api/rest/rest-router';
+  import { RestRouter } from '@saga/soa-core-api/rest/rest-router';
   ```
 
 ## 5. Unit Testing

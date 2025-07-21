@@ -1,7 +1,7 @@
-import { Get, Controller }                                                    from 'routing-controllers';
-import { inject }                                                             from 'inversify';
-import type { ILogger }                                                       from '@saga-soa/logger';
-import { RestControllerBase, REST_API_BASE_PATH }                             from '@saga-soa/core-api/rest-controller';
+import { Get, Controller } from 'routing-controllers';
+import { inject } from 'inversify';
+import type { ILogger } from '@saga/soa-logger';
+import { RestControllerBase, REST_API_BASE_PATH } from '@saga/soa-core-api/rest-controller';
 import { injectable } from 'inversify';
 
 const SECTOR = 'hello-again';

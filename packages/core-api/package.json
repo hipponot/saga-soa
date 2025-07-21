@@ -1,5 +1,5 @@
 {
-  "name": "@saga-soa/core-api",
+  "name": "@saga/soa-core-api",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -39,7 +39,10 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "test": "vitest run",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prepare": "npm run co:login",
+    "preinstall": "npm run co:login",
+    "co:login": "export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain saga --query authorizationToken --output text) && npm config set //saga-531314149529.d.codeartifact.us-west-2.amazonaws.com/npm/saga_js/:_authToken=$CODEARTIFACT_AUTH_TOKEN"
   },
   "dependencies": {
     "express": "^4.18.2",
@@ -51,7 +54,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "@saga-soa/logger": "workspace:*",
+    "@saga/soa-logger": "workspace:*",
     "@types/express": "^5.0.3",
     "@types/figlet": "^1.7.0",
     "@types/node": "latest",

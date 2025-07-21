@@ -1,23 +1,23 @@
 # Turborepo & pnpm Workspace Specification
 
 ## Overview
-This project uses [Turborepo](https://turbo.build/) in combination with [pnpm workspaces](https://pnpm.io/workspaces) to manage a monorepo of TypeScript packages and applications. The workspace is organized under the `packages/` and `apps/` directories, with each submodule (e.g., `@saga-soa/config`, `@saga-soa/db`) as a separate package.
+This project uses [Turborepo](https://turbo.build/) in combination with [pnpm workspaces](https://pnpm.io/workspaces) to manage a monorepo of TypeScript packages and applications. The workspace is organized under the `packages/` and `apps/` directories, with each submodule (e.g., `@saga/soa-config`, `@saga/soa-db`) as a separate package.
 
 ## Internal Dependency Management
 - **Internal packages are made accessible to each other using pnpm workspace dependencies, not TypeScript project references.**
 - To depend on another internal package, add it to your `package.json` as:
   ```json
   "dependencies": {
-    "@saga-soa/config": "*"
+    "@saga/soa-config": "*"
   }
   ```
   or
   ```json
   "dependencies": {
-    "@saga-soa/config": "workspace"
+    "@saga/soa-config": "workspace"
   }
   ```
-- This ensures that pnpm links the local package for development and builds, and resolves imports like `import { X } from '@saga-soa/config'` correctly.
+- This ensures that pnpm links the local package for development and builds, and resolves imports like `import { X } from '@saga/soa-config'` correctly.
 - **Do not use TypeScript project references** (i.e., no `"references"` field in `tsconfig.json`).
 - TypeScript `paths` mappings are not required for internal workspace imports, as pnpm handles resolution.
 
@@ -27,22 +27,22 @@ This project uses [Turborepo](https://turbo.build/) in combination with [pnpm wo
 - **Compatibility:** This approach works seamlessly with Turborepo's task pipeline and caching, and is compatible with standard TypeScript and Node.js tooling.
 
 ## Best Practices
-- Always use the `@saga-soa/` scope for internal packages.
+- Always use the `@saga/soa-` scope for internal packages.
 - Keep internal dependencies up to date by running `pnpm install` at the root after modifying any `package.json`.
 - Use the `exports` field in each package's `package.json` to control what is accessible to consumers (internal and external).
 - Avoid circular dependencies between packages.
 - Document any special import conventions or subpath exports in the memory bank.
 
 ## Example
-If `@saga-soa/db` depends on `@saga-soa/config`, add to `packages/db/package.json`:
+If `@saga/soa-db` depends on `@saga/soa-config`, add to `packages/db/package.json`:
 ```json
 "dependencies": {
-  "@saga-soa/config": "*"
+  "@saga/soa-config": "*"
 }
 ```
 Then, in your code:
 ```ts
-import { IConfigManager, MockConfigManager } from '@saga-soa/config';
+import { IConfigManager, MockConfigManager } from '@saga/soa-config';
 ```
 
 ## See Also

@@ -1,8 +1,8 @@
 import { Controller, Get, Req, Res, HeaderParams, getMetadataArgsStorage } from 'routing-controllers';
-import type { Request, Response }                                          from 'express';
-import { injectable, inject }                                              from 'inversify';
-import type { ILogger }                                                    from '@saga-soa/logger';
-import { RestControllerBase, REST_API_BASE_PATH }                          from './rest-controller.js';
+import type { Request, Response } from 'express';
+import { injectable, inject } from 'inversify';
+import type { ILogger } from '@saga/soa-logger';
+import { RestControllerBase, REST_API_BASE_PATH } from './rest-controller.js';
 
 const SECTOR = 'sectors';
 
@@ -65,5 +65,5 @@ export class SectorsController extends RestControllerBase {
     return sectors;
   }
 
-  async init() {}
+  async init() { }
 }
