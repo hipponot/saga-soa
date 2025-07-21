@@ -40,7 +40,7 @@ This guide explains how to add a new reusable library to the `packages/` directo
 - To depend on another package in the monorepo, add it to `dependencies` in `package.json`:
   ```json
   "dependencies": {
-    "@saga/soa-config": "workspace:*"
+    "@saga/soa-config": "1.0.0"
   }
   ```
 - Use `import` statements as normal in your TypeScript code.

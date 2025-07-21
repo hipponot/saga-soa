@@ -54,7 +54,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "@saga/soa-logger": "workspace:*",
+    "@saga/soa-logger": "1.0.0",
     "@types/express": "^5.0.3",
     "@types/figlet": "^1.7.0",
     "@types/node": "latest",

@@ -22,9 +22,9 @@ This checklist documents the step-by-step process to ensure TypeScript correctly
 4. **Dependency in App**
    - Add the package as a dependency in the target app's `package.json` using the workspace protocol:
      ```sh
-     pnpm add <package-name>@workspace:* --filter <app-path>
+     pnpm add <package-name>@1.0.0 --filter <app-path>
      ```
-   - Example: `pnpm add @saga/soa-logger@workspace:* --filter ./apps/examples/rest_api`
+   - Example: `pnpm add @saga/soa-logger@1.0.0 --filter ./apps/examples/rest_api`
 
 5. **Symlink and Node Modules**
    - Confirm that the app's `node_modules` contains a symlink to the local package, and that the `dist/` directory is present and correct under the symlink.

@@ -38,8 +38,8 @@ This guide explains how to add a new Express-based API application to the `apps/
 - To use a package from `packages/`, add it to `dependencies` in `package.json`:
   ```json
   "dependencies": {
-    "@saga/soa-core-api": "workspace:*",
-    "@saga/soa-logger": "workspace:*"
+    "@saga/soa-core-api": "1.0.0",
+    "@saga/soa-logger": "1.0.0"
   }
   ```
 - Use imports as normal in your code:

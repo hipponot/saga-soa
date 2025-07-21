@@ -8,19 +8,20 @@ RUN npm install -g pnpm@9.0.0
 WORKDIR /app
 
 # Copy workspace files
-COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+# COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY package.json ./
-COPY turbo.json ./
-COPY shared-tsup.config.ts ./
+# COPY turbo.json ./
+# COPY shared-tsup.config.ts ./
 
 # Copy packages
-COPY packages/ ./packages/
+# COPY packages/ ./packages/
 
-# Copy only the rest-api app
-COPY apps/examples/rest-api/ ./apps/examples/rest-api/
+# # Copy only the rest-api app
+# COPY apps/examples/rest-api/ ./apps/examples/rest-api/
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install 
+# --frozen-lockfile
 
 # Build the project
 RUN pnpm turbo run build --filter=rest-api...
@@ -31,13 +32,13 @@ FROM node:18-alpine AS runner
 WORKDIR /app
 
 # Copy built application
-COPY --from=builder /app/apps/examples/rest-api/dist ./dist
-COPY --from=builder /app/apps/examples/rest-api/package.json ./
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package.json ./
 
 # Copy necessary dependencies
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/apps/examples/rest-api/node_modules ./apps/examples/rest-api/node_modules
-COPY --from=builder /app/packages/ ./packages/
+# COPY --from=builder /app/apps/examples/rest-api/node_modules ./apps/examples/rest-api/node_modules
+# COPY --from=builder /app/packages/ ./packages/
 
 # Expose port (adjust based on your app configuration)
 EXPOSE 3000

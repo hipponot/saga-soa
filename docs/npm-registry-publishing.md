@@ -86,8 +86,8 @@ Update the application `package.json` files to use specific versions instead of 
 ```json
 {
   "dependencies": {
-    "@saga/soa-core-api": "workspace:*",
-    "@saga/soa-db": "workspace:*",
+    "@saga/soa-core-api": "1.0.0",
+    "@saga/soa-db": "1.0.0",
     "@saga/soa-logger": "workspace:^"
   }
 }

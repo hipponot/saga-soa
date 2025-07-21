@@ -685,8 +685,8 @@ Now that the directories are created, I will create the `package.json` file for 
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "@saga/soa-config": "workspace:*",
-    "@saga/typescript-config": "workspace:*",
+    "@saga/soa-config": "1.0.0",
+    "@saga/typescript-config": "1.0.0",
     "@types/jest": "^29.5.3",
     "@types/node": "latest",
     "jest": "^29.6.2",
@@ -1869,7 +1869,7 @@ export type ExpressServerConfig = z.infer<typeof ExpressServerSchema>;
   },
   "dependencies": {
     "zod": "^3.22.2",
-    "@saga/soa-config": "workspace:*"
+    "@saga/soa-config": "1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",
@@ -1943,8 +1943,8 @@ export class ExpressServer {
   },
   "dependencies": {
     "zod": "^3.22.2",
-    "@saga/soa-config": "workspace:*",
-    "@saga/soa-logger": "workspace:*",
+    "@saga/soa-config": "1.0.0",
+    "@saga/soa-logger": "1.0.0",
     "express": "^4.18.2",
     "inversify": "^6.0.1",
     "reflect-metadata": "^0.1.13"
@@ -2447,7 +2447,7 @@ export class HelloRest extends RestEndpointGroup {
     "express": "^4.18.2",
     "inversify": "^6.0.1",
     "reflect-metadata": "^0.1.13",
-    "@saga/soa-core-api": "workspace:*"
+    "@saga/soa-core-api": "1.0.0"
   }
 }
 
@@ -2567,7 +2567,7 @@ I have a preference for ESM so please add "type" : "module" where required
     "express": "^4.18.2",
     "inversify": "^6.0.1",
     "reflect-metadata": "^0.1.13",
-    "@saga/soa-core-api": "workspace:*"
+    "@saga/soa-core-api": "1.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
@@ -2642,7 +2642,7 @@ Can we  try and move the example_rest application to use commonjs in both packag
     "express": "^4.18.2",
     "inversify": "^6.0.1",
     "reflect-metadata": "^0.1.13",
-    "@saga/soa-core-api": "workspace:*"
+    "@saga/soa-core-api": "1.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
@@ -2725,8 +2725,8 @@ yes
   },
   "dependencies": {
     "zod": "^3.22.2",
-    "@saga/soa-config": "workspace:*",
-    "@saga/soa-logger": "workspace:*",
+    "@saga/soa-config": "1.0.0",
+    "@saga/soa-logger": "1.0.0",
     "express": "^4.18.2",
     "inversify": "^6.0.1",
     "reflect-metadata": "^0.1.13",
@@ -2887,8 +2887,8 @@ yes
   },
   "dependencies": {
     "zod": "^3.22.2",
-    "@saga/soa-config": "workspace:*",
-    "@saga/soa-logger": "workspace:*",
+    "@saga/soa-config": "1.0.0",
+    "@saga/soa-logger": "1.0.0",
     "express": "^4.18.2",
     "inversify": "^6.0.1",
     "reflect-metadata": "^0.1.13",
@@ -3237,7 +3237,7 @@ please use ESM everywhere
     "express": "^4.18.2",
     "inversify": "^6.0.1",
     "reflect-metadata": "^0.1.13",
-    "@saga/soa-core-api": "workspace:*"
+    "@saga/soa-core-api": "1.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
@@ -3391,8 +3391,8 @@ yes
   },
   "dependencies": {
     "zod": "^3.22.2",
-    "@saga/soa-config": "workspace:*",
-    "@saga/soa-logger": "workspace:*",
+    "@saga/soa-config": "1.0.0",
+    "@saga/soa-logger": "1.0.0",
     "express": "^4.18.2",
     "inversify": "^6.0.1",
     "reflect-metadata": "^0.1.13",

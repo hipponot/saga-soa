@@ -28,7 +28,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "@saga/typescript-config": "workspace:*",
+    "@saga/typescript-config": "1.0.0",
     "@types/node": "latest",
     "pino-pretty": "^10.2.0",
     "tsup": "^8.5.0",

@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@apollo/server": "^4.9.6",
-    "@saga/soa-core-api": "workspace:*",
-    "@saga/soa-db": "workspace:*",
+    "@saga/soa-core-api": "1.0.0",
+    "@saga/soa-db": "1.0.0",
     "@saga/soa-logger": "workspace:^",
     "@types/mongodb": "^4.0.7",
     "express": "^4.18.2",
