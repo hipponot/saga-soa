@@ -1,14 +1,21 @@
 {
-  "name": "@saga/soa-logger",
-  "version": "1.0.0",
+  "name": "@hipponot/soa-logger",
+  "version": "0.0.1",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hipponot/saga-soa.git",
+    "directory": "packages/logger"
+  },
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
     "test": "vitest run",
     "clean": "rm -rf dist",
-    "prepare": "npm run co:login",
-    "preinstall": "npm run co:login",
-    "co:login": "export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain saga --query authorizationToken --output text) && npm config set //saga-531314149529.d.codeartifact.us-west-2.amazonaws.com/npm/saga_js/:_authToken=$CODEARTIFACT_AUTH_TOKEN"
+    "prepublishOnly": "pnpm build"
   },
   "exports": {
     ".": {
@@ -28,7 +35,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "@saga/typescript-config": "1.0.0",
+    "@hipponot/soa-typescript-config": "0.0.1",
     "@types/node": "latest",
     "pino-pretty": "^10.2.0",
     "tsup": "^8.5.0",

@@ -1,250 +1,282 @@
-# Publishing Packages to Private NPM Registry
+# Publishing Packages to GitHub Packages
 
-This guide describes how to publish the workspace packages to a private npm registry and use them in Docker builds.
+This guide describes how the workspace packages are published to GitHub Packages and how to use them in your projects.
 
-## Prerequisites
+## 📦 Available Packages
 
-- Access to a private npm registry (e.g., GitHub Packages, npm Enterprise, Artifactory, etc.)
-- Authentication credentials for the registry
-- npm or pnpm installed locally
+All packages are published to GitHub Packages and are publicly available:
 
-## Publishing Packages
+- `@hipponot/soa-config` - Configuration management with Zod validation
+- `@hipponot/soa-core-api` - Express-based REST API framework  
+- `@hipponot/soa-db` - Database connection helpers (MongoDB, Redis)
+- `@hipponot/soa-logger` - Structured logging with Pino
 
-### 1. Configure Registry Authentication
+## 📋 Installation (No Authentication Required)
 
-First, authenticate with your private registry:
+**Great News**: Since these packages are public, no authentication is required for installation!
 
-```bash
-# For npm
-npm login --registry=https://your-registry.com
-
-# For GitHub Packages
-npm login --scope=@saga --registry=https://npm.pkg.github.com
-
-# Or create .npmrc file
-echo "//your-registry.com/:_authToken=YOUR_AUTH_TOKEN" >> ~/.npmrc
-```
-
-### 2. Update Package Versions
-
-Before publishing, ensure all packages have the correct version numbers:
+### Step 1: Configure GitHub Packages Registry
 
 ```bash
-# Update versions in all packages
-pnpm recursive exec -- npm version patch
-
-# Or manually update version in each package.json
+# Configure npm to use GitHub Packages for @hipponot scope
+echo "@hipponot:registry=https://npm.pkg.github.com" >> ~/.npmrc
 ```
 
-### 3. Configure Package Registry
+### Step 2: Install Packages
 
-Add registry configuration to each package's `package.json`:
+```bash
+# Now you can install packages without authentication
+npm install @hipponot/soa-core-api
+npm install @hipponot/soa-db  
+npm install @hipponot/soa-logger
+npm install @hipponot/soa-config
+
+# Or with pnpm
+pnpm add @hipponot/soa-core-api @hipponot/soa-db @hipponot/soa-logger @hipponot/soa-config
+
+# Or with yarn
+yarn add @hipponot/soa-core-api @hipponot/soa-db @hipponot/soa-logger @hipponot/soa-config
+```
+
+## Usage in Your Projects
+
+### Basic Usage
+
+```typescript
+// Using the core API framework
+import { ExpressServer } from '@hipponot/soa-core-api';
+import { MongoProvider } from '@hipponot/soa-db';
+import { PinoLogger } from '@hipponot/soa-logger';
+import { DotenvConfigManager } from '@hipponot/soa-config';
+
+// Set up your application
+const config = new DotenvConfigManager();
+const logger = new PinoLogger();
+const db = new MongoProvider(config, logger);
+const server = new ExpressServer(config, logger);
+```
+
+### Package.json Example
 
 ```json
 {
-  "name": "@saga/soa-core-api",
-  "version": "1.0.0",
-  "publishConfig": {
-    "registry": "https://your-registry.com"
-  }
-}
-```
-
-### 4. Publish Packages
-
-Publish all workspace packages:
-
-```bash
-# Publish all packages
-pnpm -r publish --access restricted
-
-# Or publish individually
-cd packages/core-api && npm publish
-cd packages/logger && npm publish
-cd packages/db && npm publish
-cd packages/config && npm publish
-```
-
-### 5. Verify Publication
-
-Verify packages are available in the registry:
-
-```bash
-npm view @saga/soa-core-api --registry=https://your-registry.com
-npm view @saga/soa-logger --registry=https://your-registry.com
-npm view @saga/soa-db --registry=https://your-registry.com
-npm view @saga/soa-config --registry=https://your-registry.com
-```
-
-## Using Published Packages in Docker Builds
-
-### 1. Update Application Dependencies
-
-Update the application `package.json` files to use specific versions instead of workspace references:
-
-**Before:**
-```json
-{
+  "name": "my-api-project",
   "dependencies": {
-    "@saga/soa-core-api": "1.0.0",
-    "@saga/soa-db": "1.0.0",
-    "@saga/soa-logger": "workspace:^"
+    "@hipponot/soa-core-api": "^1.0.0",
+    "@hipponot/soa-db": "^1.0.0", 
+    "@hipponot/soa-logger": "^1.0.0",
+    "@hipponot/soa-config": "^1.0.0"
   }
 }
 ```
 
-**After:**
-```json
-{
-  "dependencies": {
-    "@saga/soa-core-api": "^1.0.0",
-    "@saga/soa-db": "^1.0.0",
-    "@saga/soa-logger": "^1.0.0"
-  }
-}
-```
+## Automated Publishing
 
-### 2. Update Dockerfile for Registry Access
+Packages are automatically published to GitHub Packages when:
 
-Modify your Dockerfiles to authenticate with the private registry:
+1. **Push to main branch** - Automatically publishes if package files change
+2. **GitHub Release** - Publishes all packages with release
+3. **Manual trigger** - Maintainers can trigger publishing with version bumps
+
+### Publishing Workflow
+
+The GitHub Actions workflow:
+1. ✅ Runs tests and type checking
+2. ✅ Builds all packages
+3. ✅ Publishes to GitHub Packages
+4. ✅ Creates release summary
+
+## For Package Maintainers
+
+### Publishing Authentication Required
+
+**Note**: While installation is public, publishing requires authentication.
+
+#### Setup for Publishing
+
+1. **Create GitHub Personal Access Token (classic)**:
+   - Go to [GitHub Personal Access Tokens (classic)](https://github.com/settings/tokens)
+   - Select scopes: `packages:write` and `repo`
+
+2. **Configure Publishing Authentication**:
+   ```bash
+   npm login --scope=@hipponot --auth-type=legacy --registry=https://npm.pkg.github.com
+   # Enter your GitHub username and token as password
+   ```
+
+### Publishing New Versions
+
+1. **Automatic (Recommended)**: Create a GitHub Release
+   ```bash
+   # GitHub will automatically publish packages
+   gh release create v1.1.0 --title "Release v1.1.0" --notes "Bug fixes and improvements"
+   ```
+
+2. **Manual Trigger**: Use GitHub Actions workflow
+   - Go to Actions → "Publish Packages to GitHub Packages"  
+   - Click "Run workflow"
+   - Choose version bump type (patch/minor/major)
+
+3. **Local Publishing** (if needed):
+   ```bash
+   # Build packages
+   pnpm build
+   
+   # Publish all packages (authentication required)
+   pnpm publish:packages
+   ```
+
+### Version Management
+
+Packages use semantic versioning:
+- **Patch** (1.0.1): Bug fixes
+- **Minor** (1.1.0): New features, backwards compatible
+- **Major** (2.0.0): Breaking changes
+
+## Using Published Packages in Docker
+
+### Dockerfile Example
 
 ```dockerfile
-# Build stage
 FROM node:18-alpine AS builder
-
-# Install pnpm
-RUN npm install -g pnpm@9.0.0
 
 # Set working directory
 WORKDIR /app
 
-# Configure npm registry (if using scoped packages)
-ARG NPM_TOKEN
-RUN echo "@saga:registry=https://your-registry.com" >> ~/.npmrc
-RUN echo "//your-registry.com/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
-
 # Copy package files
-COPY pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY package.json ./
-COPY turbo.json ./
-COPY shared-tsup.config.ts ./
+COPY package.json pnpm-lock.yaml ./
 
-# Copy packages (only needed if building from source)
-COPY packages/ ./packages/
+# Configure GitHub Packages (no authentication needed for public packages)
+RUN echo "@hipponot:registry=https://npm.pkg.github.com" > .npmrc
 
-# Copy application source
-COPY apps/examples/rest-api/ ./apps/examples/rest-api/
-
-# Install dependencies (will fetch from registry)
+# Install dependencies
+RUN npm install -g pnpm@9.0.0
 RUN pnpm install --frozen-lockfile
 
-# Build the project
-RUN pnpm turbo run build --filter=rest-api...
+# Copy source and build
+COPY src/ ./src/
+RUN pnpm build
 
 # Production stage
 FROM node:18-alpine AS runner
-
 WORKDIR /app
 
 # Copy built application
-COPY --from=builder /app/apps/examples/rest-api/dist ./dist
-COPY --from=builder /app/apps/examples/rest-api/package.json ./
-
-# Copy dependencies
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
 
-# No need to copy packages folder anymore!
-
 EXPOSE 3000
-
 CMD ["node", "dist/main.js"]
 ```
 
-### 3. Build Docker Images with Registry Token
+### Docker Compose Example
 
-Build the Docker images passing the npm token as a build argument:
+```yaml
+version: '3.8'
 
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+```
+
+## Benefits of GitHub Packages
+
+✅ **Public Access**: No authentication required for installation  
+✅ **Integrated**: Works seamlessly with GitHub workflow  
+✅ **Secure**: Built-in security scanning  
+✅ **Standard**: Uses standard npm registry protocol  
+✅ **Reliable**: GitHub's infrastructure and uptime  
+✅ **Free**: No cost for public packages (with usage limits)  
+
+## Migration from CodeArtifact
+
+If you were previously using our private CodeArtifact registry:
+
+### Before (CodeArtifact - Private)
 ```bash
-# Build with npm token
-docker build \
-  --build-arg NPM_TOKEN=$NPM_TOKEN \
-  --network=host \
-  -t saga-rest-api:prod \
-  -f apps/examples/rest-api/Dockerfile .
-
-# Or use environment variable
-export NPM_TOKEN=your-token-here
-docker build --build-arg NPM_TOKEN --network=host -t saga-rest-api:prod -f apps/examples/rest-api/Dockerfile .
+# Required AWS authentication
+aws codeartifact login --tool npm --domain saga --repository saga_js
+npm install @hipponot/soa-core-api
 ```
 
-### 4. CI/CD Integration
-
-For automated builds, store the NPM_TOKEN as a secret in your CI/CD platform:
-
-**GitHub Actions Example:**
-```yaml
-- name: Build Docker Image
-  run: |
-    docker build \
-      --build-arg NPM_TOKEN=${{ secrets.NPM_TOKEN }} \
-      --network=host \
-      -t saga-rest-api:${{ github.sha }} \
-      -f apps/examples/rest-api/Dockerfile .
+### After (GitHub Packages - Public)
+```bash
+# No authentication needed for installation!
+echo "@hipponot:registry=https://npm.pkg.github.com" >> ~/.npmrc
+npm install @hipponot/soa-core-api
 ```
-
-**GitLab CI Example:**
-```yaml
-build:
-  script:
-    - docker build
-        --build-arg NPM_TOKEN=$NPM_TOKEN
-        --network=host
-        -t saga-rest-api:$CI_COMMIT_SHA
-        -f apps/examples/rest-api/Dockerfile .
-  variables:
-    NPM_TOKEN: $NPM_TOKEN
-```
-
-## Benefits of This Approach
-
-1. **Proper Dependency Resolution**: No more symlink issues in Docker containers
-2. **Version Control**: Explicit versioning of internal packages
-3. **Caching**: Docker can cache npm install layers effectively
-4. **Security**: Private packages remain secure in your registry
-5. **Production Ready**: Standard approach for enterprise deployments
 
 ## Troubleshooting
 
-### Authentication Issues
-```bash
-# Test registry authentication
-npm whoami --registry=https://your-registry.com
-
-# View npm configuration
-npm config list
-```
-
 ### Package Not Found
-```bash
-# Ensure package is published
-npm view @saga/soa-core-api --registry=https://your-registry.com
+If you get "package not found" errors:
 
-# Check .npmrc configuration
-cat ~/.npmrc
+1. **Check registry configuration**:
+   ```bash
+   cat ~/.npmrc
+   # Should contain: @hipponot:registry=https://npm.pkg.github.com
+   ```
+
+2. **Verify package name spelling**:
+   ```bash
+   # Correct
+   npm install @hipponot/soa-core-api
+   
+   # Incorrect  
+   npm install @saga-soa/core-api
+   ```
+
+3. **Clear npm cache**:
+   ```bash
+   npm cache clean --force
+   ```
+
+4. **Check network connectivity**:
+   ```bash
+   npm ping --registry=https://npm.pkg.github.com
+   ```
+
+### Publishing Issues (For Maintainers)
+
+```bash
+# Check current authentication
+npm whoami --registry=https://npm.pkg.github.com
+
+# Re-authenticate for publishing
+npm logout --registry=https://npm.pkg.github.com
+npm login --scope=@hipponot --registry=https://npm.pkg.github.com
 ```
 
-### Docker Build Failures
+### Version Issues
+
+To see available versions:
 ```bash
-# Build with no cache to debug
-docker build --no-cache --progress=plain \
-  --build-arg NPM_TOKEN=$NPM_TOKEN \
-  -t saga-rest-api:debug \
-  -f apps/examples/rest-api/Dockerfile .
+npm view @hipponot/soa-core-api versions --json --registry=https://npm.pkg.github.com
 ```
 
-## Next Steps
+To install specific version:
+```bash
+npm install @hipponot/soa-core-api@1.0.0
+```
 
-1. Set up your private npm registry
-2. Create a CI/CD pipeline for automated package publishing
-3. Update all Dockerfiles to use the registry approach
-4. Remove the packages folder from Docker builds (optional optimization)
+## Important Notes
+
+- **Installation**: No authentication required for public packages
+- **Publishing**: Authentication required (maintainers only)
+- **Repository Visibility**: Repository must be public for packages to be publicly accessible
+- **Rate Limits**: GitHub has rate limits for package operations
+- **Version Immutability**: Once published, package contents are immutable
+
+## Links
+
+- 📦 [GitHub Packages](https://github.com/hipponot/saga-soa/packages)
+- 🛠️ [Source Code](https://github.com/hipponot/saga-soa)
+- 📖 [Documentation](https://github.com/hipponot/saga-soa/tree/main/docs)
+- 🚀 [Examples](https://github.com/hipponot/saga-soa/tree/main/saga-soa-examples/examples)
+- 🔑 [GitHub Personal Access Tokens (for publishing)](https://github.com/settings/tokens)

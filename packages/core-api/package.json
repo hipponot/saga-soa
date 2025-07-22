@@ -1,9 +1,18 @@
 {
-  "name": "@saga/soa-core-api",
-  "version": "1.0.0",
+  "name": "@hipponot/soa-core-api",
+  "version": "0.0.2",
   "type": "module",
-  "main": "dist/rest-controller.js",
-  "types": "dist/rest-controller.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hipponot/saga-soa.git",
+    "directory": "packages/core-api"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -39,11 +48,10 @@
     "build": "tsup",
     "test": "vitest run",
     "clean": "rm -rf dist",
-    "prepare": "npm run co:login",
-    "preinstall": "npm run co:login",
-    "co:login": "export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain saga --query authorizationToken --output text) && npm config set //saga-531314149529.d.codeartifact.us-west-2.amazonaws.com/npm/saga_js/:_authToken=$CODEARTIFACT_AUTH_TOKEN"
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
+    "@hipponot/soa-logger": "0.0.1",
     "express": "^4.18.2",
     "fast-glob": "^3.3.3",
     "figlet": "^1.8.1",
@@ -53,21 +61,12 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "@saga/soa-logger": "1.0.0",
+    "@hipponot/soa-typescript-config": "0.0.1",
     "@types/express": "^5.0.3",
-    "@types/figlet": "^1.7.0",
-    "@types/node": "latest",
-    "@types/supertest": "^6.0.3",
-    "@vitest/coverage-v8": "^1.5.0",
-    "figlet": "^1.8.1",
-    "inversify": "^6.0.1",
-    "reflect-metadata": "^0.1.14",
-    "routing-controllers": "^0.11.2",
+    "@types/figlet": "^1.5.8",
+    "@types/node": "^24.0.3",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3",
-    "undici": "^7.11.0",
-    "vitest": "^1.5.0",
-    "zod": "^3.22.2"
+    "typescript": "^5.8.3"
   },
   "typesVersions": {
     "*": {

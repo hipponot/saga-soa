@@ -1,8 +1,16 @@
 {
-  "name": "@saga/eslint-config",
-  "version": "0.0.0",
+  "name": "@hipponot/soa-eslint-config",
+  "version": "0.0.1",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hipponot/saga-soa.git",
+    "directory": "packages/eslint-config"
+  },
   "type": "module",
-  "private": true,
   "exports": {
     "./base": "./base.js",
     "./next-js": "./next.js",

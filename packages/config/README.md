@@ -1,4 +1,4 @@
-# @saga/soa-config
+# @hipponot/config
 
 A strongly-typed configuration management package that uses Zod schemas to validate and type configuration objects. The package provides a flexible way to manage configuration through environment variables with runtime validation.
 
@@ -25,7 +25,7 @@ Each configuration object must define a Zod schema that:
 - Specifies validation rules for each configuration field
 - Can be used to infer the TypeScript type
 
-Example using the MongoProviderSchema from `@saga/soa-db`:
+Example using the MongoProviderSchema from `@hipponot/soa-db`:
 
 ```typescript
 import { z } from 'zod';
@@ -103,7 +103,7 @@ APP_API_KEY=your-api-key
 
 ```typescript
 import { Container } from 'inversify';
-import { IConfigManager, DotenvConfigManager } from '@saga/soa-config';
+import { IConfigManager, DotenvConfigManager } from '@hipponot/config';
 import { AppConfigSchema } from './app-config';
 
 // Set up dependency injection
@@ -125,7 +125,7 @@ The package includes a `MockConfigManager` that generates valid mock data based 
 
 ```typescript
 import { Container } from 'inversify';
-import { IConfigManager, MockConfigManager } from '@saga/soa-config';
+import { IConfigManager, MockConfigManager } from '@hipponot/config';
 
 describe('MyService', () => {
   let container: Container;

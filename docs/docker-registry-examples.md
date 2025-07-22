@@ -30,7 +30,7 @@ COPY shared-tsup.config.ts ./
 # Copy only the REST API app (no packages folder needed)
 COPY apps/examples/rest-api/ ./apps/examples/rest-api/
 
-# Install dependencies (will fetch @saga/soa-* from registry)
+# Install dependencies (will fetch @hipponot/soa-* from registry)
 RUN pnpm install --frozen-lockfile
 
 # Build the project

@@ -1,7 +1,7 @@
 import { Controller, Get, Req, Res, HeaderParams, getMetadataArgsStorage } from 'routing-controllers';
 import type { Request, Response } from 'express';
 import { injectable, inject } from 'inversify';
-import type { ILogger } from '@saga/soa-logger';
+import type { ILogger } from '@hipponot/soa-logger';
 import { RestControllerBase, REST_API_BASE_PATH } from './rest-controller.js';
 
 const SECTOR = 'sectors';

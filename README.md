@@ -21,13 +21,46 @@ Key features:
 - Flexible deployment: serverless or server
 - Strong focus on developer experience and maintainability
 
+## 📦 Published Packages
+
+Our packages are published to GitHub Packages and are publicly available:
+
+- **[@hipponot/soa-config](https://github.com/hipponot/saga-soa/packages/)**: Strongly-typed configuration management using Zod schemas for runtime validation and TypeScript safety. Supports environment variable-based configuration, dependency injection (Inversify), and mock configuration for testing.
+- **[@hipponot/soa-db](https://github.com/hipponot/saga-soa/packages/)**: Helpers for managing connections to supported databases (MongoDB, SQL/MySQL, Redis). Designed for use with Inversify to manage shared and multiple database instances within the monorepo.
+- **[@hipponot/soa-core-api](https://github.com/hipponot/saga-soa/packages/)**: Express-based REST API framework with sector (controller) auto-registration, dependency injection, and schema-driven design. Provides a foundation for building modular, testable service APIs.
+- **[@hipponot/soa-logger](https://github.com/hipponot/saga-soa/packages/)**: Structured logging with Pino, supporting dependency injection and testing mocks.
+
+### Installation
+
+**No Authentication Required** for installing public packages:
+
+```bash
+# Configure npm to use GitHub Packages for @hipponot scope
+echo "@hipponot:registry=https://npm.pkg.github.com" >> ~/.npmrc
+
+# Install packages (no authentication needed for public packages)
+npm install @hipponot/soa-core-api
+npm install @hipponot/soa-db
+npm install @hipponot/soa-logger
+npm install @hipponot/soa-config
+
+# Or install multiple packages
+npm install @hipponot/soa-core-api @hipponot/soa-db @hipponot/soa-logger @hipponot/soa-config
+```
+
+### 📖 Package Management
+
+- **[📋 Manual Package Management](docs/manual-package-management.md)** - Quick reference for publishing/managing packages during development
+- **[🚀 Automated Publishing](docs/npm-registry-publishing.md)** - Production GitHub Actions workflow
+- **[🔄 Migration Guide](docs/github-packages-migration.md)** - Migration from CodeArtifact to GitHub Packages
+
 ## Build Out
 
 This project is under active development. The following packages have some level of build out:
 
-- **@saga/soa-config**: Strongly-typed configuration management using Zod schemas for runtime validation and TypeScript safety. Supports environment variable-based configuration, dependency injection (Inversify), and mock configuration for testing.
-- **@saga/soa-db**: Helpers for managing connections to supported databases (MongoDB, SQL/MySQL, Redis). Designed for use with Inversify to manage shared and multiple database instances within the monorepo.
-- **@saga/soa-core-api**: Express-based REST API framework with sector (controller) auto-registration, dependency injection, and schema-driven design. Provides a foundation for building modular, testable service APIs.
+- **@hipponot/soa-config**: Strongly-typed configuration management using Zod schemas for runtime validation and TypeScript safety. Supports environment variable-based configuration, dependency injection (Inversify), and mock configuration for testing.
+- **@hipponot/soa-db**: Helpers for managing connections to supported databases (MongoDB, SQL/MySQL, Redis). Designed for use with Inversify to manage shared and multiple database instances within the monorepo.
+- **@hipponot/soa-core-api**: Express-based REST API framework with sector (controller) auto-registration, dependency injection, and schema-driven design. Provides a foundation for building modular, testable service APIs.
 - **apps/examples/rest-api**: Example REST API app demonstrating sector auto-registration, dependency injection, and integration with the core packages. Useful as a reference for building new services or for integration testing.
 
 For more details and project tracking, see the [Project Board](https://github.com/orgs/hipponot/projects/22).

@@ -1,10 +1,19 @@
 {
-  "name": "@saga/typescript-config",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@hipponot/soa-typescript-config",
+  "version": "0.0.1",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hipponot/saga-soa.git",
+    "directory": "packages/typescript-config"
+  },
+  "exports": {
+    "./base.json": "./base.json",
+    "./react-library.json": "./react-library.json",
+    "./nextjs.json": "./nextjs.json"
   },
   "scripts": {
     "clean": ":"

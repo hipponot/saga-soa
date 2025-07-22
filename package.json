@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
+    "build:clean": "pnpm clean && turbo run build --no-cache --force",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -13,9 +14,15 @@
     "dep:list": "pnpm syncpack list",
     "dep:fix": "pnpm syncpack fix",
     "check": "turbo run build --no-cache --force && pnpm test",
-    "prepare": "npm run co:login",
-    "preinstall": "npm run co:login",
-    "co:login": "export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain saga --query authorizationToken --output text) && npm config set //saga-531314149529.d.codeartifact.us-west-2.amazonaws.com/npm/saga_js/:_authToken=$CODEARTIFACT_AUTH_TOKEN"
+    "pre-publish": "pnpm build:clean && pnpm test",
+    "version:patch": "pnpm -r exec -- pnpm version patch",
+    "version:minor": "pnpm -r exec -- pnpm version minor",
+    "version:major": "pnpm -r exec -- pnpm version major",
+    "publish:dry": "pnpm -r publish --dry-run --access public",
+    "publish:packages": "pnpm pre-publish && pnpm -r publish --access public",
+    "publish:force": "pnpm -r publish --access public --force",
+    "login:github": "npm login --scope=@hipponot --auth-type=legacy --registry=https://npm.pkg.github.com",
+    "publish:github": "pnpm pre-publish && pnpm -r publish --registry=https://npm.pkg.github.com --access=public"
   },
   "devDependencies": {
     "prettier": "^3.5.3",

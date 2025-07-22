@@ -37,11 +37,11 @@ This checklist helps you migrate from workspace dependencies to published packag
 ### Initial Publication
 - [ ] Authenticate with registry: `npm login --registry=https://your-registry.com`
 - [ ] Publish all packages: `pnpm -r publish --access restricted`
-- [ ] Verify packages are available: `npm view @saga/soa-core-api --registry=https://your-registry.com`
+- [ ] Verify packages are available: `npm view @hipponot/soa-core-api --registry=https://your-registry.com`
 
 ### Test Package Installation
 - [ ] Create test directory outside workspace
-- [ ] Install packages from registry: `npm install @saga/soa-core-api@1.0.0`
+- [ ] Install packages from registry: `npm install @hipponot/soa-core-api@1.0.0`
 - [ ] Test imports work correctly
 
 ## Step 3: Update Application Dependencies
@@ -51,9 +51,9 @@ This checklist helps you migrate from workspace dependencies to published packag
   ```json
   {
     "dependencies": {
-      "@saga/soa-core-api": "^1.0.0",
-      "@saga/soa-db": "^1.0.0",
-      "@saga/soa-logger": "^1.0.0"
+      "@hipponot/soa-core-api": "^1.0.0",
+      "@hipponot/soa-db": "^1.0.0",
+      "@hipponot/soa-logger": "^1.0.0"
     }
   }
   ```
@@ -63,9 +63,9 @@ This checklist helps you migrate from workspace dependencies to published packag
   ```json
   {
     "dependencies": {
-      "@saga/soa-core-api": "^1.0.0",
-      "@saga/soa-db": "^1.0.0",
-      "@saga/soa-logger": "^1.0.0"
+      "@hipponot/soa-core-api": "^1.0.0",
+      "@hipponot/soa-db": "^1.0.0",
+      "@hipponot/soa-logger": "^1.0.0"
     }
   }
   ```
@@ -173,7 +173,7 @@ This checklist helps you migrate from workspace dependencies to published packag
 # Check registry configuration
 npm config list
 # Test package availability
-npm view @saga/soa-core-api --registry=https://your-registry.com
+npm view @hipponot/soa-core-api --registry=https://your-registry.com
 ```
 
 ### Authentication Issues
