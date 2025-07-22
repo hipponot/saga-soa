@@ -1,7 +1,7 @@
-import { injectable, inject }                   from 'inversify';
+import { injectable, inject } from 'inversify';
 import pino, { Logger, TransportTargetOptions } from 'pino';
-import { ILogger }                              from './i-logger.js';
-import type { PinoLoggerConfig }                from './pino-logger-schema.js';
+import { ILogger } from './i-logger.js';
+import type { PinoLoggerConfig } from './pino-logger-schema.js';
 
 @injectable()
 export class PinoLogger implements ILogger {
@@ -14,8 +14,9 @@ export class PinoLogger implements ILogger {
     const logFile = config.logFile;
     const targets: TransportTargetOptions[] = [];
 
-    // Enforce production Express context rule
-    if (env === 'production' && isExpressContext && !logFile) {
+    // Allow stdout logging in production for containerized environments (Docker best practice)
+    // Only enforce logFile requirement if explicitly configured to require it
+    if (env === 'production' && isExpressContext && !logFile && process.env.REQUIRE_LOG_FILE === 'true') {
       throw new Error('In production Express context, logFile must be specified for the logger.');
     }
 
@@ -26,10 +27,10 @@ export class PinoLogger implements ILogger {
         target: config.prettyPrint ? 'pino-pretty' : 'pino/file',
         options: config.prettyPrint
           ? {
-              colorize: true,
-              levelFirst: true,
-              translateTime: 'SYS:standard',
-            }
+            colorize: true,
+            levelFirst: true,
+            translateTime: 'SYS:standard',
+          }
           : { destination: 1 }, // STDOUT
       });
       // File logger if specified
@@ -47,10 +48,10 @@ export class PinoLogger implements ILogger {
           target: config.prettyPrint ? 'pino-pretty' : 'pino/file',
           options: config.prettyPrint
             ? {
-                colorize: true,
-                levelFirst: true,
-                translateTime: 'SYS:standard',
-              }
+              colorize: true,
+              levelFirst: true,
+              translateTime: 'SYS:standard',
+            }
             : { destination: 1 },
         });
       }
@@ -74,10 +75,10 @@ export class PinoLogger implements ILogger {
             target: config.prettyPrint ? 'pino-pretty' : 'pino/file',
             options: config.prettyPrint
               ? {
-                  colorize: true,
-                  levelFirst: true,
-                  translateTime: 'SYS:standard',
-                }
+                colorize: true,
+                levelFirst: true,
+                translateTime: 'SYS:standard',
+              }
               : { destination: 1 },
           });
         }
@@ -89,10 +90,10 @@ export class PinoLogger implements ILogger {
         target: config.prettyPrint ? 'pino-pretty' : 'pino/file',
         options: config.prettyPrint
           ? {
-              colorize: true,
-              levelFirst: true,
-              translateTime: 'SYS:standard',
-            }
+            colorize: true,
+            levelFirst: true,
+            translateTime: 'SYS:standard',
+          }
           : { destination: 1 },
       });
     }
