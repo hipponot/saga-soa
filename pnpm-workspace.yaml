@@ -1,4 +1,6 @@
 packages:
+  - 'apps/docs'
+  - 'apps/web'
   - 'apps/examples/rest-api'
   - 'apps/examples/graphql-api'
   - 'packages/*'

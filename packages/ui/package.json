@@ -1,7 +1,6 @@
 {
-  "name": "@saga/ui",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@hipponot/soa-ui",
+  "version": "0.0.1",
   "exports": {
     "./*": "./src/*.tsx"
   },
@@ -13,8 +12,8 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@saga/eslint-config": "workspace:*",
-    "@saga/typescript-config": "workspace:*",
+    "@hipponot/soa-eslint-config": "0.0.1",
+    "@hipponot/soa-typescript-config": "0.0.1",
     "@turbo/gen": "^2.5.0",
     "@types/node": "^22.15.3",
     "@types/react": "19.1.0",

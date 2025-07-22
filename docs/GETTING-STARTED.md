@@ -20,7 +20,36 @@ This guide covers initial setup and common build/test commands for the saga-soa 
 
 ---
 
-## 1. Setup Instructions
+## 📦 Using Published Packages
+
+Our packages are published to GitHub Packages and are publicly available. **No authentication required for installation**.
+
+### Installation
+```bash
+# Configure npm to use GitHub Packages for @hipponot scope
+echo "@hipponot:registry=https://npm.pkg.github.com" >> ~/.npmrc
+
+# Install packages (no authentication needed for public packages)
+npm install @hipponot/soa-core-api
+npm install @hipponot/soa-db
+npm install @hipponot/soa-logger
+npm install @hipponot/soa-config
+
+# Or install all at once
+npm install @hipponot/soa-core-api @hipponot/soa-db @hipponot/soa-logger @hipponot/soa-config
+```
+
+### Usage Example
+```typescript
+import { ExpressServer } from '@hipponot/soa-core-api';
+import { MongoProvider } from '@hipponot/soa-db';
+import { PinoLogger } from '@hipponot/soa-logger';
+import { DotenvConfigManager } from '@hipponot/soa-config';
+```
+
+---
+
+## 1. Development Setup
 
 ### 1. Install pnpm (if not already installed)
 ```sh
@@ -64,12 +93,12 @@ turbo run test
 - **Build:**
   ```sh
   turbo run build --filter=packages/logger
-  turbo run build --filter=apps/examples/rest_api
+  turbo run build --filter=saga-soa-examples/examples/rest-api
   ```
 - **Test:**
   ```sh
   turbo run test --filter=packages/config
-  turbo run test --filter=apps/examples/rest_api
+  turbo run test --filter=saga-soa-examples/examples/rest-api
   ```
 
 ### Other Useful Commands
@@ -87,13 +116,57 @@ turbo run test
   ```
 - **Start a dev server for an app:**
   ```sh
-  pnpm --filter ./apps/web dev
-  pnpm --filter ./apps/docs dev
+  pnpm --filter ./saga-soa-examples/web dev
+  pnpm --filter ./saga-soa-examples/docs dev
   ```
 - **Show which tasks will run (dry run):**
   ```sh
   turbo run build --dry
   ```
+
+---
+
+## 3. Publishing Packages
+
+### 📋 Manual Publishing (Development)
+
+For quick development and testing, see our **[Manual Package Management Guide](./manual-package-management.md)** for:
+- Publishing individual packages (authentication required)
+- Version bumping
+- Deleting package versions
+- Testing workflows
+
+### Automatic Publishing (Production)
+
+Packages are automatically published to GitHub Packages when:
+- **Push to main**: Automatically publishes if package files change  
+- **GitHub Release**: Publishes all packages with the release
+- **Manual trigger**: Use GitHub Actions workflow
+
+### Manual Publishing
+
+If you're a maintainer and need to publish manually:
+
+```sh
+# Build all packages
+pnpm build
+
+# Publish all packages to GitHub Packages (authentication required)
+pnpm publish:packages
+```
+
+### Version Management
+
+```sh
+# Bump patch version (1.0.0 → 1.0.1)
+pnpm recursive exec -- npm version patch
+
+# Bump minor version (1.0.0 → 1.1.0)  
+pnpm recursive exec -- npm version minor
+
+# Bump major version (1.0.0 → 2.0.0)
+pnpm recursive exec -- npm version major
+```
 
 ---
 
@@ -108,4 +181,51 @@ turbo run test
 
 ---
 
-> **Tip:** Use `--filter <package>`
+## 4. Example Projects
+
+Explore our example applications:
+
+### REST API Example
+```sh
+cd saga-soa-examples/examples/rest-api
+pnpm install
+pnpm dev
+```
+
+### GraphQL API Example  
+```sh
+cd saga-soa-examples/examples/graphql-api
+pnpm install
+pnpm dev
+```
+
+### Using Published Packages in New Projects
+
+Create a new project using our published packages:
+
+```sh
+mkdir my-saga-project
+cd my-saga-project
+npm init -y
+
+# Configure GitHub Packages for @hipponot scope
+echo "@hipponot:registry=https://npm.pkg.github.com" > .npmrc
+
+# Install saga-soa packages (no authentication needed for public packages)
+npm install @hipponot/soa-core-api @hipponot/soa-db @hipponot/soa-logger @hipponot/soa-config
+
+# Create your application
+# See examples in saga-soa-examples/examples/
+```
+
+---
+
+## 📚 Related Documentation
+
+- **[📋 Manual Package Management](./manual-package-management.md)** - Quick commands for development publishing
+- **[🚀 Automated Publishing](./npm-registry-publishing.md)** - Production GitHub workflow
+- **[🔄 Migration Guide](./github-packages-migration.md)** - CodeArtifact to GitHub Packages migration
+
+---
+
+> **Tip:** Use `--filter <package>` with pnpm commands to target specific packages in the monorepo.

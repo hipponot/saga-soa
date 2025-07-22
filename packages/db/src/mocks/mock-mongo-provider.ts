@@ -12,7 +12,15 @@ export class MockMongoProvider implements IMongoConnMgr {
   }
 
   async connect(): Promise<void> {
-    this.mongoServer = await MongoMemoryServer.create();
+    // Configure MongoMemoryServer to use Ubuntu binaries instead of Alpine
+    // This fixes compatibility issues when running in Alpine Linux containers
+    this.mongoServer = await MongoMemoryServer.create({
+      binary: {
+        version: '7.0.14', // Use a stable version that has Ubuntu binaries
+        platform: 'ubuntu2204', // Force Ubuntu platform instead of Alpine
+        arch: 'x64',
+      },
+    });
     const uri = this.mongoServer.getUri();
     this.client = new MongoClient(uri);
     await this.client.connect();

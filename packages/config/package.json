@@ -1,11 +1,21 @@
 {
-  "name": "@saga-soa/config",
-  "version": "1.0.0",
+  "name": "@hipponot/soa-config",
+  "version": "0.0.1",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hipponot/saga-soa.git",
+    "directory": "packages/config"
+  },
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
     "test": "vitest run",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prepublishOnly": "pnpm build"
   },
   "exports": {
     ".": {
@@ -22,7 +32,7 @@
     }
   },
   "devDependencies": {
-    "@saga/typescript-config": "workspace:*",
+    "@hipponot/soa-typescript-config": "0.0.1",
     "@types/node": "24.0.12",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"

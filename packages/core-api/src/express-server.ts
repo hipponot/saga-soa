@@ -1,10 +1,10 @@
-import express, { Application }                                                  from 'express';
-import { injectable, inject }                                                    from 'inversify';
-import type { ExpressServerConfig }                                              from './express-server-schema.js';
-import type { ILogger }                                                          from '@saga-soa/logger';
-import { useContainer, useExpressServer }                                        from 'routing-controllers';
-import { Container }                                                             from 'inversify';
-import { SectorsController }                                                     from './sectors-controller.js';
+import express, { Application } from 'express';
+import { injectable, inject } from 'inversify';
+import type { ExpressServerConfig } from './express-server-schema.js';
+import type { ILogger } from '@hipponot/soa-logger';
+import { useContainer, useExpressServer } from 'routing-controllers';
+import { Container } from 'inversify';
+import { SectorsController } from './sectors-controller.js';
 
 @injectable()
 export class ExpressServer {
