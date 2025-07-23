@@ -24,6 +24,27 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Debug trpc-api (with libraries)",
+      "program": "${workspaceFolder}/apps/examples/trpc-api/dist/main.js",
+      "cwd": "${workspaceFolder}/apps/examples/trpc-api",
+      "outFiles": [
+        "${workspaceFolder}/apps/examples/trpc-api/dist/**/*.js",
+        "${workspaceFolder}/packages/core-api/dist/**/*.js",
+        "${workspaceFolder}/packages/logger/dist/**/*.js",
+        "${workspaceFolder}/packages/db/dist/**/*.js"
+      ],
+      "console": "integratedTerminal",
+      "smartStep": true,
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Debug emit-schema.ts (tsx)",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": [
