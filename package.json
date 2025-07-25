@@ -28,6 +28,8 @@
   "version": "1.0.0",
   "dependencies": {
     "@swc/helpers": "^0.5.17",
-    "bunchee": "^6.5.4"
+    "bunchee": "^6.5.4",
+    "commander": "^14.0.0",
+    "zod": "^4.0.10"
   }
 }

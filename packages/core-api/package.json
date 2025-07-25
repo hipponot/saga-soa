@@ -37,6 +37,14 @@
     "./utils/loadControllers": {
       "types": "./dist/utils/loadControllers.d.ts",
       "default": "./dist/utils/loadControllers.js"
+    },
+    "./trpc-app-router": {
+      "types": "./dist/trpc-app-router.d.ts",
+      "default": "./dist/trpc-app-router.js"
+    },
+    "./trpc-app-router-schema": {
+      "types": "./dist/trpc-app-router-schema.d.ts",
+      "default": "./dist/trpc-app-router-schema.js"
     }
   },
   "scripts": {

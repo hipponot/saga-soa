@@ -6,6 +6,8 @@ export default defineConfig({
     'src/express-server-schema.ts',
     'src/rest-controller.ts',
     'src/trpc-controller.ts',
+    'src/trpc-app-router.ts',
+    'src/trpc-app-router-schema.ts',
     'src/sectors-controller.ts',
     'src/utils/loadControllers.ts',
     'src/gql-controller.ts',
