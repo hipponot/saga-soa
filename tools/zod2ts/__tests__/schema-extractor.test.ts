@@ -55,7 +55,7 @@ describe('SchemaExtractor', () => {
   });
 
   it('should throw NoSchemasFoundError when no schemas are found', async () => {
-    const fixturePath = resolve(__dirname, 'fixtures/no-schemas.ts');
+    const fixturePath = resolve(__dirname, 'fixtures/empty-file.ts');
     
     await expect(async () => {
       await extractor.extractSchemas(fixturePath, testOutputDir);
@@ -70,5 +70,20 @@ describe('SchemaExtractor', () => {
     for (const file of result.outputFiles) {
       expect(existsSync(file)).toBe(true);
     }
+  });
+
+  it('should handle schemas that do not end with Schema', async () => {
+    const fixturePath = resolve(__dirname, 'fixtures/no-schemas.ts');
+    const result = await extractor.extractSchemas(fixturePath, testOutputDir);
+
+    expect(result.schemas).toHaveLength(2);
+    expect(result.schemas[0]?.name).toBe('user');
+    expect(result.schemas[0]?.typeName).toBe('user');
+    expect(result.schemas[1]?.name).toBe('profile');
+    expect(result.schemas[1]?.typeName).toBe('profile');
+
+    expect(result.outputFiles).toHaveLength(2);
+    expect(result.outputFiles[0]).toContain('user.ts');
+    expect(result.outputFiles[1]).toContain('profile.ts');
   });
 }); 

@@ -1,6 +1,7 @@
 export interface CliOptions {
   zodPath: string;
   outputDir: string;
+  typeName?: string;
 }
 
 export interface SchemaInfo {
@@ -29,7 +30,7 @@ export class FileNotFoundError extends ZodToTsError {
 
 export class NoSchemasFoundError extends ZodToTsError {
   constructor(filePath: string) {
-    super(`No schemas found in file: ${filePath}. Expected variables ending with 'Schema'`, 'NO_SCHEMAS_FOUND');
+    super(`No schemas found in file: ${filePath}. Expected Zod schema variables`, 'NO_SCHEMAS_FOUND');
   }
 }
 
