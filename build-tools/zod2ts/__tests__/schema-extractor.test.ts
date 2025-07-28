@@ -86,4 +86,27 @@ describe('SchemaExtractor', () => {
     expect(result.outputFiles[0]).toContain('user.ts');
     expect(result.outputFiles[1]).toContain('profile.ts');
   });
+
+  it('should extract project schemas correctly', async () => {
+    const fixturePath = resolve(__dirname, 'fixtures/project-schemas.ts');
+    const result = await extractor.extractSchemas(fixturePath, testOutputDir);
+
+    expect(result.schemas).toHaveLength(3);
+    expect(result.schemas[0]?.name).toBe('CreateProjectSchema');
+    expect(result.schemas[0]?.typeName).toBe('CreateProject');
+    expect(result.schemas[1]?.name).toBe('UpdateProjectSchema');
+    expect(result.schemas[1]?.typeName).toBe('UpdateProject');
+    expect(result.schemas[2]?.name).toBe('GetProjectSchema');
+    expect(result.schemas[2]?.typeName).toBe('GetProject');
+
+    expect(result.outputFiles).toHaveLength(3);
+    expect(result.outputFiles[0]).toContain('CreateProject.ts');
+    expect(result.outputFiles[1]).toContain('UpdateProject.ts');
+    expect(result.outputFiles[2]).toContain('GetProject.ts');
+
+    // Check that output files exist and contain proper types
+    for (const file of result.outputFiles) {
+      expect(existsSync(file)).toBe(true);
+    }
+  });
 }); 

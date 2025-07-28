@@ -32,6 +32,8 @@ export class TypeGenerator {
       return this.generateNullableType(schema);
     } else if (schema instanceof z.ZodEnum) {
       return this.generateEnumType(schema);
+    } else if (schema instanceof z.ZodDefault) {
+      return this.generateDefaultType(schema);
     } else if (schema instanceof z.ZodLiteral) {
       return this.generateLiteralType(schema);
     } else if (schema instanceof z.ZodString) {
@@ -90,6 +92,13 @@ export class TypeGenerator {
   private generateEnumType(schema: z.ZodEnum<any>): string {
     const options = schema.options.map((option: string) => `'${option}'`);
     return options.join(' | ');
+  }
+  
+  private generateDefaultType(schema: any): string {
+    // For default values, we just return the inner type
+    // The default value doesn't affect the TypeScript type
+    const innerType = this.generateTypeDefinition(schema.unwrap() as any);
+    return innerType;
   }
   
   private generateLiteralType(schema: z.ZodLiteral<any>): string {
