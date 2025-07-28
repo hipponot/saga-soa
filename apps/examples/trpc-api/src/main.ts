@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-import { ExpressServer }            from '@saga-soa/core-api/express-server';
+import { ExpressServer } from '@saga-soa/core-api/express-server';
 import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
-import { container }                from './inversify.config.js';
-import { createExpressMiddleware }  from '@trpc/server/adapters/express';
-import { appRouter }                from './app-router.js';
-import express                      from 'express';
+import { TRPCAppRouter } from '@saga-soa/core-api/trpc-app-router';
+import { container } from './inversify.config.js';
+import { ProjectController } from './sectors/project/index.js';
+import { RunController } from './sectors/run/index.js';
 
 const expressConfig: ExpressServerConfig = {
   configType: 'EXPRESS_SERVER',
@@ -23,17 +23,22 @@ async function start() {
   await expressServer.init(container, []);
   const app = expressServer.getApp();
 
-  // Create tRPC middleware with proper configuration
-  const trpcMiddleware = createExpressMiddleware({
-    router: appRouter,
-    createContext: async () => ({}),
-    onError: ({ error }) => {
-      console.error('tRPC Error:', error);
-    },
-  });
+  // Get the TRPCAppRouter instance from DI
+  const trpcAppRouter = container.get(TRPCAppRouter);
+  
+  // Get the sector controllers from DI
+  const projectController = container.get(ProjectController);
+  const runController = container.get(RunController);
+  
+  // Add routers to the TRPCAppRouter
+  trpcAppRouter.addRouter('project', projectController.createRouter());
+  trpcAppRouter.addRouter('run', runController.createRouter());
 
-  // Mount tRPC on /trpc
-  app.use('/trpc', trpcMiddleware);
+  // Create tRPC middleware using TRPCAppRouter
+  const trpcMiddleware = trpcAppRouter.createExpressMiddleware();
+
+  // Mount tRPC on the configured base path
+  app.use(trpcAppRouter.getBasePath(), trpcMiddleware);
 
   // Add a simple health check
   app.get('/health', (req, res) => {

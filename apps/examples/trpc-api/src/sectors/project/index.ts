@@ -1,1 +1,1 @@
-export * from './trpc/index.js'; 
+export { ProjectController } from './trpc/project.router.js'; 

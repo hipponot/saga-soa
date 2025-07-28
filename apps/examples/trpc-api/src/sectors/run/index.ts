@@ -1,1 +1,1 @@
-export * from './trpc/index.js'; 
+export { RunController } from './trpc/run.router.js'; 

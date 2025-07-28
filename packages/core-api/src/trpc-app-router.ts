@@ -69,10 +69,14 @@ export class TRPCAppRouter {
         // Create an empty router if no routers have been added
         this.mergedRouter = this.t.router({});
       } else {
-        // Merge all routers using tRPC's mergeRouters
-        this.mergedRouter = this.t.mergeRouters(...Object.values(this.routers));
+        // Create a namespaced router with each router as a sub-router
+        const namespacedRouters: Record<string, AnyRouter> = {};
+        for (const [name, router] of Object.entries(this.routers)) {
+          namespacedRouters[name] = router;
+        }
+        this.mergedRouter = this.t.router(namespacedRouters);
       }
-      this.logger.info(`Created merged tRPC router with ${Object.keys(this.routers).length} routers`);
+      this.logger.info(`Created namespaced tRPC router with ${Object.keys(this.routers).length} routers`);
     }
     
     return this.mergedRouter;

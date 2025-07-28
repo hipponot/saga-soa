@@ -1,60 +1,79 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-import { appRouter } from '../app-router.js';
-import { createExpressMiddleware } from '@trpc/server/adapters/express';
-import express from 'express';
+import { injectable, inject }                                   from 'inversify';                 from 'inversify';All } from 'vitest';
+import { createTRPCProxyClient, httpBatchLink }      from '@trpc/client';
+import { createExpressMiddleware }                              from '@trpc/server/adapters/express';e-api/express-server';
+import type { ILogger }                                         from '@saga-soa/logger';     from '@saga-soa/core-api/trpc-app-router';
+import type { TRPCAppRouterConfig }                             from './trpc-app-router-schema.js';re-api/express-server-schema';
+import { container }                                 from '../inversify.config.js';
+import { ProjectController }                         from '../sectors/project/index.js';
+import { RunController }                             from '../sectors/run/index.js';
+import express                                       from 'express';
 
 describe('tRPC API Integration Tests', () => {
   let app: express.Application;
-  let client: ReturnType<typeof createTRPCProxyClient<typeof appRouter>>;
+  let client: any;
+  let server: any;
 
-  beforeAll(() => {
-    app = express();
-    app.use(express.json());
+  beforeAll(async () => {
+    // Add ExpressServerConfig binding for tests
+    const expressConfig: ExpressServerConfig = {
+      configType: 'EXPRESS_SERVER',
+      port: 0, // Use random port
+      logLevel: 'info',
+      name: 'Test tRPC API',
+    };
+    container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
 
-    // Create tRPC middleware with proper configuration
-    const trpcMiddleware = createExpressMiddleware({
-      router: appRouter,
-      createContext: async () => ({}),
-      onError: ({ error }) => {
-        console.error('tRPC Error:', error);
-      },
-    });
+    // Configure Express server
+    const expressServer = container.get(ExpressServer);
+    await expressServer.init(container, []);
+    app = expressServer.getApp();
 
-    app.use('/trpc', trpcMiddleware);
+    // Get the TRPCAppRouter instance from DI
+    const trpcAppRouter = container.get(TRPCAppRouter);
+    
+    // Get the sector controllers from DI
+    const projectController = container.get(ProjectController);
+    const runController = container.get(RunController);
+    
+    // Add routers to the TRPCAppRouter with namespaced names
+    trpcAppRouter.addRouter('project', projectController.createRouter());
+    trpcAppRouter.addRouter('run', runController.createRouter());
+
+    // Create tRPC middleware using TRPCAppRouter
+    const trpcMiddleware = trpcAppRouter.createExpressMiddleware();
+
+    // Mount tRPC on the configured base path
+    app.use(trpcAppRouter.getBasePath(), trpcMiddleware);
 
     // Start the server on a random port
-    const server = app.listen(0);
+    server = app.listen(0);
     const port = (server.address() as any).port;
 
     // Create tRPC client
-    client = createTRPCProxyClient<typeof appRouter>({
+    client = createTRPCProxyClient({
       links: [
         httpBatchLink({
-          url: `http://localhost:${port}/trpc`,
+          url: `http://localhost:${port}${trpcAppRouter.getBasePath()}`,
         }),
       ],
     });
-
-    // Store server for cleanup
-    (app as any).server = server;
   });
 
   afterAll(() => {
-    if ((app as any).server) {
-      (app as any).server.close();
+    if (server) {
+      server.close();
     }
   });
 
   describe('Project Router', () => {
     it('should get all projects', async () => {
-      const result = await client.project.getAll.query();
+      const result = await client.project.getAllProjects.query();
       console.log('Result:', JSON.stringify(result, null, 2));
       expect(Array.isArray(result)).toBe(true);
     });
 
     it('should get project by ID', async () => {
-      const result = await client.project.getById.query({ id: '1' });
+      const result = await client.project.getProjectById.query({ id: '1' });
       console.log('Result:', JSON.stringify(result, null, 2));
       expect(result.id).toBe('1');
       expect(result.name).toBe('Saga SOA Platform');
@@ -68,7 +87,7 @@ describe('tRPC API Integration Tests', () => {
       };
 
       console.log('Request input:', JSON.stringify(newProject, null, 2));
-      const result = await client.project.create.mutate(newProject);
+      const result = await client.project.createProject.mutate(newProject);
       console.log('Result:', JSON.stringify(result, null, 2));
       expect(result.name).toBe(newProject.name);
       expect(result.description).toBe(newProject.description);
@@ -77,16 +96,16 @@ describe('tRPC API Integration Tests', () => {
 
   describe('Run Router', () => {
     it('should get all runs', async () => {
-      const result = await client.run.getAll.query();
+      const result = await client.run.getAllRuns.query();
       console.log('Result:', JSON.stringify(result, null, 2));
       expect(Array.isArray(result)).toBe(true);
     });
 
-    it('should get runs by project ID', async () => {
-      const result = await client.run.getByProject.query({ projectId: '1' });
+    it('should get run by ID', async () => {
+      const result = await client.run.getRunById.query({ id: '1' });
       console.log('Result:', JSON.stringify(result, null, 2));
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.every((run: any) => run.projectId === '1')).toBe(true);
+      expect(result.id).toBe('1');
+      expect(result.name).toBe('Initial Build');
     });
 
     it('should create a new run', async () => {
@@ -98,10 +117,10 @@ describe('tRPC API Integration Tests', () => {
       };
 
       console.log('Request input:', JSON.stringify(newRun, null, 2));
-      const result = await client.run.create.mutate(newRun);
+      const result = await client.run.createRun.mutate(newRun);
       console.log('Result:', JSON.stringify(result, null, 2));
       expect(result.name).toBe(newRun.name);
       expect(result.projectId).toBe(newRun.projectId);
     });
   });
-}); 
+});
