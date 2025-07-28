@@ -18,6 +18,7 @@
     "@saga-soa/core-api": "workspace:*",
     "@saga-soa/db": "workspace:*",
     "@saga-soa/logger": "workspace:^",
+    "@trpc/client": "^11.4.3",
     "@trpc/server": "^11.0.0",
     "@types/mongodb": "^4.0.7",
     "express": "^4.18.2",

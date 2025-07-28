@@ -1,7 +1,3 @@
-import { inject } from 'inversify';
-import { TRPCControllerBase } from '@saga-soa/core-api/trpc-controller';
-import type { ILogger } from '@saga-soa/logger';
-import { z } from 'zod';
 import { initTRPC } from '@trpc/server';
 import {
   CreateProjectSchema,
@@ -68,4 +64,4 @@ export const projectRouter = t.router({
       }
       return { success: true, message: 'Project deleted successfully' };
     }),
-}); 
+});

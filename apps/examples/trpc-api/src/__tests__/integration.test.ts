@@ -1,44 +1,63 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import request from 'supertest';
+import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
 import { appRouter } from '../app-router.js';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import express from 'express';
 
 describe('tRPC API Integration Tests', () => {
   let app: express.Application;
+  let client: ReturnType<typeof createTRPCProxyClient<typeof appRouter>>;
 
   beforeAll(() => {
     app = express();
     app.use(express.json());
 
+    // Create tRPC middleware with proper configuration
     const trpcMiddleware = createExpressMiddleware({
       router: appRouter,
       createContext: async () => ({}),
+      onError: ({ error }) => {
+        console.error('tRPC Error:', error);
+      },
     });
 
     app.use('/trpc', trpcMiddleware);
+
+    // Start the server on a random port
+    const server = app.listen(0);
+    const port = (server.address() as any).port;
+
+    // Create tRPC client
+    client = createTRPCProxyClient<typeof appRouter>({
+      links: [
+        httpBatchLink({
+          url: `http://localhost:${port}/trpc`,
+        }),
+      ],
+    });
+
+    // Store server for cleanup
+    (app as any).server = server;
+  });
+
+  afterAll(() => {
+    if ((app as any).server) {
+      (app as any).server.close();
+    }
   });
 
   describe('Project Router', () => {
     it('should get all projects', async () => {
-      const response = await request(app)
-        .post('/trpc/project.getAll')
-        .send({})
-        .expect(200);
-
-      expect(response.body.result.data).toBeDefined();
-      expect(Array.isArray(response.body.result.data)).toBe(true);
+      const result = await client.project.getAll.query();
+      console.log('Result:', JSON.stringify(result, null, 2));
+      expect(Array.isArray(result)).toBe(true);
     });
 
     it('should get project by ID', async () => {
-      const response = await request(app)
-        .post('/trpc/project.getById')
-        .send({ input: { id: '1' } })
-        .expect(200);
-
-      expect(response.body.result.data).toBeDefined();
-      expect(response.body.result.data.id).toBe('1');
-      expect(response.body.result.data.name).toBe('Saga SOA Platform');
+      const result = await client.project.getById.query({ id: '1' });
+      console.log('Result:', JSON.stringify(result, null, 2));
+      expect(result.id).toBe('1');
+      expect(result.name).toBe('Saga SOA Platform');
     });
 
     it('should create a new project', async () => {
@@ -48,37 +67,26 @@ describe('tRPC API Integration Tests', () => {
         status: 'active' as const,
       };
 
-      const response = await request(app)
-        .post('/trpc/project.create')
-        .send({ input: newProject })
-        .expect(200);
-
-      expect(response.body.result.data).toBeDefined();
-      expect(response.body.result.data.name).toBe(newProject.name);
-      expect(response.body.result.data.description).toBe(newProject.description);
+      console.log('Request input:', JSON.stringify(newProject, null, 2));
+      const result = await client.project.create.mutate(newProject);
+      console.log('Result:', JSON.stringify(result, null, 2));
+      expect(result.name).toBe(newProject.name);
+      expect(result.description).toBe(newProject.description);
     });
   });
 
   describe('Run Router', () => {
     it('should get all runs', async () => {
-      const response = await request(app)
-        .post('/trpc/run.getAll')
-        .send({})
-        .expect(200);
-
-      expect(response.body.result.data).toBeDefined();
-      expect(Array.isArray(response.body.result.data)).toBe(true);
+      const result = await client.run.getAll.query();
+      console.log('Result:', JSON.stringify(result, null, 2));
+      expect(Array.isArray(result)).toBe(true);
     });
 
     it('should get runs by project ID', async () => {
-      const response = await request(app)
-        .post('/trpc/run.getByProject')
-        .send({ input: { projectId: '1' } })
-        .expect(200);
-
-      expect(response.body.result.data).toBeDefined();
-      expect(Array.isArray(response.body.result.data)).toBe(true);
-      expect(response.body.result.data.every((run: any) => run.projectId === '1')).toBe(true);
+      const result = await client.run.getByProject.query({ projectId: '1' });
+      console.log('Result:', JSON.stringify(result, null, 2));
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.every((run: any) => run.projectId === '1')).toBe(true);
     });
 
     it('should create a new run', async () => {
@@ -89,14 +97,11 @@ describe('tRPC API Integration Tests', () => {
         status: 'pending' as const,
       };
 
-      const response = await request(app)
-        .post('/trpc/run.create')
-        .send({ input: newRun })
-        .expect(200);
-
-      expect(response.body.result.data).toBeDefined();
-      expect(response.body.result.data.name).toBe(newRun.name);
-      expect(response.body.result.data.projectId).toBe(newRun.projectId);
+      console.log('Request input:', JSON.stringify(newRun, null, 2));
+      const result = await client.run.create.mutate(newRun);
+      console.log('Result:', JSON.stringify(result, null, 2));
+      expect(result.name).toBe(newRun.name);
+      expect(result.projectId).toBe(newRun.projectId);
     });
   });
 }); 
