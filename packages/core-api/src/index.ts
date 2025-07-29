@@ -1,3 +1,3 @@
-export { RestControllerBase } from './rest-controller.js';
-export { GQLControllerBase } from './gql-controller.js';
-export { TRPCControllerBase } from './trpc-controller.js'; 
+export { AbstractRestController } from './abstract-rest-controller.js';
+export { AbstractGQLController } from './abstract-gql-controller.js';
+export { AbstractTRPCController } from './abstract-trpc-controller.js'; 

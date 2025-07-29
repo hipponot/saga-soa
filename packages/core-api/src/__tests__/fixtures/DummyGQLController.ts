@@ -1,5 +1,5 @@
-import { GQLControllerBase } from '../../gql-controller.js';
+import { AbstractGQLController } from '../../abstract-gql-controller.js';
 
-export class DummyGQLController extends GQLControllerBase {
+export class DummyGQLController extends AbstractGQLController {
   sectorName = 'dummy-gql';
 } 

@@ -10,17 +10,17 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./gql-controller": {
-      "types": "./dist/gql-controller.d.ts",
-      "default": "./dist/gql-controller.js"
+    "./abstract-gql-controller": {
+      "types": "./dist/abstract-gql-controller.d.ts",
+      "default": "./dist/abstract-gql-controller.js"
     },
-    "./trpc-controller": {
-      "types": "./dist/trpc-controller.d.ts",
-      "default": "./dist/trpc-controller.js"
+    "./abstract-trpc-controller": {
+      "types": "./dist/abstract-trpc-controller.d.ts",
+      "default": "./dist/abstract-trpc-controller.js"
     },
-    "./rest-controller": {
-      "types": "./dist/rest-controller.d.ts",
-      "default": "./dist/rest-controller.js"
+    "./abstract-rest-controller": {
+      "types": "./dist/abstract-rest-controller.d.ts",
+      "default": "./dist/abstract-rest-controller.js"
     },
     "./express-server": {
       "types": "./dist/express-server.d.ts",

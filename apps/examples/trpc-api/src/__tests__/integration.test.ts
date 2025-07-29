@@ -1,12 +1,16 @@
-import { injectable, inject }                                   from 'inversify';                 from 'inversify';All } from 'vitest';
-import { createTRPCProxyClient, httpBatchLink }      from '@trpc/client';
-import { createExpressMiddleware }                              from '@trpc/server/adapters/express';e-api/express-server';
-import type { ILogger }                                         from '@saga-soa/logger';     from '@saga-soa/core-api/trpc-app-router';
-import type { TRPCAppRouterConfig }                             from './trpc-app-router-schema.js';re-api/express-server-schema';
-import { container }                                 from '../inversify.config.js';
-import { ProjectController }                         from '../sectors/project/index.js';
-import { RunController }                             from '../sectors/run/index.js';
-import express                                       from 'express';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { injectable, inject } from 'inversify';
+import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
+import { createExpressMiddleware } from '@trpc/server/adapters/express';
+import type { ILogger } from '@saga-soa/logger';
+import { ExpressServer } from '@saga-soa/core-api/express-server';
+import { TRPCAppRouter } from '@saga-soa/core-api/trpc-app-router';
+import type { TRPCAppRouterConfig } from '@saga-soa/core-api/trpc-app-router-schema';
+import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
+import { container } from '../inversify.config.js';
+import { ProjectController } from '../sectors/project/index.js';
+import { RunController } from '../sectors/run/index.js';
+import express from 'express';
 
 describe('tRPC API Integration Tests', () => {
   let app: express.Application;
@@ -123,4 +127,4 @@ describe('tRPC API Integration Tests', () => {
       expect(result.projectId).toBe(newRun.projectId);
     });
   });
-});
+}); 

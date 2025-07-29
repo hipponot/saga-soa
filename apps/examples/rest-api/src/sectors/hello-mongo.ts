@@ -4,7 +4,7 @@ import type { MongoClient }                       from 'mongodb';
 import { ObjectId }                               from 'mongodb';
 import { MONGO_CLIENT }                           from '@saga-soa/db';
 import type { ILogger }                           from '@saga-soa/logger';
-import { RestControllerBase, REST_API_BASE_PATH } from '@saga-soa/core-api/rest-controller';
+import { AbstractRestController, REST_API_BASE_PATH } from '@saga-soa/core-api/abstract-rest-controller';
 
 const SECTOR = 'hello-mongo';
 const TEST_COLLECTION = 'hello_mongo_test';
@@ -12,7 +12,7 @@ const TEST_DOC = { _id: new ObjectId('64b7f8f8f8f8f8f8f8f8f8f8'), message: 'Hell
 
 @Controller(`/${REST_API_BASE_PATH}/${SECTOR}`)
 @injectable()
-export class HelloMongo extends RestControllerBase {
+export class HelloMongo extends AbstractRestController {
   readonly sectorName = SECTOR;
   constructor(
     @inject('ILogger') logger: ILogger,

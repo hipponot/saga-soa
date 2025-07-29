@@ -4,7 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { writeFileSync } from 'node:fs';
 import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
-import { GQLControllerBase } from '@saga-soa/core-api/gql-controller';
+import { AbstractGQLController } from '@saga-soa/core-api/abstract-gql-controller';
 import { printSchema } from 'graphql';
 import { UserResolver } from '../dist/sectors/user/gql/user.resolver.js';
 import { SessionResolver } from '../dist/sectors/session/gql/session.resolver.js';

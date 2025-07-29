@@ -1,5 +1,5 @@
-import { RestControllerBase } from '../../rest-controller.js';
+import { AbstractRestController } from '../../abstract-rest-controller.js';
 
-export class DummyRestController extends RestControllerBase {
+export class DummyRestController extends AbstractRestController {
   sectorName = 'dummy';
 } 

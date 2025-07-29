@@ -2,13 +2,13 @@ import { Controller, Get, Req, Res, HeaderParams, getMetadataArgsStorage } from 
 import type { Request, Response }                                          from 'express';
 import { injectable, inject }                                              from 'inversify';
 import type { ILogger }                                                    from '@saga-soa/logger';
-import { RestControllerBase, REST_API_BASE_PATH }                          from './rest-controller.js';
+import { AbstractRestController, REST_API_BASE_PATH }                          from './abstract-rest-controller.js';
 
 const SECTOR = 'sectors';
 
 @injectable()
 @Controller(`/${REST_API_BASE_PATH}/${SECTOR}`)
-export class SectorsController extends RestControllerBase {
+export class SectorsController extends AbstractRestController {
   readonly sectorName = SECTOR;
 
   constructor(@inject('ILogger') logger: ILogger) {

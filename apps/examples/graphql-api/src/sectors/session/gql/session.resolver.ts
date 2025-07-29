@@ -1,6 +1,6 @@
 import { Query, Resolver, Arg, Mutation } from 'type-graphql';
 import { inject } from 'inversify';
-import { GQLControllerBase } from '@saga-soa/core-api/gql-controller';
+import { AbstractGQLController } from '@saga-soa/core-api/abstract-gql-controller';
 import type { ILogger } from '@saga-soa/logger';
 import { Session } from './session.type.js';
 import { SessionInput } from './session.input.js';
@@ -8,7 +8,7 @@ import { sessions, createSession, getSessionById } from './session.data.js';
 import { v4 as uuidv4 } from 'uuid';
 
 @Resolver(() => Session)
-export class SessionResolver extends GQLControllerBase {
+export class SessionResolver extends AbstractGQLController {
   readonly sectorName = 'session';
 
   constructor(@inject('ILogger') logger: ILogger) {

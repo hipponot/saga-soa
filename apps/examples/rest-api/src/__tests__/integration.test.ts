@@ -1,19 +1,17 @@
-import { describe, it, beforeAll, afterAll, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import request from 'supertest';
-import { container } from '../inversify.config.js';
-import { ExpressServer } from '@saga-soa/core-api/express-server';
-import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
-import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
-import { RestControllerBase } from '@saga-soa/core-api/rest-controller';
-import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
+import { ExpressServer } from '@saga-soa/core-api/express-server';
+import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
+import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
+import { container } from '../inversify.config.js';
 import express from 'express';
-import { MONGO_CLIENT } from '@saga-soa/db';
 
 let app: express.Application;
 
 beforeAll(async () => {
-
   // ExpressServer binding
   const expressConfig: ExpressServerConfig = {
     configType: 'EXPRESS_SERVER',
@@ -29,7 +27,7 @@ beforeAll(async () => {
   const controllers = await loadControllers(
     // Note this is a vitest so we load the TS files - vitest uses esbuild to transpile ts files on the fly for testing
     path.resolve(__dirname, '../sectors/*.ts'),
-    RestControllerBase
+    AbstractRestController
   );
   console.log('Loaded controllers:', controllers.map(c => c.name));
 
@@ -63,4 +61,4 @@ describe('REST API Integration', () => {
     expect(getRes.status).toBe(200);
     expect(getRes.body.message).toBe('Hello from Mongo!');
   });
-});
+}); 

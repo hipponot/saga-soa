@@ -3,8 +3,8 @@ import { ExpressServer }            from '@saga-soa/core-api/express-server';
 import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
 import { container }                from './inversify.config.js';
 import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
-import { RestControllerBase } from '@saga-soa/core-api/rest-controller';
-import { GQLControllerBase } from '@saga-soa/core-api/gql-controller';
+import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
+import { AbstractGQLController } from '@saga-soa/core-api/abstract-gql-controller';
 import { ApolloServer }             from '@apollo/server';
 import { expressMiddleware }        from '@apollo/server/express4';
 import { buildSchema }              from 'type-graphql';
@@ -35,7 +35,7 @@ async function start() {
       path.resolve(__dirname, './sectors/user/rest/*.js'),
       path.resolve(__dirname, './sectors/session/rest/*.js'),
     ],
-    RestControllerBase
+    AbstractRestController
   );
   // Get the ExpressServer instance from DI
   const expressServer = container.get(ExpressServer);
@@ -52,7 +52,7 @@ async function start() {
       path.resolve(__dirname, './sectors/user/gql/*.js'),
       path.resolve(__dirname, './sectors/session/gql/*.js'),
     ],
-    GQLControllerBase
+    AbstractGQLController
   );
   // Build TypeGraphQL schema with dynamically loaded resolvers
   const schema = await buildSchema({

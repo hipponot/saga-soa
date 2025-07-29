@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { TRPCControllerBase, router } from '@saga-soa/core-api/trpc-controller';
+import { AbstractTRPCController, router } from '@saga-soa/core-api/abstract-trpc-controller';
 import type { ILogger } from '@saga-soa/logger';
 import {
   CreateProjectSchema,
@@ -18,7 +18,7 @@ import {
 } from './project.data.js';
 
 @injectable()
-export class ProjectController extends TRPCControllerBase {
+export class ProjectController extends AbstractTRPCController {
   readonly sectorName = 'project';
 
   constructor(@inject('ILogger') logger: ILogger) {

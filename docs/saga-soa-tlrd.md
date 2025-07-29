@@ -16,17 +16,17 @@ The platform's backbone is the `core-api` package, which provides:
 **saga-soa** supports three major API technologies with consistent patterns:
 
 #### 🔗 **REST APIs**
-- `RestControllerBase` for standardized REST controllers
+- `AbstractRestController` for standardized REST controllers
 - Automatic route registration and middleware management
 - Built-in validation and error handling
 
 #### 🎯 **GraphQL APIs**
-- `GQLControllerBase` for GraphQL resolvers
+- `AbstractGQLController` for GraphQL resolvers
 - Apollo Server integration with sector-based schema composition
 - Type-safe resolver development with TypeGraphQL
 
 #### ⚡ **tRPC APIs**
-- `TRPCControllerBase` for tRPC routers
+- `AbstractTRPCController` for tRPC routers
 - `TRPCAppRouter` for centralized router management
 - Namespaced procedure organization and automatic middleware generation
 
@@ -78,7 +78,7 @@ sectors/
 ### REST API Example
 ```typescript
 @injectable()
-export class UserController extends RestControllerBase {
+export class UserController extends AbstractRestController {
   @Get('/users')
   async getUsers() { /* ... */ }
   
@@ -90,7 +90,7 @@ export class UserController extends RestControllerBase {
 ### GraphQL API Example
 ```typescript
 @injectable()
-export class UserResolver extends GQLControllerBase {
+export class UserResolver extends AbstractGQLController {
   @Query()
   async users() { /* ... */ }
   
@@ -102,7 +102,7 @@ export class UserResolver extends GQLControllerBase {
 ### tRPC API Example
 ```typescript
 @injectable()
-export class UserController extends TRPCControllerBase {
+export class UserController extends AbstractTRPCController {
   createRouter() {
     return router({
       getAllUsers: t.query(() => { /* ... */ }),
