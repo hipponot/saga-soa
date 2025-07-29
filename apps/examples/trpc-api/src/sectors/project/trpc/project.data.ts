@@ -51,10 +51,13 @@ export const updateProject = (input: UpdateProjectInput): Project | null => {
     return null;
   }
 
-  const project = projects[projectIndex];
+  const project = projects[projectIndex]!;
   const updatedProject: Project = {
-    ...project,
-    ...input,
+    id: project.id,
+    name: input.name ?? project.name,
+    description: input.description ?? project.description,
+    status: input.status ?? project.status,
+    createdAt: project.createdAt,
     updatedAt: new Date(),
   };
 

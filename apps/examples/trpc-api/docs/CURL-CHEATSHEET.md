@@ -47,7 +47,7 @@ curl -X GET http://localhost:5000/health
 ```bash
 curl -X POST http://localhost:5000/trpc/project.getAllProjects \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"query","params":{}}'
+  -d '{"0":{"jsonrpc":"2.0","id":1,"method":"query","params":{}}}'
 ```
 
 **Expected Response:**
@@ -349,17 +349,55 @@ chmod +x test-api.sh
 
 ## Notes
 
-- The API uses JSON-RPC 2.0 format for HTTP transport
+- The API uses tRPC's HTTP transport format
 - All requests are POST requests to the `/trpc` endpoint
 - Query methods use `"method":"query"`
 - Mutation methods use `"method":"mutation"`
 - Input parameters are passed in the `params.input` object
 - The server runs on port 5000 by default
 - Use `jq` for pretty-printing JSON responses: `curl ... | jq`
+- **Note:** tRPC HTTP transport is complex. For easier testing, use the tRPC client or the provided test script
 
 ## Troubleshooting
 
 1. **Server not starting:** Make sure you've run `pnpm build` first
 2. **Port already in use:** Change the port in `main.ts` or kill the existing process
 3. **Invalid JSON:** Check your JSON syntax in the request body
-4. **Method not found:** Verify the endpoint name matches the router structure 
+4. **Method not found:** Verify the endpoint name matches the router structure
+
+## Using tRPC Client (Recommended)
+
+For easier testing, use the tRPC client which handles the HTTP transport format automatically:
+
+```javascript
+import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
+
+const client = createTRPCProxyClient({
+  links: [
+    httpBatchLink({
+      url: 'http://localhost:5000/trpc',
+    }),
+  ],
+});
+
+// Test queries
+const projects = await client.project.getAllProjects.query();
+console.log(projects);
+
+const project = await client.project.getProjectById.query({ id: '1' });
+console.log(project);
+
+// Test mutations
+const newProject = await client.project.createProject.mutate({
+  name: 'Test Project',
+  description: 'A test project',
+  status: 'active'
+});
+console.log(newProject);
+```
+
+**Benefits of using tRPC client:**
+- Type safety
+- Automatic HTTP transport handling
+- Better error messages
+- Easier debugging 

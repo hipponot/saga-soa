@@ -74,11 +74,18 @@ export const updateRun = (input: UpdateRunInput): Run | null => {
     return null;
   }
 
-  const run = runs[runIndex];
+  const run = runs[runIndex]!;
   const updatedRun: Run = {
-    ...run,
-    ...input,
+    id: run.id,
+    projectId: run.projectId,
+    name: input.name ?? run.name,
+    description: input.description ?? run.description,
+    status: input.status ?? run.status,
+    config: input.config ?? run.config,
+    createdAt: run.createdAt,
     updatedAt: new Date(),
+    startedAt: run.startedAt,
+    completedAt: run.completedAt,
   };
 
   // Update timestamps based on status changes
