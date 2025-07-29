@@ -8,7 +8,6 @@ import { TRPCServer } from '@saga-soa/core-api/trpc-server';
 import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
 import { AbstractTRPCController } from '@saga-soa/core-api/abstract-trpc-controller';
 import type { TRPCServerConfig } from '@saga-soa/core-api/trpc-server-schema';
-import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
 import { container } from '../inversify.config.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -23,15 +22,6 @@ describe('tRPC API Integration Tests', () => {
   let server: any;
 
   beforeAll(async () => {
-    // Add ExpressServerConfig binding for tests
-    const expressConfig: ExpressServerConfig = {
-      configType: 'EXPRESS_SERVER',
-      port: 0, // Use random port
-      logLevel: 'info',
-      name: 'Test tRPC API',
-    };
-    container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
-
     // Dynamically load all tRPC controllers
     const controllers = await loadControllers(
       path.resolve(__dirname, '../sectors/*/trpc/*.router.ts'),
