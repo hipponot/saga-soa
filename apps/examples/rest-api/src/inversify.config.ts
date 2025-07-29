@@ -6,6 +6,7 @@ import { MockMongoProvider }              from '@saga-soa/db/mocks/mock-mongo-pr
 import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
 import { PinoLogger }                     from '@saga-soa/logger';
 import { ExpressServer }                  from '@saga-soa/core-api/express-server';
+import type { ExpressServerConfig }       from '@saga-soa/core-api/express-server-schema';
 
 const container = new Container();
 
@@ -17,8 +18,20 @@ const loggerConfig: PinoLoggerConfig = {
   prettyPrint: true,
 };
 
+// Express Server configuration
+const expressConfig: ExpressServerConfig = {
+  configType: 'EXPRESS_SERVER',
+  port: Number(process.env.PORT) || 3000,
+  logLevel: 'info',
+  name: 'REST API Example',
+  basePath: 'saga-soa', // Simplified basePath since controllers no longer include hardcoded prefix
+};
+
 container.bind<PinoLoggerConfig>('PinoLoggerConfig').toConstantValue(loggerConfig);
 container.bind<ILogger>('ILogger').to(PinoLogger).inSingletonScope();
+
+// Bind ExpressServer configuration
+container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
 
 // Bind MongoProvider to IMongoConnMgr using async factory (toDynamicValue, Inversify v6.x)
 container.bind<IMongoConnMgr>('IMongoConnMgr').toDynamicValue(async () => {

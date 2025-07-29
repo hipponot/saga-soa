@@ -7,7 +7,7 @@ import { TRPCServer } from '@saga-soa/core-api/trpc-server';
 import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
 import type { IMongoConnMgr } from '@saga-soa/db';
 import type { TRPCServerConfig } from '@saga-soa/core-api/trpc-server-schema';
-
+import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
 
 export const container = new Container();
 
@@ -17,6 +17,15 @@ const loggerConfig: PinoLoggerConfig = {
   level: 'info',
   isExpressContext: true,
   prettyPrint: true,
+};
+
+// Express Server configuration
+const expressConfig: ExpressServerConfig = {
+  configType: 'EXPRESS_SERVER',
+  port: Number(process.env.PORT) || 5000,
+  logLevel: 'info',
+  name: 'Example tRPC API',
+  basePath: '/saga-soa/v1', // Add basePath like other examples
 };
 
 // tRPC Server configuration
@@ -32,6 +41,9 @@ const trpcConfig: TRPCServerConfig = {
 // Bind logger
 container.bind<PinoLoggerConfig>('PinoLoggerConfig').toConstantValue(loggerConfig);
 container.bind<ILogger>('ILogger').to(PinoLogger).inSingletonScope();
+
+// Bind ExpressServer configuration
+container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
 
 // Bind database
 container.bind<IMongoConnMgr>('IMongoConnMgr').to(MongoProvider);

@@ -1,8 +1,6 @@
 import 'reflect-metadata';
 import { ExpressServer } from '@saga-soa/core-api/express-server';
-import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
 import { GQLServer } from '@saga-soa/core-api/gql-server';
-import type { GQLServerConfig } from '@saga-soa/core-api/gql-server-schema';
 import { container } from './inversify.config.js';
 import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
 import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
@@ -17,26 +15,6 @@ import express from 'express';
 //   - __dirname: the directory name of the current module file
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const expressConfig: ExpressServerConfig = {
-  configType: 'EXPRESS_SERVER',
-  port: Number(process.env.PORT) || 4000,
-  logLevel: 'info',
-  name: 'Example GraphQL API',
-  basePath: '/saga-soa/v1', // All routes will be prefixed with this base path
-};
-
-const gqlConfig: GQLServerConfig = {
-  configType: 'GQL_SERVER',
-  mountPoint: '/graphql', // Will be mounted at /saga-soa/v1/graphql
-  logLevel: 'info',
-  name: 'GraphQL API',
-  enablePlayground: true, // Enable GraphQL playground
-  playgroundPath: '/playground', // Optional: custom playground path
-};
-
-container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
-container.bind<GQLServerConfig>('GQLServerConfig').toConstantValue(gqlConfig);
 
 async function start() {
   // Dynamically load all REST controllers from user and session sectors
@@ -65,7 +43,7 @@ async function start() {
   await gqlServer.init(container, resolvers);
   
   // Mount the GraphQL server to the Express app with basePath
-  gqlServer.mountToApp(app, expressConfig.basePath);
+  gqlServer.mountToApp(app, '/saga-soa/v1');
 
   // Start the server
   expressServer.start();

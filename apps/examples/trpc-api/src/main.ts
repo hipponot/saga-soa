@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import { ExpressServer }            from '@saga-soa/core-api/express-server';
-import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
 import { TRPCServer }            from '@saga-soa/core-api/trpc-server';
 import { loadControllers }          from '@saga-soa/core-api/utils/loadControllers';
 import { AbstractTRPCController }   from '@saga-soa/core-api/abstract-trpc-controller';
@@ -10,16 +9,6 @@ import { fileURLToPath }            from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const expressConfig: ExpressServerConfig = {
-  configType: 'EXPRESS_SERVER',
-  port: Number(process.env.PORT) || 5000,
-  logLevel: 'info',
-  name: 'Example tRPC API',
-  basePath: '/saga-soa/v1', // Add basePath like other examples
-};
-
-container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
 
 async function start() {
   // Dynamically load all tRPC controllers
@@ -52,7 +41,7 @@ async function start() {
   }
 
   // Mount tRPC and playground middleware with basePath support
-  await trpcServer.mountToApp(app, expressConfig.basePath);
+  await trpcServer.mountToApp(app, '/saga-soa/v1');
 
   // Add a simple health check (at root level for easy access)
   app.get('/health', (req, res) => {
