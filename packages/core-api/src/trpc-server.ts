@@ -1,6 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { initTRPC, type AnyRouter, type CreateContextCallback } from '@trpc/server';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
+import { expressHandler } from 'trpc-playground/handlers/express';
 import type { ILogger } from '@saga-soa/logger';
 import type { TRPCServerConfig } from './trpc-server-schema.js';
 
@@ -15,6 +16,11 @@ export class TRPCServer {
     @inject('ILogger') private logger: ILogger
   ) {
     this.t = initTRPC.create();
+    
+    // Log playground configuration
+    if (this.config.enablePlayground) {
+      this.logger.info(`tRPC Playground enabled at ${this.config.playgroundPath}`);
+    }
   }
 
   /**
@@ -98,10 +104,69 @@ export class TRPCServer {
   }
 
   /**
+   * Create playground middleware if playground is enabled
+   */
+  public createPlaygroundMiddleware() {
+    if (!this.config.enablePlayground) {
+      this.logger.warn('Playground middleware requested but playground is not enabled in configuration');
+      return null;
+    }
+
+    const router = this.getRouter();
+    const basePath = this.config.basePath;
+    
+    this.logger.info(`Creating tRPC playground middleware at ${this.config.playgroundPath}`);
+    
+    return expressHandler({
+      trpcApiEndpoint: basePath,
+      playgroundEndpoint: this.config.playgroundPath,
+      router,
+      // Additional playground configuration can be passed here
+      ...this.config.playgroundConfig,
+    });
+  }
+
+  /**
+   * Mount tRPC and playground middleware to an Express app with basePath support
+   */
+  public async mountToApp(app: any, basePath?: string): Promise<void> {
+    const trpcMiddleware = this.createExpressMiddleware();
+    const fullBasePath = basePath ? `${basePath}${this.config.basePath}` : this.config.basePath;
+    
+    // Mount tRPC middleware
+    app.use(fullBasePath, trpcMiddleware);
+    this.logger.info(`Mounted tRPC middleware at ${fullBasePath}`);
+
+    // Mount playground middleware if enabled
+    if (this.isPlaygroundEnabled()) {
+      const playgroundMiddleware = await this.createPlaygroundMiddleware();
+      if (playgroundMiddleware) {
+        const playgroundPath = basePath ? `${basePath}${this.config.playgroundPath}` : this.config.playgroundPath;
+        app.use(playgroundPath, playgroundMiddleware);
+        this.logger.info(`Mounted tRPC playground at ${playgroundPath}`);
+      }
+    }
+  }
+
+  /**
    * Get the base path for the tRPC API
    */
   public getBasePath(): string {
     return this.config.basePath;
+  }
+
+  /**
+   * Get the playground path if enabled
+   */
+  public getPlaygroundPath(): string | null {
+    return this.config.enablePlayground ? this.config.playgroundPath : null;
+  }
+
+  /**
+   * Check if playground is enabled
+   */
+  public isPlaygroundEnabled(): boolean {
+    return this.config.enablePlayground;
   }
 
   /**
@@ -146,4 +211,4 @@ export class TRPCServer {
     this.mergedRouter = undefined;
     this.logger.info('Cleared all tRPC routers');
   }
-} 
+}

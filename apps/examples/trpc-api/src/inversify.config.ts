@@ -24,6 +24,8 @@ const trpcConfig: TRPCServerConfig = {
   configType: 'TRPC_SERVER',
   name: 'Example tRPC API',
   basePath: '/trpc',
+  enablePlayground: true,
+  playgroundPath: '/playground',
   contextFactory: async () => ({}),
 };
 

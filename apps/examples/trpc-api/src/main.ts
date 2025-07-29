@@ -16,6 +16,7 @@ const expressConfig: ExpressServerConfig = {
   port: Number(process.env.PORT) || 5000,
   logLevel: 'info',
   name: 'Example tRPC API',
+  basePath: '/saga-soa/v1', // Add basePath like other examples
 };
 
 container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
@@ -50,13 +51,10 @@ async function start() {
     trpcServer.addRouter(controllerInstance.sectorName, controllerInstance.createRouter());
   }
 
-  // Create tRPC middleware using TRPCServer
-  const trpcMiddleware = trpcServer.createExpressMiddleware();
+  // Mount tRPC and playground middleware with basePath support
+  await trpcServer.mountToApp(app, expressConfig.basePath);
 
-  // Mount tRPC on the configured base path
-  app.use(trpcServer.getBasePath(), trpcMiddleware);
-
-  // Add a simple health check
+  // Add a simple health check (at root level for easy access)
   app.get('/health', (req, res) => {
     res.json({ status: 'ok', service: 'tRPC API' });
   });
