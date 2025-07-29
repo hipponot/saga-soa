@@ -31,6 +31,8 @@ const gqlConfig: GQLServerConfig = {
   mountPoint: '/graphql', // Will be mounted at /saga-soa/v1/graphql
   logLevel: 'info',
   name: 'GraphQL API',
+  enablePlayground: true, // Enable GraphQL playground
+  playgroundPath: '/playground', // Optional: custom playground path
 };
 
 container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
@@ -62,8 +64,8 @@ async function start() {
   const gqlServer = container.get(GQLServer);
   await gqlServer.init(container, resolvers);
   
-  // Mount the GraphQL server to the Express app
-  gqlServer.mountToApp(app);
+  // Mount the GraphQL server to the Express app with basePath
+  gqlServer.mountToApp(app, expressConfig.basePath);
 
   // Start the server
   expressServer.start();

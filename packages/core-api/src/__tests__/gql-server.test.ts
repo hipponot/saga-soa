@@ -117,6 +117,27 @@ describe('GQLServer (integration)', () => {
     expect(server.getApolloServer()).toBeDefined();
   });
 
+  it('should mount to Express app with basePath correctly', async () => {
+    const config = {
+      configType: 'GQL_SERVER' as const,
+      mountPoint: '/graphql',
+      logLevel: 'info' as const,
+      name: 'Test GraphQL Server',
+    };
+
+    container.bind('GQLServerConfig').toConstantValue(config);
+    container.bind('ILogger').toConstantValue(mockLogger);
+    container.bind(GQLServer).toSelf();
+
+    const server = container.get(GQLServer);
+    await server.init(container, [TestGQLController]);
+
+    const app = express();
+    server.mountToApp(app, '/api/v1');
+
+    expect(server.getApolloServer()).toBeDefined();
+  });
+
   it('should work with custom mount point', async () => {
     const config = {
       configType: 'GQL_SERVER' as const,
@@ -292,6 +313,63 @@ describe('GQLServer (integration)', () => {
       });
 
       expect(responseDefault.status).toBe(404);
+    } finally {
+      expressServer.close();
+      await server.stop();
+    }
+  });
+
+  it('should work with basePath and playground', async () => {
+    const config = {
+      configType: 'GQL_SERVER' as const,
+      mountPoint: '/graphql',
+      logLevel: 'info' as const,
+      name: 'Test GraphQL Server',
+      enablePlayground: true,
+    };
+
+    container.bind('GQLServerConfig').toConstantValue(config);
+    container.bind('ILogger').toConstantValue(mockLogger);
+    container.bind(GQLServer).toSelf();
+
+    const server = container.get(GQLServer);
+    await server.init(container, [TestGQLController]);
+
+    const app = express();
+    
+    // Add express.json() middleware before Apollo middleware
+    app.use(express.json());
+    
+    server.mountToApp(app, '/api/v1');
+
+    const port = getRandomPort();
+    const expressServer = app.listen(port);
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Test the GraphQL endpoint with basePath
+      const response = await fetch(`http://localhost:${port}/api/v1/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: '{ hello { message } }',
+        }),
+      });
+
+      expect(response.status).toBe(200);
+
+      // Test that the playground is accessible at the correct path
+      const playgroundResponse = await fetch(`http://localhost:${port}/api/v1/graphql`, {
+        headers: {
+          'Accept': 'text/html',
+        },
+      });
+
+      expect(playgroundResponse.status).toBe(200);
+      expect(playgroundResponse.headers.get('content-type')).toContain('text/html');
     } finally {
       expressServer.close();
       await server.stop();

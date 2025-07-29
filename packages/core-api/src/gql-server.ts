@@ -26,23 +26,52 @@ export class GQLServer {
       resolvers: resolvers as unknown as [Function, ...Function[]],
     });
 
-    // Set up ApolloServer v4+
-    this.apolloServer = new ApolloServer({ schema });
+    // Set up ApolloServer v4+ with playground configuration
+    this.apolloServer = new ApolloServer({
+      schema,
+      introspection: this.config.enablePlayground,
+      // Disable landing page if playground is disabled
+      plugins: this.config.enablePlayground ? [] : [
+        {
+          async serverWillStart() {
+            return {
+              async drainServer() {
+                // Disable landing page
+              },
+            };
+          },
+        },
+      ],
+    });
     await this.apolloServer.start();
   }
 
-  public mountToApp(app: Application): void {
+  public mountToApp(app: Application, basePath?: string): void {
     if (!this.apolloServer) {
       throw new Error('GQLServer must be initialized before mounting to app');
     }
 
-    // Mount Apollo middleware at the configured mount point
+    // Calculate the full mount path by combining basePath and mountPoint
+    const fullMountPath = basePath ? `${basePath}${this.config.mountPoint}` : this.config.mountPoint;
+
+    // Mount Apollo middleware at the calculated mount point
     // @ts-expect-error Apollo Server v4+ middleware type mismatch with Express
-    app.use(this.config.mountPoint, expressMiddleware(this.apolloServer, { context: async () => ({}) }));
+    app.use(fullMountPath, expressMiddleware(this.apolloServer, { context: async () => ({}) }));
 
     this.logger.info(
-      `GraphQL server '${this.config.name}' mounted at '${this.config.mountPoint}'`
+      `GraphQL server '${this.config.name}' mounted at '${fullMountPath}'`
     );
+
+    // Log playground status
+    if (this.config.enablePlayground) {
+      this.logger.info(
+        `GraphQL playground enabled and accessible at '${fullMountPath}'`
+      );
+    } else {
+      this.logger.info(
+        `GraphQL playground disabled for '${this.config.name}'`
+      );
+    }
   }
 
   public async stop(): Promise<void> {
@@ -57,4 +86,4 @@ export class GQLServer {
   public getApolloServer(): ApolloServer | undefined {
     return this.apolloServer;
   }
-} 
+}
