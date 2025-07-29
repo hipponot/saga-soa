@@ -13,4 +13,4 @@ export function getUsers() {
 
 export function getUserById(id: string) {
   return users.find(u => u.id === id);
-} 
+}

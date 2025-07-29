@@ -13,4 +13,4 @@ export function getSessions() {
 
 export function getSessionById(id: string) {
   return sessions.find(s => s.id === id);
-} 
+}

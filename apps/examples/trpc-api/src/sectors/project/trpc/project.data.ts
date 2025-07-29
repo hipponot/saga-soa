@@ -40,7 +40,7 @@ export const createProject = (input: CreateProjectInput): Project => {
     createdAt: now,
     updatedAt: now,
   };
-  
+
   projects.push(project);
   return project;
 };
@@ -73,4 +73,4 @@ export const deleteProject = (id: string): boolean => {
 
   projects.splice(projectIndex, 1);
   return true;
-}; 
+};

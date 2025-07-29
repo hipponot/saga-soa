@@ -54,5 +54,3 @@ container.bind(ExpressServer).toSelf().inSingletonScope();
 // Bind tRPC Server
 container.bind<TRPCServerConfig>('TRPCServerConfig').toConstantValue(trpcConfig);
 container.bind(TRPCServer).toSelf().inSingletonScope();
-
- 

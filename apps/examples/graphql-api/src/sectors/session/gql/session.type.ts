@@ -19,4 +19,4 @@ export class Session {
 
   @Field({ nullable: true })
   notes?: string;
-} 
+}

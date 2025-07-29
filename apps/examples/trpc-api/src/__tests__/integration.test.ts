@@ -27,8 +27,11 @@ describe('tRPC API Integration Tests', () => {
       path.resolve(__dirname, '../sectors/*/trpc/*.router.ts'),
       AbstractTRPCController
     );
-    
-    console.log('Loaded tRPC controllers:', controllers.map(c => c.name));
+
+    console.log(
+      'Loaded tRPC controllers:',
+      controllers.map(c => c.name)
+    );
 
     // Bind all loaded controllers to the DI container
     for (const controller of controllers) {
@@ -42,7 +45,7 @@ describe('tRPC API Integration Tests', () => {
 
     // Get the TRPCServer instance from DI
     const trpcServer = container.get(TRPCServer);
-    
+
     // Add routers to the TRPCServer using dynamically loaded controllers
     for (const controller of controllers) {
       const controllerInstance = container.get(controller) as any;

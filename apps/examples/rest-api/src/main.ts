@@ -10,7 +10,10 @@ const __dirname = path.dirname(__filename);
 
 async function start() {
   // Dynamically load all sector controllers
-  const controllers = await loadControllers(path.resolve(__dirname, './sectors/*.js'), AbstractRestController);
+  const controllers = await loadControllers(
+    path.resolve(__dirname, './sectors/*.js'),
+    AbstractRestController
+  );
 
   // Start the Express server
   const expressServer = container.get(ExpressServer);
@@ -18,7 +21,7 @@ async function start() {
   expressServer.start();
 }
 
-start().catch((error) => {
+start().catch(error => {
   console.error('Failed to start server:', error);
   process.exit(1);
 });

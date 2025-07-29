@@ -10,7 +10,9 @@
     "build": "tsup",
     "start": "node dist/main.js",
     "check-types": "tsc --noEmit",
-    "lint": "echo 'add lint script'",
+    "lint": "eslint \"src/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
     "test": "vitest run",
     "clean": "rm -rf dist",
     "emit:schema": "tsx scripts/emit-schema.ts"

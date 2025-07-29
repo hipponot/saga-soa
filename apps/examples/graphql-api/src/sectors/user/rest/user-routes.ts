@@ -22,4 +22,4 @@ export class UserRestController extends AbstractRestController {
   async init() {
     // Async setup if needed
   }
-} 
+}

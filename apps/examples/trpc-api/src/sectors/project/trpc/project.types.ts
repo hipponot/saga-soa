@@ -31,4 +31,4 @@ export interface Project {
   status: 'active' | 'inactive' | 'archived';
   createdAt: Date;
   updatedAt: Date;
-} 
+}

@@ -16,4 +16,4 @@ export class SessionInput {
 
   @Field({ nullable: true })
   notes?: string;
-} 
+}

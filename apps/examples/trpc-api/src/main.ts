@@ -1,11 +1,11 @@
 import 'reflect-metadata';
-import { ExpressServer }            from '@saga-soa/core-api/express-server';
-import { TRPCServer }            from '@saga-soa/core-api/trpc-server';
-import { loadControllers }          from '@saga-soa/core-api/utils/loadControllers';
-import { AbstractTRPCController }   from '@saga-soa/core-api/abstract-trpc-controller';
-import { container }                from './inversify.config.js';
-import path                         from 'node:path';
-import { fileURLToPath }            from 'node:url';
+import { ExpressServer } from '@saga-soa/core-api/express-server';
+import { TRPCServer } from '@saga-soa/core-api/trpc-server';
+import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
+import { AbstractTRPCController } from '@saga-soa/core-api/abstract-trpc-controller';
+import { container } from './inversify.config.js';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,8 +16,11 @@ async function start() {
     path.resolve(__dirname, './sectors/*/trpc/*.router.js'),
     AbstractTRPCController
   );
-  
-  console.log('Loaded tRPC controllers:', controllers.map(c => c.name));
+
+  console.log(
+    'Loaded tRPC controllers:',
+    controllers.map(c => c.name)
+  );
 
   // Bind all loaded controllers to the DI container
   for (const controller of controllers) {
@@ -26,14 +29,14 @@ async function start() {
 
   // Get the ExpressServer instance from DI
   const expressServer = container.get(ExpressServer);
-  
+
   // Initialize the Express server
   await expressServer.init(container, []);
   const app = expressServer.getApp();
 
   // Get the TRPCServer instance from DI
   const trpcServer = container.get(TRPCServer);
-  
+
   // Add routers to the TRPCServer using dynamically loaded controllers
   for (const controller of controllers) {
     const controllerInstance = container.get(controller) as any;

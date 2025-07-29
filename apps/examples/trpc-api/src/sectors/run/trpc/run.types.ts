@@ -43,4 +43,4 @@ export interface Run {
   updatedAt: Date;
   startedAt?: Date;
   completedAt?: Date;
-} 
+}

@@ -30,21 +30,18 @@ export class ProjectController extends AbstractTRPCController {
 
     return router({
       // Get all projects
-      getAllProjects: t
-        .query(() => {
-          return getAllProjects();
-        }),
+      getAllProjects: t.query(() => {
+        return getAllProjects();
+      }),
 
       // Get project by ID
-      getProjectById: t
-        .input(GetProjectSchema)
-        .query(({ input }: { input: GetProjectInput }) => {
-          const project = getProjectById(input.id);
-          if (!project) {
-            throw new Error('Project not found');
-          }
-          return project;
-        }),
+      getProjectById: t.input(GetProjectSchema).query(({ input }: { input: GetProjectInput }) => {
+        const project = getProjectById(input.id);
+        if (!project) {
+          throw new Error('Project not found');
+        }
+        return project;
+      }),
 
       // Create project
       createProject: t
@@ -65,15 +62,13 @@ export class ProjectController extends AbstractTRPCController {
         }),
 
       // Delete project
-      deleteProject: t
-        .input(GetProjectSchema)
-        .mutation(({ input }: { input: GetProjectInput }) => {
-          const success = deleteProject(input.id);
-          if (!success) {
-            throw new Error('Project not found');
-          }
-          return { success: true, message: 'Project deleted successfully' };
-        }),
+      deleteProject: t.input(GetProjectSchema).mutation(({ input }: { input: GetProjectInput }) => {
+        const success = deleteProject(input.id);
+        if (!success) {
+          throw new Error('Project not found');
+        }
+        return { success: true, message: 'Project deleted successfully' };
+      }),
     });
   }
 }

@@ -19,7 +19,10 @@ beforeAll(async () => {
     path.resolve(__dirname, '../sectors/*.ts'),
     AbstractRestController
   );
-  console.log('Loaded controllers:', controllers.map(c => c.name));
+  console.log(
+    'Loaded controllers:',
+    controllers.map(c => c.name)
+  );
 
   // Use ExpressServer from DI, initialize with controllers, and get the app instance
   const expressServer = container.get(ExpressServer);
@@ -45,4 +48,4 @@ describe('REST API Integration', () => {
     expect(res.status).toBe(200);
     expect(res.text).toContain('Hello Mongo');
   });
-}); 
+});

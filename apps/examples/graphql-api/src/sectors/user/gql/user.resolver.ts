@@ -30,4 +30,4 @@ export class UserResolver extends AbstractGQLController {
     const user = Object.assign(new User(), input, { id: uuidv4() });
     return createUser(user);
   }
-} 
+}

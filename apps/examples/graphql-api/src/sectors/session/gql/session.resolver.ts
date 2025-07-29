@@ -30,4 +30,4 @@ export class SessionResolver extends AbstractGQLController {
     const session = Object.assign(new Session(), input, { id: uuidv4() });
     return createSession(session);
   }
-} 
+}

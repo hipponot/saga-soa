@@ -22,4 +22,4 @@ export class SessionRestController extends AbstractRestController {
   async init() {
     // Async setup if needed
   }
-} 
+}

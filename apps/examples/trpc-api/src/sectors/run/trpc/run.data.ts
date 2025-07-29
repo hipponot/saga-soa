@@ -63,7 +63,7 @@ export const createRun = (input: CreateRunInput): Run => {
     createdAt: now,
     updatedAt: now,
   };
-  
+
   runs.push(run);
   return run;
 };
@@ -91,8 +91,11 @@ export const updateRun = (input: UpdateRunInput): Run | null => {
   // Update timestamps based on status changes
   if (input.status === 'running' && run.status !== 'running') {
     updatedRun.startedAt = new Date();
-  } else if ((input.status === 'completed' || input.status === 'failed') && 
-             run.status !== 'completed' && run.status !== 'failed') {
+  } else if (
+    (input.status === 'completed' || input.status === 'failed') &&
+    run.status !== 'completed' &&
+    run.status !== 'failed'
+  ) {
     updatedRun.completedAt = new Date();
   }
 
@@ -108,4 +111,4 @@ export const deleteRun = (id: string): boolean => {
 
   runs.splice(runIndex, 1);
   return true;
-}; 
+};

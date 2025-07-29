@@ -19,10 +19,13 @@ const __dirname = path.dirname(__filename);
 async function start() {
   // Dynamically load all REST controllers from user and session sectors
   const controllers = await loadControllers(
-    [path.resolve(__dirname, './sectors/user/rest/*.js'), path.resolve(__dirname, './sectors/session/rest/*.js')],
+    [
+      path.resolve(__dirname, './sectors/user/rest/*.js'),
+      path.resolve(__dirname, './sectors/session/rest/*.js'),
+    ],
     AbstractRestController
   );
-  
+
   // Get the ExpressServer instance from DI
   const expressServer = container.get(ExpressServer);
   // Initialize and register REST controllers
@@ -34,14 +37,17 @@ async function start() {
 
   // Dynamically load all GQL resolvers from user and session sectors
   const resolvers = await loadControllers(
-    [path.resolve(__dirname, './sectors/user/gql/*.js'), path.resolve(__dirname, './sectors/session/gql/*.js')],
+    [
+      path.resolve(__dirname, './sectors/user/gql/*.js'),
+      path.resolve(__dirname, './sectors/session/gql/*.js'),
+    ],
     AbstractGQLController
   );
 
   // Get the GQLServer instance from DI and initialize it
   const gqlServer = container.get(GQLServer);
   await gqlServer.init(container, resolvers);
-  
+
   // Mount the GraphQL server to the Express app with basePath
   gqlServer.mountToApp(app, '/saga-soa/v1');
 
@@ -49,7 +55,7 @@ async function start() {
   expressServer.start();
 }
 
-start().catch((error) => {
+start().catch(error => {
   console.error('Failed to start server:', error);
   process.exit(1);
 });
