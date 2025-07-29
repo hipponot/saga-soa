@@ -30,6 +30,14 @@
       "types": "./dist/express-server-schema.d.ts",
       "default": "./dist/express-server-schema.js"
     },
+    "./gql-server": {
+      "types": "./dist/gql-server.d.ts",
+      "default": "./dist/gql-server.js"
+    },
+    "./gql-server-schema": {
+      "types": "./dist/gql-server-schema.d.ts",
+      "default": "./dist/gql-server-schema.js"
+    },
     "./sectors-controller": {
       "types": "./dist/sectors-controller.d.ts",
       "default": "./dist/sectors-controller.js"
@@ -54,19 +62,23 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@apollo/server": "^4.10.0",
     "@trpc/server": "^11.0.0",
     "express": "^4.18.2",
     "fast-glob": "^3.3.3",
     "figlet": "^1.8.1",
+    "graphql": "^16.8.1",
     "inversify": "^6.2.2",
     "reflect-metadata": "^0.2.2",
     "routing-controllers": "^0.11.2",
+    "type-graphql": "^2.0.0-beta.3",
     "zod": "^3.22.2"
   },
   "devDependencies": {
     "@saga-soa/logger": "workspace:*",
     "@types/express": "^5.0.3",
     "@types/figlet": "^1.7.0",
+    "@types/graphql": "^14.5.0",
     "@types/node": "latest",
     "@types/supertest": "^6.0.3",
     "@vitest/coverage-v8": "^1.5.0",

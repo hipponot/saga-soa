@@ -262,6 +262,9 @@ importers:
 
   packages/core-api:
     dependencies:
+      '@apollo/server':
+        specifier: ^4.10.0
+        version: 4.12.2(graphql@16.11.0)
       '@trpc/server':
         specifier: ^11.0.0
         version: 11.4.3(typescript@5.8.3)
@@ -274,6 +277,9 @@ importers:
       figlet:
         specifier: ^1.8.1
         version: 1.8.1
+      graphql:
+        specifier: ^16.8.1
+        version: 16.11.0
       inversify:
         specifier: ^6.2.2
         version: 6.2.2(reflect-metadata@0.2.2)
@@ -283,6 +289,9 @@ importers:
       routing-controllers:
         specifier: ^0.11.2
         version: 0.11.2(class-transformer@0.5.1)(class-validator@0.14.2)
+      type-graphql:
+        specifier: ^2.0.0-beta.3
+        version: 2.0.0-rc.2(class-validator@0.14.2)(graphql-scalars@1.24.2(graphql@16.11.0))(graphql@16.11.0)
       zod:
         specifier: ^3.22.2
         version: 3.25.67
@@ -296,6 +305,9 @@ importers:
       '@types/figlet':
         specifier: ^1.7.0
         version: 1.7.0
+      '@types/graphql':
+        specifier: ^14.5.0
+        version: 14.5.0
       '@types/node':
         specifier: latest
         version: 24.1.0
@@ -1533,6 +1545,10 @@ packages:
 
   '@types/glob@7.2.0':
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
+
+  '@types/graphql@14.5.0':
+    resolution: {integrity: sha512-MOkzsEp1Jk5bXuAsHsUi6BVv0zCO+7/2PTiZMXWDSsMXvNU6w/PLMQT2vHn8hy2i0JqojPz1Sz6rsFjHtsU0lA==}
+    deprecated: This is a stub types definition. graphql provides its own type definitions, so you do not need this installed.
 
   '@types/http-errors@2.0.5':
     resolution: {integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==}
@@ -5696,6 +5712,10 @@ snapshots:
       '@types/minimatch': 5.1.2
       '@types/node': 24.1.0
 
+  '@types/graphql@14.5.0':
+    dependencies:
+      graphql: 16.11.0
+
   '@types/http-errors@2.0.5': {}
 
   '@types/inquirer@6.5.0':
@@ -6185,7 +6205,7 @@ snapshots:
       pretty-bytes: 5.6.0
       rollup: 4.44.0
       rollup-plugin-dts: 6.2.1(rollup@4.44.0)(typescript@5.8.2)
-      rollup-plugin-swc3: 0.11.2(@swc/core@1.12.6(@swc/helpers@0.5.15))(rollup@4.44.0)
+      rollup-plugin-swc3: 0.11.2(@swc/core@1.12.6(@swc/helpers@0.5.17))(rollup@4.44.0)
       rollup-preserve-directives: 1.1.3(rollup@4.44.0)
       tslib: 2.8.1
       yargs: 17.7.2
@@ -8472,7 +8492,7 @@ snapshots:
     optionalDependencies:
       '@babel/code-frame': 7.27.1
 
-  rollup-plugin-swc3@0.11.2(@swc/core@1.12.6(@swc/helpers@0.5.15))(rollup@4.44.0):
+  rollup-plugin-swc3@0.11.2(@swc/core@1.12.6(@swc/helpers@0.5.17))(rollup@4.44.0):
     dependencies:
       '@fastify/deepmerge': 1.3.0
       '@rollup/pluginutils': 5.2.0(rollup@4.44.0)

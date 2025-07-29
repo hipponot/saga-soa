@@ -6,7 +6,7 @@ import { MockMongoProvider }              from '@saga-soa/db/mocks/mock-mongo-pr
 import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
 import { PinoLogger }                     from '@saga-soa/logger';
 import { ExpressServer }                  from '@saga-soa/core-api/express-server';
-import * as controllers                   from './routes';
+import { GQLServer }                      from '@saga-soa/core-api/gql-server';
 
 const container = new Container();
 
@@ -35,5 +35,6 @@ container.bind<MongoClient>(MONGO_CLIENT).toDynamicValue(async () => {
 }).inSingletonScope();
 
 container.bind(ExpressServer).toSelf().inSingletonScope();
+container.bind(GQLServer).toSelf().inSingletonScope();
 
 export { container }; 

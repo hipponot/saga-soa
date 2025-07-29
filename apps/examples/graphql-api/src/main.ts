@@ -1,13 +1,12 @@
 import 'reflect-metadata';
 import { ExpressServer } from '@saga-soa/core-api/express-server';
 import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
+import { GQLServer } from '@saga-soa/core-api/gql-server';
+import type { GQLServerConfig } from '@saga-soa/core-api/gql-server-schema';
 import { container } from './inversify.config.js';
 import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
 import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
-import { AbstractGQLController, GQL_API_BASE_PATH } from '@saga-soa/core-api/abstract-gql-controller';
-import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
-import { buildSchema } from 'type-graphql';
+import { AbstractGQLController } from '@saga-soa/core-api/abstract-gql-controller';
 import path from 'node:path';
 import { fileURLToPath } from 'url';
 import express from 'express';
@@ -24,9 +23,18 @@ const expressConfig: ExpressServerConfig = {
   port: Number(process.env.PORT) || 4000,
   logLevel: 'info',
   name: 'Example GraphQL API',
+  basePath: '/saga-soa/v1', // All routes will be prefixed with this base path
+};
+
+const gqlConfig: GQLServerConfig = {
+  configType: 'GQL_SERVER',
+  mountPoint: '/graphql', // Will be mounted at /saga-soa/v1/graphql
+  logLevel: 'info',
+  name: 'GraphQL API',
 };
 
 container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
+container.bind<GQLServerConfig>('GQLServerConfig').toConstantValue(gqlConfig);
 
 async function start() {
   // Dynamically load all REST controllers from user and session sectors
@@ -34,6 +42,7 @@ async function start() {
     [path.resolve(__dirname, './sectors/user/rest/*.js'), path.resolve(__dirname, './sectors/session/rest/*.js')],
     AbstractRestController
   );
+  
   // Get the ExpressServer instance from DI
   const expressServer = container.get(ExpressServer);
   // Initialize and register REST controllers
@@ -48,20 +57,19 @@ async function start() {
     [path.resolve(__dirname, './sectors/user/gql/*.js'), path.resolve(__dirname, './sectors/session/gql/*.js')],
     AbstractGQLController
   );
-  // Build TypeGraphQL schema with dynamically loaded resolvers
-  const schema = await buildSchema({
-    resolvers: resolvers,
-  });
 
-  // Set up ApolloServer v4+ on /graphql
-  const apolloServer = new ApolloServer({ schema });
-  await apolloServer.start();
-
-  // @ts-expect-error Apollo Server v4+ middleware type mismatch with Express
-  app.use(GQL_API_BASE_PATH, expressMiddleware(apolloServer, { context: async () => ({}) }));
+  // Get the GQLServer instance from DI and initialize it
+  const gqlServer = container.get(GQLServer);
+  await gqlServer.init(container, resolvers);
+  
+  // Mount the GraphQL server to the Express app
+  gqlServer.mountToApp(app);
 
   // Start the server
   expressServer.start();
 }
 
-start();
+start().catch((error) => {
+  console.error('Failed to start server:', error);
+  process.exit(1);
+});
