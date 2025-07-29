@@ -4,6 +4,7 @@ import { TRPCServer } from '@saga-soa/core-api/trpc-server';
 import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
 import { AbstractTRPCController } from '@saga-soa/core-api/abstract-trpc-controller';
 import { container } from './inversify.config.js';
+import type { ILogger } from '@saga-soa/logger';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -11,16 +12,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function start() {
+  const logger = container.get<ILogger>('ILogger');
+
   // Dynamically load all tRPC controllers
   const controllers = await loadControllers(
     path.resolve(__dirname, './sectors/*/trpc/*.router.js'),
     AbstractTRPCController
   );
 
-  console.log(
-    'Loaded tRPC controllers:',
-    controllers.map(c => c.name)
-  );
+  logger.info('Loaded tRPC controllers:', controllers.map(c => c.name));
 
   // Bind all loaded controllers to the DI container
   for (const controller of controllers) {
@@ -55,4 +55,8 @@ async function start() {
   expressServer.start();
 }
 
-start().catch(console.error);
+start().catch(error => {
+  const logger = container.get<ILogger>('ILogger');
+  logger.error('Failed to start server:', error);
+  process.exit(1);
+});
