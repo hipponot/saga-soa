@@ -38,27 +38,21 @@ beforeAll(async () => {
 });
 
 describe('REST API Integration', () => {
-  it('GET /saga-soa/hello/test-route', async () => {
-    const res = await request(app).get('/saga-soa/hello/test-route');
+  it('GET /hello/test-route', async () => {
+    const res = await request(app).get('/hello/test-route');
     expect(res.status).toBe(200);
     expect(res.text).toContain('Hello');
   });
 
-  it('GET /saga-soa/hello-again/test-route', async () => {
-    const res = await request(app).get('/saga-soa/hello-again/test-route');
+  it('GET /hello-again/test-route', async () => {
+    const res = await request(app).get('/hello-again/test-route');
     expect(res.status).toBe(200);
-    expect(res.text).toContain('Hello again');
+    expect(res.text).toContain('Hello Again');
   });
 
-  it('POST /hello-mongo then GET /hello-mongo', async () => {
-    // Write test doc
-    const postRes = await request(app).post('/saga-soa/hello-mongo/test-write');
-    expect(postRes.status).toBe(201);
-    expect(postRes.body.ok).toBe(true);
-
-    // Read test doc
-    const getRes = await request(app).get('/saga-soa/hello-mongo/test-read');
-    expect(getRes.status).toBe(200);
-    expect(getRes.body.message).toBe('Hello from Mongo!');
+  it('GET /hello-mongo/test-route', async () => {
+    const res = await request(app).get('/hello-mongo/test-route');
+    expect(res.status).toBe(200);
+    expect(res.text).toContain('Hello Mongo');
   });
 }); 

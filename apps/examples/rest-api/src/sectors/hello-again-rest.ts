@@ -1,21 +1,23 @@
-import { Get, Controller }                                                    from 'routing-controllers';
-import { inject }                                                             from 'inversify';
-import type { ILogger }                                                       from '@saga-soa/logger';
-import { AbstractRestController, REST_API_BASE_PATH }                             from '@saga-soa/core-api/abstract-rest-controller';
-import { injectable } from 'inversify';
+import { Get, Controller } from 'routing-controllers';
+import type { Request, Response } from 'express';
+import { injectable, inject } from 'inversify';
+import type { ILogger } from '@saga-soa/logger';
+import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
 
 const SECTOR = 'hello-again';
 
-@Controller(`/${REST_API_BASE_PATH}/${SECTOR}`)
+@Controller(`/${SECTOR}`)
 @injectable()
 export class HelloAgainRest extends AbstractRestController {
   readonly sectorName = SECTOR;
-  constructor(@inject('ILogger') logger: ILogger) { super(logger, SECTOR); }
+  constructor(@inject('ILogger') logger: ILogger) {
+    super(logger, SECTOR);
+  }
 
   @Get('/test-route')
   testRoute() {
     this.logger.info('Hello again route hit');
-    return 'Hello again!';
+    return 'Hello Again';
   }
 
   async init() {

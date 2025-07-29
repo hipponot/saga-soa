@@ -4,8 +4,6 @@ import type { ILogger } from '@saga-soa/logger';
 import figlet from 'figlet';
 import type { Request, Response } from 'express';
 
-export const REST_API_BASE_PATH = 'saga-soa';
-
 export abstract class AbstractRestController {
   private static _controllers: Function[] = [];
   protected logger: ILogger;

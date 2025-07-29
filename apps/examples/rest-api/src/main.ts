@@ -13,7 +13,8 @@ const expressConfig: ExpressServerConfig = {
   configType: 'EXPRESS_SERVER',
   port: Number(process.env.PORT) || 3000,
   logLevel: 'info',
-  name: 'Example REST API',
+  name: 'REST API Example',
+  basePath: 'saga-soa', // Simplified basePath since controllers no longer include hardcoded prefix
 };
 
 container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
@@ -24,12 +25,14 @@ async function start() {
     path.resolve(__dirname, './sectors/*.js'),
     AbstractRestController
   );
-  // Get the ExpressServer instance from DI
+
+  // Start the Express server
   const expressServer = container.get(ExpressServer);
-  // Initialize and register controllers via ExpressServer
   await expressServer.init(container, controllers);
-  // Start the server using ExpressServer
   expressServer.start();
 }
 
-start();
+start().catch((error) => {
+  console.error('Failed to start server:', error);
+  process.exit(1);
+});

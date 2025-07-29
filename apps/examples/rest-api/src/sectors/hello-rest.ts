@@ -2,11 +2,11 @@ import { Get, Controller }                        from 'routing-controllers';
 import type { Request, Response }                 from 'express';
 import { injectable, inject }                     from 'inversify';
 import type { ILogger }                           from '@saga-soa/logger';
-import { AbstractRestController, REST_API_BASE_PATH } from '@saga-soa/core-api/abstract-rest-controller';
+import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
 
 const SECTOR = 'hello';
 
-@Controller(`/${REST_API_BASE_PATH}/${SECTOR}`)
+@Controller(`/${SECTOR}`)
 @injectable()
 export class HelloRest extends AbstractRestController {
   readonly sectorName = SECTOR;

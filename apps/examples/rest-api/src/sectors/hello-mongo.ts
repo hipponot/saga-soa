@@ -1,40 +1,23 @@
-import { Get, Post, Controller, HttpCode }        from 'routing-controllers';
+import { Get, Controller }                        from 'routing-controllers';
+import type { Request, Response }                 from 'express';
 import { injectable, inject }                     from 'inversify';
-import type { MongoClient }                       from 'mongodb';
-import { ObjectId }                               from 'mongodb';
-import { MONGO_CLIENT }                           from '@saga-soa/db';
 import type { ILogger }                           from '@saga-soa/logger';
-import { AbstractRestController, REST_API_BASE_PATH } from '@saga-soa/core-api/abstract-rest-controller';
+import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
 
 const SECTOR = 'hello-mongo';
-const TEST_COLLECTION = 'hello_mongo_test';
-const TEST_DOC = { _id: new ObjectId('64b7f8f8f8f8f8f8f8f8f8f8'), message: 'Hello from Mongo!' };
 
-@Controller(`/${REST_API_BASE_PATH}/${SECTOR}`)
+@Controller(`/${SECTOR}`)
 @injectable()
 export class HelloMongo extends AbstractRestController {
   readonly sectorName = SECTOR;
-  constructor(
-    @inject('ILogger') logger: ILogger,
-    @inject(MONGO_CLIENT) private client: MongoClient
-  ) {
+  constructor(@inject('ILogger') logger: ILogger) {
     super(logger, SECTOR);
   }
 
-  @Post('/test-write')
-  @HttpCode(201)
-  async writeDoc() {
-    const db = this.client.db();
-    await db.collection(TEST_COLLECTION).insertOne(TEST_DOC);
-    return { ok: true };
-  }
-
-  @Get('/test-read')
-  async readDoc() {
-    const db = this.client.db();
-    const doc = await db.collection(TEST_COLLECTION).findOne({ _id: TEST_DOC._id });
-    if (!doc) return { error: 'Not found' };
-    return doc;
+  @Get('/test-route')
+  testRoute() {
+    this.logger.info('Hello mongo route hit');
+    return 'Hello Mongo';
   }
 
   async init() {

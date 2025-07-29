@@ -24,7 +24,7 @@ export class ExpressServer {
 
     // Always add SectorsController to the list
     const controllerClasses = [...controllers, SectorsController].filter(
-      (ctrl): ctrl is new (...args: any[]) => any => typeof ctrl === 'function' && ctrl.prototype && ctrl.prototype.init
+      (ctrl): ctrl is new (...args: any[]) => any => typeof ctrl === 'function'
     );
 
     // Step 1: Register all controllers with the DI container
@@ -42,16 +42,25 @@ export class ExpressServer {
       }
     }
 
-    // Register controller classes with routing-controllers
-    useExpressServer(this.app, {
+    // Prepare routing-controllers configuration
+    const routingConfig: Parameters<typeof useExpressServer>[1] = {
       controllers: controllerClasses as Function[],
-    });
+    };
+
+    // Add routePrefix if basePath is configured
+    if (this.config.basePath) {
+      routingConfig.routePrefix = this.config.basePath;
+    }
+
+    // Register controller classes with routing-controllers
+    useExpressServer(this.app, routingConfig);
   }
 
   public start(): void {
     this.serverInstance = this.app.listen(this.config.port, () => {
+      const basePathInfo = this.config.basePath ? ` with basePath '${this.config.basePath}'` : '';
       this.logger.info(
-        `Express server '${this.config.name}' started on port ${this.config.port}`
+        `Express server '${this.config.name}' started on port ${this.config.port}${basePathInfo}`
       );
     });
   }
