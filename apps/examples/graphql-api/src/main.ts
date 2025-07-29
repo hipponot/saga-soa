@@ -1,16 +1,16 @@
 import 'reflect-metadata';
-import { ExpressServer }            from '@saga-soa/core-api/express-server';
+import { ExpressServer } from '@saga-soa/core-api/express-server';
 import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
-import { container }                from './inversify.config.js';
+import { container } from './inversify.config.js';
 import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
 import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
-import { AbstractGQLController } from '@saga-soa/core-api/abstract-gql-controller';
-import { ApolloServer }             from '@apollo/server';
-import { expressMiddleware }        from '@apollo/server/express4';
-import { buildSchema }              from 'type-graphql';
-import path                         from 'node:path';
-import { fileURLToPath }            from 'url';
-import express                      from 'express';
+import { AbstractGQLController, GQL_API_BASE_PATH } from '@saga-soa/core-api/abstract-gql-controller';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
+import { buildSchema } from 'type-graphql';
+import path from 'node:path';
+import { fileURLToPath } from 'url';
+import express from 'express';
 
 // In ESM (ECMAScript Modules), __filename and __dirname are not available by default as they are in CommonJS.
 // The following workaround uses import.meta.url and path utilities to replicate their behavior:
@@ -31,10 +31,7 @@ container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expre
 async function start() {
   // Dynamically load all REST controllers from user and session sectors
   const controllers = await loadControllers(
-    [
-      path.resolve(__dirname, './sectors/user/rest/*.js'),
-      path.resolve(__dirname, './sectors/session/rest/*.js'),
-    ],
+    [path.resolve(__dirname, './sectors/user/rest/*.js'), path.resolve(__dirname, './sectors/session/rest/*.js')],
     AbstractRestController
   );
   // Get the ExpressServer instance from DI
@@ -48,23 +45,20 @@ async function start() {
 
   // Dynamically load all GQL resolvers from user and session sectors
   const resolvers = await loadControllers(
-    [
-      path.resolve(__dirname, './sectors/user/gql/*.js'),
-      path.resolve(__dirname, './sectors/session/gql/*.js'),
-    ],
+    [path.resolve(__dirname, './sectors/user/gql/*.js'), path.resolve(__dirname, './sectors/session/gql/*.js')],
     AbstractGQLController
   );
   // Build TypeGraphQL schema with dynamically loaded resolvers
   const schema = await buildSchema({
-    // @ts-expect-error - loadControllers returns a tuple, but buildSchema expects an array
     resolvers: resolvers,
   });
 
   // Set up ApolloServer v4+ on /graphql
   const apolloServer = new ApolloServer({ schema });
   await apolloServer.start();
+
   // @ts-expect-error Apollo Server v4+ middleware type mismatch with Express
-  app.use('/graphql', expressMiddleware(apolloServer, { context: async () => ({}) }));
+  app.use(GQL_API_BASE_PATH, expressMiddleware(apolloServer, { context: async () => ({}) }));
 
   // Start the server
   expressServer.start();

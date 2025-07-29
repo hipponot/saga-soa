@@ -42,12 +42,30 @@ curl -X GET http://localhost:5000/health
 
 ## Project Endpoints
 
+### Create New Project
+
+```bash
+curl -X POST http://localhost:5000/trpc/project.createProject \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test Project","description":"A test project","status":"active"}'
+```
+
+**Expected Response:**
+```json
+{
+  "id": "generated-uuid",
+  "name": "Test Project",
+  "description": "A test project",
+  "status": "active",
+  "createdAt": "2025-07-29T13:56:05.818Z",
+  "updatedAt": "2025-07-29T13:56:05.818Z"
+}
+```
+
 ### Get All Projects
 
 ```bash
-curl -X POST http://localhost:5000/trpc/project.getAllProjects \
-  -H "Content-Type: application/json" \
-  -d '{"0":{"jsonrpc":"2.0","id":1,"method":"query","params":{}}}'
+curl -X GET http://localhost:5000/trpc/project.getAllProjects
 ```
 
 **Expected Response:**
@@ -79,9 +97,7 @@ curl -X POST http://localhost:5000/trpc/project.getAllProjects \
 ### Get Project by ID
 
 ```bash
-curl -X POST http://localhost:5000/trpc/project.getProjectById \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"query","params":{"input":{"id":"1"}}}'
+curl -X GET "http://localhost:5000/trpc/project.getProjectById?input=%7B%22id%22%3A%221%22%7D"
 ```
 
 **Expected Response:**
@@ -100,13 +116,7 @@ curl -X POST http://localhost:5000/trpc/project.getProjectById \
 }
 ```
 
-### Create New Project
 
-```bash
-curl -X POST http://localhost:5000/trpc/project.createProject \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"mutation","params":{"input":{"name":"Test Project","description":"A test project","status":"active"}}}'
-```
 
 **Expected Response:**
 ```json
@@ -129,7 +139,7 @@ curl -X POST http://localhost:5000/trpc/project.createProject \
 ```bash
 curl -X POST http://localhost:5000/trpc/project.updateProject \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"mutation","params":{"input":{"id":"1","name":"Updated Project","description":"Updated description","status":"active"}}}'
+  -d '{"id":"1","name":"Updated Project","description":"Updated description","status":"active"}'
 ```
 
 **Expected Response:**
@@ -153,7 +163,7 @@ curl -X POST http://localhost:5000/trpc/project.updateProject \
 ```bash
 curl -X POST http://localhost:5000/trpc/project.deleteProject \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"mutation","params":{"input":{"id":"1"}}}'
+  -d '{"id":"1"}'
 ```
 
 **Expected Response:**
@@ -170,12 +180,31 @@ curl -X POST http://localhost:5000/trpc/project.deleteProject \
 
 ## Run Endpoints
 
+### Create New Run
+
+```bash
+curl -X POST http://localhost:5000/trpc/run.createRun \
+  -H "Content-Type: application/json" \
+  -d '{"projectId":"1","name":"Test Run","description":"A test run","status":"pending"}'
+```
+
+**Expected Response:**
+```json
+{
+  "id": "generated-uuid",
+  "projectId": "1",
+  "name": "Test Run",
+  "description": "A test run",
+  "status": "pending",
+  "createdAt": "2025-07-29T13:56:05.827Z",
+  "updatedAt": "2025-07-29T13:56:05.827Z"
+}
+```
+
 ### Get All Runs
 
 ```bash
-curl -X POST http://localhost:5000/trpc/run.getAllRuns \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"query","params":{}}'
+curl -X GET http://localhost:5000/trpc/run.getAllRuns
 ```
 
 **Expected Response:**
@@ -220,9 +249,7 @@ curl -X POST http://localhost:5000/trpc/run.getAllRuns \
 ### Get Run by ID
 
 ```bash
-curl -X POST http://localhost:5000/trpc/run.getRunById \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"query","params":{"input":{"id":"1"}}}'
+curl -X GET "http://localhost:5000/trpc/run.getRunById?input=%7B%22id%22%3A%221%22%7D"
 ```
 
 **Expected Response:**
@@ -248,13 +275,7 @@ curl -X POST http://localhost:5000/trpc/run.getRunById \
 }
 ```
 
-### Create New Run
 
-```bash
-curl -X POST http://localhost:5000/trpc/run.createRun \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"mutation","params":{"input":{"projectId":"1","name":"Test Run","description":"A test run","status":"pending"}}}'
-```
 
 **Expected Response:**
 ```json
@@ -278,9 +299,7 @@ curl -X POST http://localhost:5000/trpc/run.createRun \
 ### Invalid Project ID
 
 ```bash
-curl -X POST http://localhost:5000/trpc/project.getProjectById \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"query","params":{"input":{"id":"999"}}}'
+curl -X GET "http://localhost:5000/trpc/project.getProjectById?input=%7B%22id%22%3A%22999%22%7D"
 ```
 
 **Expected Response:**
@@ -298,15 +317,19 @@ curl -X POST http://localhost:5000/trpc/project.getProjectById \
 ```bash
 curl -X POST http://localhost:5000/trpc/project.createProject \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"mutation","params":{"input":{"name":"Test"}}}'
+  -d '{"name":"Test"}'
 ```
 
 **Expected Response:**
 ```json
 {
   "error": {
-    "code": -32603,
-    "message": "Validation failed"
+    "message": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"string\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"name\"\n    ],\n    \"message\": \"Required\"\n  }\n]",
+    "code": -32600,
+    "data": {
+      "code": "BAD_REQUEST",
+      "httpStatus": 400
+    }
   }
 }
 ```
@@ -325,20 +348,21 @@ echo "Testing tRPC API..."
 echo "1. Health Check:"
 curl -s -X GET http://localhost:5000/health | jq
 
-echo -e "\n2. Get All Projects:"
-curl -s -X POST http://localhost:5000/trpc/project.getAllProjects \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"query","params":{}}' | jq
-
-echo -e "\n3. Create New Project:"
+echo -e "\n2. Create New Project:"
 curl -s -X POST http://localhost:5000/trpc/project.createProject \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"mutation","params":{"input":{"name":"cURL Test Project","description":"Created via cURL","status":"active"}}}' | jq
+  -d '{"name":"cURL Test Project","description":"Created via cURL","status":"active"}' | jq
 
-echo -e "\n4. Get All Runs:"
-curl -s -X POST http://localhost:5000/trpc/run.getAllRuns \
+echo -e "\n3. Get All Projects:"
+curl -s -X GET http://localhost:5000/trpc/project.getAllProjects | jq
+
+echo -e "\n4. Create New Run:"
+curl -s -X POST http://localhost:5000/trpc/run.createRun \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"query","params":{}}' | jq
+  -d '{"projectId":"1","name":"cURL Test Run","description":"Created via cURL","status":"pending"}' | jq
+
+echo -e "\n5. Get All Runs:"
+curl -s -X GET http://localhost:5000/trpc/run.getAllRuns | jq
 ```
 
 Make it executable and run:
@@ -349,11 +373,9 @@ chmod +x test-api.sh
 
 ## Notes
 
-- The API uses tRPC's HTTP transport format
-- All requests are POST requests to the `/trpc` endpoint
-- Query methods use `"method":"query"`
-- Mutation methods use `"method":"mutation"`
-- Input parameters are passed in the `params.input` object
+- **Queries use GET requests** to the `/trpc` endpoint
+- **Mutations use POST requests** with JSON body to the `/trpc` endpoint
+- Input parameters for GET queries are passed as URL-encoded JSON in the query string
 - The server runs on port 5000 by default
 - Use `jq` for pretty-printing JSON responses: `curl ... | jq`
 - **Note:** tRPC HTTP transport is complex. For easier testing, use the tRPC client or the provided test script
@@ -400,4 +422,4 @@ console.log(newProject);
 - Type safety
 - Automatic HTTP transport handling
 - Better error messages
-- Easier debugging 
+- Easier debugging
