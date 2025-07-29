@@ -1,10 +1,15 @@
 import 'reflect-metadata';
-import { ExpressServer } from '@saga-soa/core-api/express-server';
+import { ExpressServer }            from '@saga-soa/core-api/express-server';
 import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
-import { TRPCAppRouter } from '@saga-soa/core-api/trpc-app-router';
-import { container } from './inversify.config.js';
-import { ProjectController } from './sectors/project/index.js';
-import { RunController } from './sectors/run/index.js';
+import { TRPCAppRouter }            from '@saga-soa/core-api/trpc-app-router';
+import { loadControllers }          from '@saga-soa/core-api/utils/loadControllers';
+import { AbstractTRPCController }   from '@saga-soa/core-api/abstract-trpc-controller';
+import { container }                from './inversify.config.js';
+import path                         from 'node:path';
+import { fileURLToPath }            from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const expressConfig: ExpressServerConfig = {
   configType: 'EXPRESS_SERVER',
@@ -16,6 +21,19 @@ const expressConfig: ExpressServerConfig = {
 container.bind<ExpressServerConfig>('ExpressServerConfig').toConstantValue(expressConfig);
 
 async function start() {
+  // Dynamically load all tRPC controllers
+  const controllers = await loadControllers(
+    path.resolve(__dirname, './sectors/*/trpc/*.router.js'),
+    AbstractTRPCController
+  );
+  
+  console.log('Loaded tRPC controllers:', controllers.map(c => c.name));
+
+  // Bind all loaded controllers to the DI container
+  for (const controller of controllers) {
+    container.bind(controller).toSelf().inSingletonScope();
+  }
+
   // Get the ExpressServer instance from DI
   const expressServer = container.get(ExpressServer);
   
@@ -26,13 +44,11 @@ async function start() {
   // Get the TRPCAppRouter instance from DI
   const trpcAppRouter = container.get(TRPCAppRouter);
   
-  // Get the sector controllers from DI
-  const projectController = container.get(ProjectController);
-  const runController = container.get(RunController);
-  
-  // Add routers to the TRPCAppRouter
-  trpcAppRouter.addRouter('project', projectController.createRouter());
-  trpcAppRouter.addRouter('run', runController.createRouter());
+  // Add routers to the TRPCAppRouter using dynamically loaded controllers
+  for (const controller of controllers) {
+    const controllerInstance = container.get(controller) as any;
+    trpcAppRouter.addRouter(controllerInstance.sectorName, controllerInstance.createRouter());
+  }
 
   // Create tRPC middleware using TRPCAppRouter
   const trpcMiddleware = trpcAppRouter.createExpressMiddleware();

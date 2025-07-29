@@ -7,8 +7,7 @@ import { TRPCAppRouter } from '@saga-soa/core-api/trpc-app-router';
 import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
 import type { IMongoConnMgr } from '@saga-soa/db';
 import type { TRPCAppRouterConfig } from '@saga-soa/core-api/trpc-app-router-schema';
-import { ProjectController } from './sectors/project/index.js';
-import { RunController } from './sectors/run/index.js';
+
 
 export const container = new Container();
 
@@ -42,6 +41,4 @@ container.bind(ExpressServer).toSelf().inSingletonScope();
 container.bind<TRPCAppRouterConfig>('TRPCAppRouterConfig').toConstantValue(trpcConfig);
 container.bind(TRPCAppRouter).toSelf().inSingletonScope();
 
-// Bind sector controllers
-container.bind(ProjectController).toSelf().inSingletonScope();
-container.bind(RunController).toSelf().inSingletonScope(); 
+ 
