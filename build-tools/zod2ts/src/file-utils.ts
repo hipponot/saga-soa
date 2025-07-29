@@ -18,11 +18,11 @@ export function validateFileExists(filePath: string): void {
 
 export function writeTypeFile(outputPath: string, typeName: string, typeDefinition: string): void {
   ensureDirectoryExists(outputPath);
-  
+
   // The typeDefinition already contains the full content, so just write it directly
   writeFileSync(outputPath, typeDefinition, 'utf-8');
 }
 
 export function generateOutputPath(outputDir: string, typeName: string): string {
   return resolve(outputDir, `${typeName}.ts`);
-} 
+}

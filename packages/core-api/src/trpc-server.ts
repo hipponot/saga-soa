@@ -16,7 +16,7 @@ export class TRPCServer {
     @inject('ILogger') private logger: ILogger
   ) {
     this.t = initTRPC.create();
-    
+
     // Log playground configuration
     if (this.config.enablePlayground) {
       this.logger.info(`tRPC Playground enabled at ${this.config.playgroundPath}`);
@@ -51,7 +51,7 @@ export class TRPCServer {
     if (this.routers[name]) {
       this.logger.warn(`Router '${name}' already exists and will be overwritten`);
     }
-    
+
     this.routers[name] = router;
     this.mergedRouter = undefined; // Reset merged router to force regeneration
     this.logger.info(`Added tRPC router '${name}'`);
@@ -82,9 +82,11 @@ export class TRPCServer {
         }
         this.mergedRouter = this.t.router(namespacedRouters);
       }
-      this.logger.info(`Created namespaced tRPC router with ${Object.keys(this.routers).length} routers`);
+      this.logger.info(
+        `Created namespaced tRPC router with ${Object.keys(this.routers).length} routers`
+      );
     }
-    
+
     return this.mergedRouter;
   }
 
@@ -93,7 +95,7 @@ export class TRPCServer {
    */
   public createExpressMiddleware() {
     const router = this.getRouter();
-    
+
     return createExpressMiddleware({
       router,
       createContext: this.config.contextFactory || (async () => ({})),
@@ -108,15 +110,17 @@ export class TRPCServer {
    */
   public createPlaygroundMiddleware() {
     if (!this.config.enablePlayground) {
-      this.logger.warn('Playground middleware requested but playground is not enabled in configuration');
+      this.logger.warn(
+        'Playground middleware requested but playground is not enabled in configuration'
+      );
       return null;
     }
 
     const router = this.getRouter();
     const basePath = this.config.basePath;
-    
+
     this.logger.info(`Creating tRPC playground middleware at ${this.config.playgroundPath}`);
-    
+
     return expressHandler({
       trpcApiEndpoint: basePath,
       playgroundEndpoint: this.config.playgroundPath,
@@ -132,7 +136,7 @@ export class TRPCServer {
   public async mountToApp(app: any, basePath?: string): Promise<void> {
     const trpcMiddleware = this.createExpressMiddleware();
     const fullBasePath = basePath ? `${basePath}${this.config.basePath}` : this.config.basePath;
-    
+
     // Mount tRPC middleware
     app.use(fullBasePath, trpcMiddleware);
     this.logger.info(`Mounted tRPC middleware at ${fullBasePath}`);
@@ -141,7 +145,9 @@ export class TRPCServer {
     if (this.isPlaygroundEnabled()) {
       const playgroundMiddleware = await this.createPlaygroundMiddleware();
       if (playgroundMiddleware) {
-        const playgroundPath = basePath ? `${basePath}${this.config.playgroundPath}` : this.config.playgroundPath;
+        const playgroundPath = basePath
+          ? `${basePath}${this.config.playgroundPath}`
+          : this.config.playgroundPath;
         app.use(playgroundPath, playgroundMiddleware);
         this.logger.info(`Mounted tRPC playground at ${playgroundPath}`);
       }

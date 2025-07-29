@@ -65,23 +65,23 @@ describe('ExpressServer (integration)', () => {
     const container = new Container();
     container.bind(TestSector).toSelf();
     useContainer(container);
-    
+
     const app = createExpressServer({
       controllers: [TestSector],
-      routePrefix: '/api/v1'
+      routePrefix: '/api/v1',
     });
-    
+
     const port = getRandomPort();
     const server = app.listen(port);
-    
+
     try {
       // Wait a bit for server to start
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       // Test the basePath route
       const response = await fetch(`http://localhost:${port}/api/v1/test/`);
       expect(response.status).toBe(200);
-      
+
       // Test that routes without basePath are not accessible
       const responseWithoutBasePath = await fetch(`http://localhost:${port}/test/`);
       expect(responseWithoutBasePath.status).toBe(404);
@@ -95,19 +95,19 @@ describe('ExpressServer (integration)', () => {
     const container = new Container();
     container.bind(TestSector).toSelf();
     useContainer(container);
-    
+
     const app = createExpressServer({
-      controllers: [TestSector]
+      controllers: [TestSector],
       // No routePrefix
     });
-    
+
     const port = getRandomPort();
     const server = app.listen(port);
-    
+
     try {
       // Wait a bit for server to start
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       // Test the direct route
       const response = await fetch(`http://localhost:${port}/test/`);
       expect(response.status).toBe(200);

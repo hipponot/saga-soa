@@ -1,8 +1,15 @@
-import { Controller, Get, Req, Res, HeaderParams, getMetadataArgsStorage } from 'routing-controllers';
-import type { Request, Response }                                          from 'express';
-import { injectable, inject }                                              from 'inversify';
-import type { ILogger }                                                    from '@saga-soa/logger';
-import { AbstractRestController }                          from './abstract-rest-controller.js';
+import {
+  Controller,
+  Get,
+  Req,
+  Res,
+  HeaderParams,
+  getMetadataArgsStorage,
+} from 'routing-controllers';
+import type { Request, Response } from 'express';
+import { injectable, inject } from 'inversify';
+import type { ILogger } from '@saga-soa/logger';
+import { AbstractRestController } from './abstract-rest-controller.js';
 
 const SECTOR = 'sectors';
 
@@ -26,7 +33,10 @@ export class SectorsController extends AbstractRestController {
       const sectorName = ctrl.target.name;
       const baseRoute = typeof ctrl.route === 'string' ? ctrl.route : ctrl.route.toString();
       const routes = actions
-        .filter((a: { target: any; type: string; route: string | RegExp; method: string }) => a.target === ctrl.target)
+        .filter(
+          (a: { target: any; type: string; route: string | RegExp; method: string }) =>
+            a.target === ctrl.target
+        )
         .map((a: { type: string; route: string | RegExp; method: string }) => ({
           method: a.type.toUpperCase(),
           path: baseRoute + (typeof a.route === 'string' ? a.route : a.route.toString()),

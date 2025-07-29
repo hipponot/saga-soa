@@ -5,4 +5,4 @@ export interface ILogger {
   warn(message: string, data?: object): void;
   error(message: string, error?: Error, data?: object): void;
   debug(message: string, data?: object): void;
-} 
+}

@@ -21,6 +21,7 @@ The configuration system is built around three main concepts:
 ### Configuration Schema
 
 Each configuration object must define a Zod schema that:
+
 - Includes a `configType` literal field to identify the configuration type
 - Specifies validation rules for each configuration field
 - Can be used to infer the TypeScript type
@@ -85,7 +86,7 @@ export const AppConfigSchema = z.object({
   configType: z.literal('APP'),
   port: z.number().int().positive(),
   logLevel: z.enum(['debug', 'info', 'warn', 'error']),
-  apiKey: z.string().min(1)
+  apiKey: z.string().min(1),
 });
 
 export type AppConfig = z.infer<typeof AppConfigSchema>;
@@ -129,7 +130,7 @@ import { IConfigManager, MockConfigManager } from '@saga-soa/config';
 
 describe('MyService', () => {
   let container: Container;
-  
+
   beforeEach(() => {
     container = new Container();
     container.bind<IConfigManager>('IConfigManager').to(MockConfigManager);

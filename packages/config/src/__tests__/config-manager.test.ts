@@ -1,40 +1,42 @@
 import 'reflect-metadata';
-import { z }                     from 'zod';
-import fs                        from 'fs';
-import path                      from 'path';
-import dotenv                    from 'dotenv-flow';
-import { Container }             from 'inversify';
-import { IConfigManager }        from '../i-config-manager.js';
-import { DotenvConfigManager }   from '../dotenv-config-manager.js';
+import { z } from 'zod';
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv-flow';
+import { Container } from 'inversify';
+import { IConfigManager } from '../i-config-manager.js';
+import { DotenvConfigManager } from '../dotenv-config-manager.js';
 import { ConfigValidationError } from '../config-validation-error.js';
-import { MockConfigManager }     from '../mocks/mock-config-manager.js';
+import { MockConfigManager } from '../mocks/mock-config-manager.js';
 import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach } from 'vitest';
 
 describe('ConfigManager', () => {
-
   let container: Container;
   const originalEnv = process.env;
-  const dotEnvPath = path.join(__dirname,'../../', '.env.test');
+  const dotEnvPath = path.join(__dirname, '../../', '.env.test');
 
   // This is the schema that drives the initialization of the TEST_CONFIG
   const TestSchema = z.object({
     configType: z.literal('TEST_CONFIG'),
     string: z.string().min(3),
-    number: z.preprocess((val) => Number(val), z.number().int().positive()),
-    bool: z.preprocess((val) => val === 'true', z.boolean()),
+    number: z.preprocess(val => Number(val), z.number().int().positive()),
+    bool: z.preprocess(val => val === 'true', z.boolean()),
     optional: z.string().optional(),
-    enum: z.enum(['option1', 'option2', 'option3'])
+    enum: z.enum(['option1', 'option2', 'option3']),
   });
 
   beforeAll(() => {
     // Write a .env.test file for the test
-    fs.writeFileSync(dotEnvPath, [
-      'TEST_CONFIG_STRING=hello',
-      'TEST_CONFIG_NUMBER=42',
-      'TEST_CONFIG_BOOL=true',
-      'TEST_CONFIG_OPTIONAL=optional-value',
-      'TEST_CONFIG_ENUM=option2',
-    ].join('\n'));
+    fs.writeFileSync(
+      dotEnvPath,
+      [
+        'TEST_CONFIG_STRING=hello',
+        'TEST_CONFIG_NUMBER=42',
+        'TEST_CONFIG_BOOL=true',
+        'TEST_CONFIG_OPTIONAL=optional-value',
+        'TEST_CONFIG_ENUM=option2',
+      ].join('\n')
+    );
     dotenv.config({ path: path.dirname(dotEnvPath) });
   });
 
@@ -109,7 +111,7 @@ describe('ConfigManager', () => {
     const EdgeSchema = z.object({
       configType: z.literal('EDGE_CONFIG'),
       required: z.string(),
-      number: z.preprocess((val) => Number(val), z.number().int()),
+      number: z.preprocess(val => Number(val), z.number().int()),
     });
 
     afterEach(() => {
@@ -131,10 +133,10 @@ describe('ConfigManager', () => {
     });
 
     it('throws ConfigValidationError for malformed .env values', () => {
-      fs.writeFileSync(dotEnvPath, [
-        'EDGE_CONFIG_REQUIRED=present',
-        'EDGE_CONFIG_NUMBER=notanumber',
-      ].join('\n'));
+      fs.writeFileSync(
+        dotEnvPath,
+        ['EDGE_CONFIG_REQUIRED=present', 'EDGE_CONFIG_NUMBER=notanumber'].join('\n')
+      );
       dotenv.config({ path: dotEnvPath });
       const configManager = new DotenvConfigManager();
       expect(() => configManager.get(EdgeSchema)).toThrow(ConfigValidationError);
@@ -150,8 +152,11 @@ describe('ConfigManager', () => {
     const AdvancedSchema = z.object({
       configType: z.literal('ADVANCED_CONFIG'),
       tags: z.string().array(),
-      database: z.object({ host: z.string(), port: z.preprocess((val) => Number(val), z.number().int()) }),
-      env: z.enum(['dev', 'prod', 'test'])
+      database: z.object({
+        host: z.string(),
+        port: z.preprocess(val => Number(val), z.number().int()),
+      }),
+      env: z.enum(['dev', 'prod', 'test']),
     });
 
     it('parses valid env values correctly', () => {

@@ -31,4 +31,4 @@ export class MockLogger implements ILogger {
   public clear(): void {
     this.logs = [];
   }
-} 
+}

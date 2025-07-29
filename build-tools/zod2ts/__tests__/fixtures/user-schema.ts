@@ -16,4 +16,4 @@ export const UserProfileSchema = z.object({
     theme: z.enum(['light', 'dark']).default('light'),
     notifications: z.boolean().default(true),
   }),
-}); 
+});

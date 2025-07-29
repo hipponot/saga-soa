@@ -21,4 +21,4 @@ export class TestGQLController extends AbstractGQLController {
       message: 'Hello from TestGQLController!',
     };
   }
-} 
+}

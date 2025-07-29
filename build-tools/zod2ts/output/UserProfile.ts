@@ -6,7 +6,7 @@ export type UserProfile = {
   bio: string | undefined;
   avatar: string | undefined;
   preferences: {
-  theme: any;
-  notifications: any;
-};
+    theme: any;
+    notifications: any;
+  };
 };

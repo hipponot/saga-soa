@@ -74,7 +74,7 @@ describe('GQLServer (integration)', () => {
     container.bind(GQLServer).toSelf();
 
     const server = container.get(GQLServer);
-    
+
     await expect(server.init(container, [])).rejects.toThrow('At least one resolver is required');
   });
 
@@ -93,7 +93,9 @@ describe('GQLServer (integration)', () => {
     const server = container.get(GQLServer);
     const app = express();
 
-    expect(() => server.mountToApp(app)).toThrow('GQLServer must be initialized before mounting to app');
+    expect(() => server.mountToApp(app)).toThrow(
+      'GQLServer must be initialized before mounting to app'
+    );
   });
 
   it('should mount to Express app correctly', async () => {
@@ -175,10 +177,10 @@ describe('GQLServer (integration)', () => {
     await server.init(container, [TestGQLController]);
 
     const app = express();
-    
+
     // Add express.json() middleware before Apollo middleware
     app.use(express.json());
-    
+
     server.mountToApp(app);
 
     // Start the Express app
@@ -200,13 +202,11 @@ describe('GQLServer (integration)', () => {
         }),
       });
 
-
-
       expect(response.status).toBe(200);
     } finally {
       // Stop the Express server
       expressServer.close();
-      
+
       // Stop the GraphQL server
       await server.stop();
     }
@@ -228,10 +228,10 @@ describe('GQLServer (integration)', () => {
     await server.init(container, [TestGQLController]);
 
     const app = express();
-    
+
     // Add express.json() middleware before Apollo middleware
     app.use(express.json());
-    
+
     server.mountToApp(app);
 
     const port = getRandomPort();
@@ -252,7 +252,7 @@ describe('GQLServer (integration)', () => {
       });
 
       expect(response.status).toBe(200);
-      const result = await response.json() as { data?: unknown };
+      const result = (await response.json()) as { data?: unknown };
       expect(result.data).toBeDefined();
     } finally {
       expressServer.close();
@@ -276,10 +276,10 @@ describe('GQLServer (integration)', () => {
     await server.init(container, [TestGQLController]);
 
     const app = express();
-    
+
     // Add express.json() middleware before Apollo middleware
     app.use(express.json());
-    
+
     server.mountToApp(app);
 
     const port = getRandomPort();
@@ -336,10 +336,10 @@ describe('GQLServer (integration)', () => {
     await server.init(container, [TestGQLController]);
 
     const app = express();
-    
+
     // Add express.json() middleware before Apollo middleware
     app.use(express.json());
-    
+
     server.mountToApp(app, '/api/v1');
 
     const port = getRandomPort();
@@ -364,7 +364,7 @@ describe('GQLServer (integration)', () => {
       // Test that the playground is accessible at the correct path
       const playgroundResponse = await fetch(`http://localhost:${port}/api/v1/graphql`, {
         headers: {
-          'Accept': 'text/html',
+          Accept: 'text/html',
         },
       });
 
@@ -392,10 +392,10 @@ describe('GQLServer (integration)', () => {
     await server.init(container, [TestGQLController, SimpleTestGQLController]);
 
     const app = express();
-    
+
     // Add express.json() middleware before Apollo middleware
     app.use(express.json());
-    
+
     server.mountToApp(app);
 
     const port = getRandomPort();
@@ -437,7 +437,7 @@ describe('GQLServer (integration)', () => {
     container.bind(GQLServer).toSelf();
 
     const server = container.get(GQLServer);
-    
+
     // This should throw an error during initialization due to invalid config
     try {
       await server.init(container, [TestGQLController]);
@@ -470,4 +470,4 @@ describe('GQLServer (integration)', () => {
     // Verify the Apollo server is stopped
     expect(server.getApolloServer()).toBeDefined();
   });
-}); 
+});

@@ -31,17 +31,19 @@ export class GQLServer {
       schema,
       introspection: this.config.enablePlayground,
       // Disable landing page if playground is disabled
-      plugins: this.config.enablePlayground ? [] : [
-        {
-          async serverWillStart() {
-            return {
-              async drainServer() {
-                // Disable landing page
+      plugins: this.config.enablePlayground
+        ? []
+        : [
+            {
+              async serverWillStart() {
+                return {
+                  async drainServer() {
+                    // Disable landing page
+                  },
+                };
               },
-            };
-          },
-        },
-      ],
+            },
+          ],
     });
     await this.apolloServer.start();
   }
@@ -52,34 +54,28 @@ export class GQLServer {
     }
 
     // Calculate the full mount path by combining basePath and mountPoint
-    const fullMountPath = basePath ? `${basePath}${this.config.mountPoint}` : this.config.mountPoint;
+    const fullMountPath = basePath
+      ? `${basePath}${this.config.mountPoint}`
+      : this.config.mountPoint;
 
     // Mount Apollo middleware at the calculated mount point
     // @ts-expect-error Apollo Server v4+ middleware type mismatch with Express
     app.use(fullMountPath, expressMiddleware(this.apolloServer, { context: async () => ({}) }));
 
-    this.logger.info(
-      `GraphQL server '${this.config.name}' mounted at '${fullMountPath}'`
-    );
+    this.logger.info(`GraphQL server '${this.config.name}' mounted at '${fullMountPath}'`);
 
     // Log playground status
     if (this.config.enablePlayground) {
-      this.logger.info(
-        `GraphQL playground enabled and accessible at '${fullMountPath}'`
-      );
+      this.logger.info(`GraphQL playground enabled and accessible at '${fullMountPath}'`);
     } else {
-      this.logger.info(
-        `GraphQL playground disabled for '${this.config.name}'`
-      );
+      this.logger.info(`GraphQL playground disabled for '${this.config.name}'`);
     }
   }
 
   public async stop(): Promise<void> {
     if (this.apolloServer) {
       await this.apolloServer.stop();
-      this.logger.info(
-        `GraphQL server '${this.config.name}' stopped.`
-      );
+      this.logger.info(`GraphQL server '${this.config.name}' stopped.`);
     }
   }
 

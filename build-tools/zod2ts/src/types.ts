@@ -16,7 +16,10 @@ export interface ExtractionResult {
 }
 
 export class ZodToTsError extends Error {
-  constructor(message: string, public code?: string) {
+  constructor(
+    message: string,
+    public code?: string
+  ) {
     super(message);
     this.name = 'ZodToTsError';
   }
@@ -30,7 +33,10 @@ export class FileNotFoundError extends ZodToTsError {
 
 export class NoSchemasFoundError extends ZodToTsError {
   constructor(filePath: string) {
-    super(`No schemas found in file: ${filePath}. Expected Zod schema variables`, 'NO_SCHEMAS_FOUND');
+    super(
+      `No schemas found in file: ${filePath}. Expected Zod schema variables`,
+      'NO_SCHEMAS_FOUND'
+    );
   }
 }
 
@@ -50,4 +56,4 @@ export class TypeGenerationError extends ZodToTsError {
   constructor(message: string) {
     super(message, 'TYPE_GENERATION_ERROR');
   }
-} 
+}

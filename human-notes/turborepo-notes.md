@@ -10,6 +10,7 @@ Similarly the `imports` field enables subpaths imports relative to the root pack
 # more reading required
 https://nodejs.org/api/packages.html#imports
 ```
+
 Its seems that is still possible to access code across package boundaries (Common Pitfalls)
 
 #### Managing Dependencies
@@ -30,7 +31,6 @@ pnpm up --recursive typescript@latest
 
 pmpm catalogs - [more reading](https://pnpm.io/catalogs)
 
-
 --- How does turbo repo build, how does it diplay dependencies, how do you fresh rebuild ?
 
 The use the vernacular "Internal Package"
@@ -50,12 +50,14 @@ better is
 ```
 pnpm add turbo --save-dev --ignore-workspace-root-check
 ```
+
 this results in a pinned version of turbo
 
 ```
 skelly-> pnpm which turbo
 ./node_modules/.bin/turbo
 ```
+
 turbo.json needs a wildcard for all the outputs from the subpackages in this case
 
 ```

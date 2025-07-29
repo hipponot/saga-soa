@@ -7,19 +7,23 @@ This checklist documents the step-by-step process to ensure TypeScript correctly
 ## Step-by-Step Type Resolution Check
 
 1. **Build Output in Package**
+
    - Ensure the package (e.g., `packages/logger`) has a `dist/` directory with both `index.js` and `index.d.ts` (or equivalent entry files).
    - Confirm all relevant types (e.g., interfaces, types) are exported from the built `.d.ts` file.
 
 2. **Exports and Types in `package.json`**
+
    - Check that the package's `package.json` includes:
      - `"main": "dist/index.js"`
      - `"types": "dist/index.d.ts"`
      - An `exports` field mapping `.` to both the type and JS entry points.
 
 3. **Workspace Inclusion**
+
    - Verify the package is included in `pnpm-workspace.yaml` (e.g., under `packages/*`).
 
 4. **Dependency in App**
+
    - Add the package as a dependency in the target app's `package.json` using the workspace protocol:
      ```sh
      pnpm add <package-name>@workspace:* --filter <app-path>
@@ -27,9 +31,11 @@ This checklist documents the step-by-step process to ensure TypeScript correctly
    - Example: `pnpm add @saga-soa/logger@workspace:* --filter ./apps/examples/rest_api`
 
 5. **Symlink and Node Modules**
+
    - Confirm that the app's `node_modules` contains a symlink to the local package, and that the `dist/` directory is present and correct under the symlink.
 
 6. **Build and Type Check**
+
    - Run the app's build and type-check scripts (e.g., `pnpm run build`, `pnpm run check-types`).
    - Ensure there are no type resolution errors for the imported package.
 
@@ -47,4 +53,4 @@ This checklist documents the step-by-step process to ensure TypeScript correctly
 
 ---
 
-_Last updated: 2024-06-29_ 
+_Last updated: 2024-06-29_

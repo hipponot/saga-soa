@@ -1,6 +1,5 @@
 I would like the logger to have the following behaviors
 
-
 NODE_ENV=local
 
 always instantiate a console logger

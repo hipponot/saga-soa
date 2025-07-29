@@ -16,4 +16,4 @@ export default defineConfig({
   splitting: false,
   skipNodeModulesBundle: true,
   target: 'node16',
-}); 
+});

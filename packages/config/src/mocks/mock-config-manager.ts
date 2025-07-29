@@ -17,7 +17,7 @@ export class MockConfigManager implements IConfigManager {
 
     for (const [key, def] of Object.entries(schema.shape)) {
       if (key === 'configType') continue;
-      
+
       // Generate mock data based on the Zod type
       if (def instanceof z.ZodString) {
         input[key] = def.minLength || 0 ? 'mock'.padEnd(def.minLength || 3, 'x') : 'mock';
@@ -41,4 +41,4 @@ export class MockConfigManager implements IConfigManager {
       throw err;
     }
   }
-} 
+}

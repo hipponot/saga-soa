@@ -40,10 +40,14 @@ describe('PinoLogger', () => {
     process.env.NODE_ENV = 'development';
     let logger: PinoLogger | undefined;
     withTTY(true, () => {
-      expect(() => { logger = new PinoLogger(config); }).not.toThrow();
+      expect(() => {
+        logger = new PinoLogger(config);
+      }).not.toThrow();
     });
     withTTY(false, () => {
-      expect(() => { logger = new PinoLogger(config); }).not.toThrow();
+      expect(() => {
+        logger = new PinoLogger(config);
+      }).not.toThrow();
     });
   });
 
@@ -56,7 +60,11 @@ describe('PinoLogger', () => {
   });
 
   it('should not throw if logFile is present in production Express context', () => {
-    const config: PinoLoggerConfig = { ...baseConfig, isExpressContext: true, logFile: '/tmp/test.log' };
+    const config: PinoLoggerConfig = {
+      ...baseConfig,
+      isExpressContext: true,
+      logFile: '/tmp/test.log',
+    };
     process.env.NODE_ENV = 'production';
     withTTY(true, () => {
       expect(() => new PinoLogger(config)).not.toThrow();
@@ -64,10 +72,14 @@ describe('PinoLogger', () => {
   });
 
   it('should instantiate both console and file loggers in local with logFile', () => {
-    const config: PinoLoggerConfig = { ...baseConfig, isExpressContext: false, logFile: '/tmp/test.log' };
+    const config: PinoLoggerConfig = {
+      ...baseConfig,
+      isExpressContext: false,
+      logFile: '/tmp/test.log',
+    };
     process.env.NODE_ENV = 'local';
     withTTY(true, () => {
       expect(() => new PinoLogger(config)).not.toThrow();
     });
   });
-}); 
+});

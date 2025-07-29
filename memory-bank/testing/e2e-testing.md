@@ -154,4 +154,4 @@ Please provide specific, implementable test code that I can run immediately to v
 - **Include your application's unique features** - payments, real-time, etc.
 - **Specify browser and device requirements** - what you need to support
 - **Mention your deployment process** - how E2E tests fit into CI/CD
-- **Include performance requirements** - acceptable load times and response times 
+- **Include performance requirements** - acceptable load times and response times

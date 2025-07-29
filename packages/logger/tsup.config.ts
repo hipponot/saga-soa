@@ -11,4 +11,4 @@ export default defineConfig({
   outExtension: ({ format }) => ({ js: '.js' }),
   splitting: false,
   skipNodeModulesBundle: true,
-}); 
+});

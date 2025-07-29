@@ -9,4 +9,4 @@ export abstract class AbstractGQLController {
   constructor(@inject('ILogger') logger: ILogger) {
     this.logger = logger;
   }
-} 
+}

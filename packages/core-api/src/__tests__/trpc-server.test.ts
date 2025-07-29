@@ -10,7 +10,7 @@ describe('TRPCServer', () => {
 
   beforeEach(() => {
     container = new Container();
-    
+
     const config = TRPCServerSchema.parse({
       configType: 'TRPC_SERVER',
       name: 'Test tRPC Server',
@@ -101,7 +101,7 @@ describe('TRPCServer', () => {
       });
 
       expect(trpcServer.getRouterNames()).toHaveLength(2);
-      
+
       trpcServer.clearRouters();
       expect(trpcServer.getRouterNames()).toEqual([]);
     });
@@ -140,4 +140,4 @@ describe('TRPCServer', () => {
       expect(typeof middleware).toBe('function');
     });
   });
-}); 
+});

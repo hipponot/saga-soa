@@ -56,7 +56,7 @@ describe('SchemaExtractor', () => {
 
   it('should throw NoSchemasFoundError when no schemas are found', async () => {
     const fixturePath = resolve(__dirname, 'fixtures/empty-file.ts');
-    
+
     await expect(async () => {
       await extractor.extractSchemas(fixturePath, testOutputDir);
     }).rejects.toThrow(NoSchemasFoundError);
@@ -109,4 +109,4 @@ describe('SchemaExtractor', () => {
       expect(existsSync(file)).toBe(true);
     }
   });
-}); 
+});

@@ -1,10 +1,10 @@
-import express, { Application }                                                  from 'express';
-import { injectable, inject }                                                    from 'inversify';
-import type { ExpressServerConfig }                                              from './express-server-schema.js';
-import type { ILogger }                                                          from '@saga-soa/logger';
-import { useContainer, useExpressServer }                                        from 'routing-controllers';
-import { Container }                                                             from 'inversify';
-import { SectorsController }                                                     from './sectors-controller.js';
+import express, { Application } from 'express';
+import { injectable, inject } from 'inversify';
+import type { ExpressServerConfig } from './express-server-schema.js';
+import type { ILogger } from '@saga-soa/logger';
+import { useContainer, useExpressServer } from 'routing-controllers';
+import { Container } from 'inversify';
+import { SectorsController } from './sectors-controller.js';
 
 @injectable()
 export class ExpressServer {
@@ -18,7 +18,10 @@ export class ExpressServer {
     this.app = express();
   }
 
-  public async init(container: Container, controllers: Array<new (...args: any[]) => any>): Promise<void> {
+  public async init(
+    container: Container,
+    controllers: Array<new (...args: any[]) => any>
+  ): Promise<void> {
     // Ensure routing-controllers uses Inversify for controller resolution
     useContainer(container);
 
@@ -68,9 +71,7 @@ export class ExpressServer {
   public stop(): void {
     if (this.serverInstance) {
       this.serverInstance.close(() => {
-        this.logger.info(
-          `Express server '${this.config.name}' stopped.`
-        );
+        this.logger.info(`Express server '${this.config.name}' stopped.`);
       });
     }
   }
@@ -79,4 +80,3 @@ export class ExpressServer {
     return this.app;
   }
 }
-

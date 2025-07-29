@@ -10,6 +10,7 @@ Bunchee is a zero-config bundler designed for building modern JavaScript/TypeScr
 - **No config needed:** Great for simple libraries—just run `bunchee` and get a working ESM build.
 
 In this project, bunchee was likely chosen to:
+
 - Provide a modern, ESM-first, zero-config build for packages like the logger.
 - Make it easy to publish libraries for both browser and Node.js consumers.
 
@@ -23,9 +24,10 @@ In this project, bunchee was likely chosen to:
 ## Rule/Reminder for Developers
 
 > **When adding a new TypeScript library to this monorepo:**
+>
 > - **Prefer `bunchee`** for simple, ESM-first libraries that do **not** use experimental decorators.
 > - **If your library uses experimental decorators** (e.g., for Inversify or other DI frameworks targeting Node.js), **use `tsup` or `tsc` instead** to ensure correct transpilation and Node.js compatibility.
 
 ---
 
-_Last updated: 2024-06-29_ 
+_Last updated: 2024-06-29_

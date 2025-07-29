@@ -3,6 +3,7 @@
 ## Project Description
 
 **saga-soa** is a modern, modular monorepo for building service-oriented architectures (SOA) in educational and experimental environments. It leverages a collection of composable packages and apps to enable scalable, introspectable, and schema-driven APIs. The project is organized into:
+
 - **apps/**: Applications (e.g., web, docs, example REST APIs)
 - **packages/**: Reusable libraries (e.g., config, db, logger, core-api, UI)
 
@@ -24,4 +25,4 @@
 - `human-notes/` — Ad-hoc notes and chat logs
 - `tsconfig.json` and `packages/typescript-config/` — Shared TypeScript configuration
 - `pnpm-workspace.yaml` — Workspace/project definitions
-- `turbo.json` — TurboRepo pipeline configuration 
+- `turbo.json` — TurboRepo pipeline configuration

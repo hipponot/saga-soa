@@ -8,4 +8,4 @@ export const user = z.object({
 
 export const profile = z.object({
   bio: z.string(),
-}); 
+});

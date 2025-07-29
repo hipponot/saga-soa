@@ -15,6 +15,7 @@ pnpm check
 **saga-soa** is a modern, modular monorepo for building service-oriented architectures (SOA) in educational and experimental environments. It leverages [Turborepo](https://turbo.build/), [pnpm](https://pnpm.io/), and a collection of composable packages to enable scalable, introspectable, and schema-driven APIs. The project is organized into apps (web, docs) and packages (config, db, UI, etc.), supporting both serverless and traditional deployments.
 
 Key features:
+
 - Monorepo powered by Turborepo for fast, incremental builds
 - Introspectable, schemaful APIs (type-graphql, tRPC, REST)
 - Modular, logically composable microservices
@@ -49,10 +50,12 @@ pnpm check
 ```
 
 This will:
+
 - Force a full, no-cache build of all packages and apps
 - Run all unit tests in all packages and apps
 
 **When to use:**
+
 - Before opening a PR
 - After major refactors
 - Before a release

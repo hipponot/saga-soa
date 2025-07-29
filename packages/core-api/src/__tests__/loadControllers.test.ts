@@ -8,7 +8,6 @@ const fixturesDir = path.join(__dirname, 'fixtures');
 const dummyRestControllerGlob = path.join(fixturesDir, 'DummyRestController.ts');
 const dummyGQLControllerGlob = path.join(fixturesDir, 'DummyGQLController.ts');
 
-
 describe('loadControllers', () => {
   it('loads a controller that extends AbstractRestController', async () => {
     const controllers = await loadControllers(dummyRestControllerGlob, AbstractRestController);
@@ -24,6 +23,8 @@ describe('loadControllers', () => {
 
   it('throws an error if no controllers are found', async () => {
     const noMatchGlob = path.join(fixturesDir, 'NoSuchController.ts');
-    await expect(loadControllers(noMatchGlob, AbstractRestController)).rejects.toThrow('No controllers found');
+    await expect(loadControllers(noMatchGlob, AbstractRestController)).rejects.toThrow(
+      'No controllers found'
+    );
   });
-}); 
+});

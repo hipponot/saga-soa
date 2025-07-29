@@ -48,6 +48,7 @@
 ## Suggested Implementation Plan (Future)
 
 ### A. Controller Loader Utility
+
 - Implement a static method (e.g., `RestControllerBase.loadControllers(pluginDir, container)`) that:
   1. Scans the directory for `.ts`/`.js` files.
   2. Dynamically imports each file.
@@ -57,6 +58,7 @@
   6. Maintains a registry of loaded controllers per directory.
 
 ### B. Registry Management
+
 - Track which controllers are loaded from which directory.
 - On repeated calls, compare the current directory contents to the registry:
   - **Add** new controllers.
@@ -64,39 +66,43 @@
   - **Ignore** already-loaded controllers.
 
 ### C. Robustness
+
 - Only register classes that:
   - Are functions (constructor).
   - Extend `RestControllerBase`.
 - Ignore all other exports.
 
 ### D. DI and Async Init
+
 - After registering with the container, instantiate via `container.get()`.
 - Await `init()` if present.
 
 ### E. Main Startup Logic
+
 - For each plugin directory:
   - Call `RestControllerBase.loadControllers(pluginDir, container)`.
 - Collect all loaded controller classes.
 - Pass the full list to `useExpressServer` **once** at startup.
 
 ### F. Hot Reloading
+
 - For true hot reloading:
   - Create a new Express app and re-register all controllers.
   - Swap the app instance in your server (e.g., using a proxy or by restarting the server).
 
 ## Summary Table
 
-| Feature/Requirement         | Supported? | Notes                                                                 |
-|----------------------------|------------|-----------------------------------------------------------------------|
-| Static controller loading   | Yes        | All controllers imported/exported from sectors index                  |
-| Multiple plugin dirs        | No         | Future enhancement                                                    |
-| Dynamic loading            | No         | Future enhancement                                                    |
-| Repeated invocation        | No         | Future enhancement                                                    |
-| Robust to non-controllers  | N/A        | All controllers are statically known                                  |
-| Inversify DI               | Yes        | Register with container, instantiate via container                    |
-| Async init                 | Yes        | Await `init()` after construction                                     |
-| Hot reloading              | No         | Future enhancement                                                    |
+| Feature/Requirement       | Supported? | Notes                                                |
+| ------------------------- | ---------- | ---------------------------------------------------- |
+| Static controller loading | Yes        | All controllers imported/exported from sectors index |
+| Multiple plugin dirs      | No         | Future enhancement                                   |
+| Dynamic loading           | No         | Future enhancement                                   |
+| Repeated invocation       | No         | Future enhancement                                   |
+| Robust to non-controllers | N/A        | All controllers are statically known                 |
+| Inversify DI              | Yes        | Register with container, instantiate via container   |
+| Async init                | Yes        | Await `init()` after construction                    |
+| Hot reloading             | No         | Future enhancement                                   |
 
 ---
 
-**For further details or implementation, see the full plan in this file.** 
+**For further details or implementation, see the full plan in this file.**

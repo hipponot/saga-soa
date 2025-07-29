@@ -50,4 +50,4 @@ export class MongoProvider implements IMongoConnMgr {
 }
 
 export const MongoProviderFactory = Symbol('MongoProviderFactory');
-export type MongoProviderFactory = (config: MongoProviderConfig) => MongoProvider; 
+export type MongoProviderFactory = (config: MongoProviderConfig) => MongoProvider;

@@ -16,4 +16,4 @@ export const UpdateProjectSchema = z.object({
 
 export const GetProjectSchema = z.object({
   id: z.string().min(1, 'Project ID is required'),
-}); 
+});

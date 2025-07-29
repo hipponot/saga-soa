@@ -19,4 +19,4 @@ export const OrderSchema = z.object({
   id: z.string(),
   items: z.array(z.string()),
   total: z.number(),
-}); 
+});

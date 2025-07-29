@@ -8,4 +8,4 @@ export class TestSector {
   getTest() {
     return { ok: true };
   }
-} 
+}

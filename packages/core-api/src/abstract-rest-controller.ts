@@ -1,4 +1,11 @@
-import { Get, Controller, getMetadataArgsStorage, Req, Res, HeaderParams } from 'routing-controllers';
+import {
+  Get,
+  Controller,
+  getMetadataArgsStorage,
+  Req,
+  Res,
+  HeaderParams,
+} from 'routing-controllers';
 import { injectable, inject } from 'inversify';
 import type { ILogger } from '@saga-soa/logger';
 import figlet from 'figlet';

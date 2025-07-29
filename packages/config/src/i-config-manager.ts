@@ -12,4 +12,4 @@ export interface IConfigManager {
    * @throws ConfigValidationError if validation fails
    */
   get<T extends HasConfigType>(schema: ZodObject<T>): z.infer<ZodObject<T>>;
-} 
+}

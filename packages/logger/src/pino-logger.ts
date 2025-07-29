@@ -1,7 +1,7 @@
-import { injectable, inject }                   from 'inversify';
+import { injectable, inject } from 'inversify';
 import pino, { Logger, TransportTargetOptions } from 'pino';
-import { ILogger }                              from './i-logger.js';
-import type { PinoLoggerConfig }                from './pino-logger-schema.js';
+import { ILogger } from './i-logger.js';
+import type { PinoLoggerConfig } from './pino-logger-schema.js';
 
 @injectable()
 export class PinoLogger implements ILogger {
@@ -99,17 +99,19 @@ export class PinoLogger implements ILogger {
 
     // Use pino.default if available (ESM interop), otherwise pino (CJS)
     // @ts-ignore
-    this.logger = (pino as any).default ? (pino as any).default({
-      level: config.level,
-      transport: {
-        targets,
-      },
-    }) : (pino as any)({
-      level: config.level,
-      transport: {
-        targets,
-      },
-    });
+    this.logger = (pino as any).default
+      ? (pino as any).default({
+          level: config.level,
+          transport: {
+            targets,
+          },
+        })
+      : (pino as any)({
+          level: config.level,
+          transport: {
+            targets,
+          },
+        });
 
     this.logger.info(`Logger initialized with level ${config.level}`);
   }

@@ -9,9 +9,11 @@ export const TRPCServerSchema = z.object({
   // Playground configuration
   enablePlayground: z.boolean().optional().default(false),
   playgroundPath: z.string().optional().default('/playground'),
-  playgroundConfig: z.object({
-    // Additional playground-specific configuration can be added here
-  }).optional(),
+  playgroundConfig: z
+    .object({
+      // Additional playground-specific configuration can be added here
+    })
+    .optional(),
 });
 
-export type TRPCServerConfig = z.infer<typeof TRPCServerSchema>; 
+export type TRPCServerConfig = z.infer<typeof TRPCServerSchema>;

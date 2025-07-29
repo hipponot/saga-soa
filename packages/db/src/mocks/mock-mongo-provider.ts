@@ -39,4 +39,4 @@ export class MockMongoProvider implements IMongoConnMgr {
     }
     return this.client;
   }
-} 
+}

@@ -1,4 +1,4 @@
 export type { IConfigManager, HasConfigType } from './i-config-manager.js';
 export { DotenvConfigManager } from './dotenv-config-manager';
 export { ConfigValidationError } from './config-validation-error.js';
-export { MockConfigManager } from './mocks/mock-config-manager.js'; 
+export { MockConfigManager } from './mocks/mock-config-manager.js';

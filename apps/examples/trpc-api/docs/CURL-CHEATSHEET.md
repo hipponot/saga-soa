@@ -5,16 +5,19 @@ This cheatsheet provides cURL commands for testing the tRPC API endpoints. The A
 ## Prerequisites
 
 1. **Build the project:**
+
    ```bash
    pnpm build
    ```
 
 2. **Start the server:**
+
    ```bash
    node dist/main.js
    ```
 
    You should see output like:
+
    ```
    Loaded tRPC controllers: [ 'ProjectController', 'RunController' ]
    INFO: Logger initialized with level info
@@ -33,6 +36,7 @@ curl -X GET http://localhost:5000/health
 ```
 
 **Expected Response:**
+
 ```json
 {
   "status": "ok",
@@ -51,6 +55,7 @@ curl -X POST http://localhost:5000/trpc/project.createProject \
 ```
 
 **Expected Response:**
+
 ```json
 {
   "id": "generated-uuid",
@@ -69,6 +74,7 @@ curl -X GET http://localhost:5000/trpc/project.getAllProjects
 ```
 
 **Expected Response:**
+
 ```json
 {
   "result": {
@@ -101,6 +107,7 @@ curl -X GET "http://localhost:5000/trpc/project.getProjectById?input=%7B%22id%22
 ```
 
 **Expected Response:**
+
 ```json
 {
   "result": {
@@ -116,9 +123,8 @@ curl -X GET "http://localhost:5000/trpc/project.getProjectById?input=%7B%22id%22
 }
 ```
 
-
-
 **Expected Response:**
+
 ```json
 {
   "result": {
@@ -143,6 +149,7 @@ curl -X POST http://localhost:5000/trpc/project.updateProject \
 ```
 
 **Expected Response:**
+
 ```json
 {
   "result": {
@@ -167,6 +174,7 @@ curl -X POST http://localhost:5000/trpc/project.deleteProject \
 ```
 
 **Expected Response:**
+
 ```json
 {
   "result": {
@@ -189,6 +197,7 @@ curl -X POST http://localhost:5000/trpc/run.createRun \
 ```
 
 **Expected Response:**
+
 ```json
 {
   "id": "generated-uuid",
@@ -208,6 +217,7 @@ curl -X GET http://localhost:5000/trpc/run.getAllRuns
 ```
 
 **Expected Response:**
+
 ```json
 {
   "result": {
@@ -253,6 +263,7 @@ curl -X GET "http://localhost:5000/trpc/run.getRunById?input=%7B%22id%22%3A%221%
 ```
 
 **Expected Response:**
+
 ```json
 {
   "result": {
@@ -275,9 +286,8 @@ curl -X GET "http://localhost:5000/trpc/run.getRunById?input=%7B%22id%22%3A%221%
 }
 ```
 
-
-
 **Expected Response:**
+
 ```json
 {
   "result": {
@@ -303,6 +313,7 @@ curl -X GET "http://localhost:5000/trpc/project.getProjectById?input=%7B%22id%22
 ```
 
 **Expected Response:**
+
 ```json
 {
   "error": {
@@ -321,6 +332,7 @@ curl -X POST http://localhost:5000/trpc/project.createProject \
 ```
 
 **Expected Response:**
+
 ```json
 {
   "error": {
@@ -366,6 +378,7 @@ curl -s -X GET http://localhost:5000/trpc/run.getAllRuns | jq
 ```
 
 Make it executable and run:
+
 ```bash
 chmod +x test-api.sh
 ./test-api.sh
@@ -413,12 +426,13 @@ console.log(project);
 const newProject = await client.project.createProject.mutate({
   name: 'Test Project',
   description: 'A test project',
-  status: 'active'
+  status: 'active',
 });
 console.log(newProject);
 ```
 
 **Benefits of using tRPC client:**
+
 - Type safety
 - Automatic HTTP transport handling
 - Better error messages

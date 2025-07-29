@@ -39,4 +39,4 @@ export class DotenvConfigManager implements IConfigManager {
       throw err;
     }
   }
-} 
+}

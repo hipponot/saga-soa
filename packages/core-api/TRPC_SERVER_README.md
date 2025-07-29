@@ -51,18 +51,18 @@ const userRouter = trpcServer.router({
   getAll: trpcServer.procedures.query(() => {
     return getAllUsers();
   }),
-  
-  getById: trpcServer.procedures
-    .input(z.object({ id: z.string() }))
-    .query(({ input }) => {
-      return getUserById(input.id);
-    }),
-    
+
+  getById: trpcServer.procedures.input(z.object({ id: z.string() })).query(({ input }) => {
+    return getUserById(input.id);
+  }),
+
   create: trpcServer.procedures
-    .input(z.object({
-      name: z.string().min(1),
-      email: z.string().email(),
-    }))
+    .input(
+      z.object({
+        name: z.string().min(1),
+        email: z.string().email(),
+      })
+    )
     .mutation(({ input }) => {
       return createUser(input);
     }),
@@ -72,7 +72,7 @@ const projectRouter = trpcServer.router({
   getAll: trpcServer.procedures.query(() => {
     return getAllProjects();
   }),
-  
+
   // ... more procedures
 });
 ```
@@ -123,47 +123,61 @@ constructor(
 ### Methods
 
 #### `getTRPC()`
+
 Returns the shared tRPC instance for creating procedures and middleware.
 
 #### `get procedures`
+
 Returns the shared procedures from the tRPC instance.
 
 #### `get router`
+
 Returns the shared router builder from the tRPC instance.
 
 #### `addRouter(name: string, router: AnyRouter): void`
+
 Adds a single router with a name. If a router with the same name already exists, it will be overwritten.
 
 #### `addRouters(routers: Record<string, AnyRouter>): void`
+
 Adds multiple routers at once.
 
 #### `getRouter(): AnyRouter`
+
 Returns the final merged router with all added routers. Uses tRPC's `mergeRouters` internally.
 
 #### `createExpressMiddleware()`
+
 Creates Express middleware for the merged router with proper error handling.
 
 #### `getBasePath(): string`
+
 Returns the configured base path for the tRPC API.
 
 #### `getName(): string`
+
 Returns the name of this tRPC app.
 
 #### `getRouterNames(): string[]`
+
 Returns all registered router names.
 
 #### `hasRouter(name: string): boolean`
+
 Checks if a router with the given name exists.
 
 #### `removeRouter(name: string): boolean`
+
 Removes a router by name. Returns `true` if the router was found and removed.
 
 #### `clearRouters(): void`
+
 Clears all registered routers.
 
 ## Benefits Over Previous Pattern
 
 ### Before (Multiple initTRPC calls)
+
 ```typescript
 // ❌ Multiple tRPC instances
 const t1 = initTRPC.create();
@@ -179,6 +193,7 @@ export const appRouter = t3.router({
 ```
 
 ### After (Single tRPC instance)
+
 ```typescript
 // ✅ Single tRPC instance shared across all routers
 const trpcAppRouter = container.get(TRPCAppRouter);
@@ -223,4 +238,4 @@ To migrate from the old pattern to `TRPCAppRouter`:
 4. **Use `getRouter()`** to get the final merged router
 5. **Update Express middleware creation** to use `createExpressMiddleware()`
 
-This approach provides better maintainability, type safety, and follows the same patterns as other saga-soa components like `ExpressServer`. 
+This approach provides better maintainability, type safety, and follows the same patterns as other saga-soa components like `ExpressServer`.

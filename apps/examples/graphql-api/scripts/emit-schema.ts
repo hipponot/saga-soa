@@ -12,7 +12,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function emitSchema() {
-  
   // Build TypeGraphQL schema with dynamically loaded resolvers
   const schema = await buildSchema({
     resolvers: [UserResolver, SessionResolver],
@@ -25,7 +24,7 @@ async function emitSchema() {
   console.log(`Schema SDL emitted to ${outPath}`);
 }
 
-emitSchema().catch((err) => {
+emitSchema().catch(err => {
   // eslint-disable-next-line no-console
   console.error(err);
   process.exit(1);

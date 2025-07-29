@@ -28,7 +28,8 @@ describe('MockMongoProvider (Inversify Factory with MockConfigManager)', () => {
       options: {},
     };
     // Bind the factory for the mock provider
-    container.bind<IMongoConnMgr>(MockMongoProvider)
+    container
+      .bind<IMongoConnMgr>(MockMongoProvider)
       .toDynamicValue(() => new MockMongoProvider(mockConfig.instanceName))
       .whenTargetNamed(MOCK_INSTANCE_NAME);
   });

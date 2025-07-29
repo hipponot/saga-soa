@@ -89,4 +89,4 @@ Focus on creating tests that are reliable, maintainable, and provide confidence 
 - **Specify your testing environment** and any constraints
 - **Mention existing tests** so AI doesn't duplicate efforts
 - **Be clear about testing philosophy** - strict TDD vs pragmatic testing
-- **Include domain knowledge** that affects what should be tested 
+- **Include domain knowledge** that affects what should be tested

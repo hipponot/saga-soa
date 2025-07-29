@@ -62,28 +62,27 @@ const mongo_config = ConfigManager.get<MongoConnectionSchema>
 
 Under the hood this code use dotenv-flow to initialize the environment dotenv-flow to initialize the environment and provides a method to access the parsed env blob
 
-0) dotenv-flow to initialize the environment
-1) create a input object by matching env data with the fields named in the schema using an upper-snake prefex based on the configuration name
+0. dotenv-flow to initialize the environment
+1. create a input object by matching env data with the fields named in the schema using an upper-snake prefex based on the configuration name
 
 // env variable
 MONGO_CONNECTION.host
 
 // input object
 {
-  host: 'localhost'
+host: 'localhost'
 }
 
-2) parse and return the infered object using using the schema.parse
+2. parse and return the infered object using using the schema.parse
 
-3) throw a named exception type either custom or a zod error type to describe the error if parse fails
-
+3. throw a named exception type either custom or a zod error type to describe the error if parse fails
 
 ### Some questions
 
-1) Can I use a generic type generate the nested type definiton
+1. Can I use a generic type generate the nested type definiton
 
 class ConfigManager<MongoConnnectionSchema> {
-  type MongoConnectionConfig = z.infer<typeof MongoConnectionSchema>
+type MongoConnectionConfig = z.infer<typeof MongoConnectionSchema>
 }
 
-2) Can I constrain the Blah type to be a zod schema object with the required stringofied field config_name
+2. Can I constrain the Blah type to be a zod schema object with the required stringofied field config_name
