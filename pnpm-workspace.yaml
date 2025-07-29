@@ -2,4 +2,5 @@ packages:
   - 'apps/examples/rest-api'
   - 'apps/examples/graphql-api'
   - 'apps/examples/trpc-api'
+  - 'apps/web'
   - 'packages/*'
