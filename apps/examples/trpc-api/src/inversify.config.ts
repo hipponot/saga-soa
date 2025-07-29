@@ -3,10 +3,10 @@ import { Container } from 'inversify';
 import { PinoLogger } from '@saga-soa/logger';
 import { MongoProvider } from '@saga-soa/db';
 import { ExpressServer } from '@saga-soa/core-api/express-server';
-import { TRPCAppRouter } from '@saga-soa/core-api/trpc-app-router';
+import { TRPCServer } from '@saga-soa/core-api/trpc-server';
 import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
 import type { IMongoConnMgr } from '@saga-soa/db';
-import type { TRPCAppRouterConfig } from '@saga-soa/core-api/trpc-app-router-schema';
+import type { TRPCServerConfig } from '@saga-soa/core-api/trpc-server-schema';
 
 
 export const container = new Container();
@@ -19,9 +19,9 @@ const loggerConfig: PinoLoggerConfig = {
   prettyPrint: true,
 };
 
-// tRPC App Router configuration
-const trpcConfig: TRPCAppRouterConfig = {
-  configType: 'TRPC_APP_ROUTER',
+// tRPC Server configuration
+const trpcConfig: TRPCServerConfig = {
+  configType: 'TRPC_SERVER',
   name: 'Example tRPC API',
   basePath: '/trpc',
   contextFactory: async () => ({}),
@@ -37,8 +37,8 @@ container.bind<IMongoConnMgr>('IMongoConnMgr').to(MongoProvider);
 // Bind ExpressServer
 container.bind(ExpressServer).toSelf().inSingletonScope();
 
-// Bind tRPC App Router
-container.bind<TRPCAppRouterConfig>('TRPCAppRouterConfig').toConstantValue(trpcConfig);
-container.bind(TRPCAppRouter).toSelf().inSingletonScope();
+// Bind tRPC Server
+container.bind<TRPCServerConfig>('TRPCServerConfig').toConstantValue(trpcConfig);
+container.bind(TRPCServer).toSelf().inSingletonScope();
 
  

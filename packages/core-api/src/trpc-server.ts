@@ -2,16 +2,16 @@ import { injectable, inject } from 'inversify';
 import { initTRPC, type AnyRouter, type CreateContextCallback } from '@trpc/server';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import type { ILogger } from '@saga-soa/logger';
-import type { TRPCAppRouterConfig } from './trpc-app-router-schema.js';
+import type { TRPCServerConfig } from './trpc-server-schema.js';
 
 @injectable()
-export class TRPCAppRouter {
+export class TRPCServer {
   private readonly t: ReturnType<typeof initTRPC.create>;
   private routers: Record<string, AnyRouter> = {};
   private mergedRouter?: AnyRouter;
 
   constructor(
-    @inject('TRPCAppRouterConfig') private config: TRPCAppRouterConfig,
+    @inject('TRPCServerConfig') private config: TRPCServerConfig,
     @inject('ILogger') private logger: ILogger
   ) {
     this.t = initTRPC.create();

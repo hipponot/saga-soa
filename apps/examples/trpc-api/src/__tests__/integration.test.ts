@@ -4,10 +4,10 @@ import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import type { ILogger } from '@saga-soa/logger';
 import { ExpressServer } from '@saga-soa/core-api/express-server';
-import { TRPCAppRouter } from '@saga-soa/core-api/trpc-app-router';
+import { TRPCServer } from '@saga-soa/core-api/trpc-server';
 import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
 import { AbstractTRPCController } from '@saga-soa/core-api/abstract-trpc-controller';
-import type { TRPCAppRouterConfig } from '@saga-soa/core-api/trpc-app-router-schema';
+import type { TRPCServerConfig } from '@saga-soa/core-api/trpc-server-schema';
 import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
 import { container } from '../inversify.config.js';
 import path from 'node:path';
@@ -50,20 +50,20 @@ describe('tRPC API Integration Tests', () => {
     await expressServer.init(container, []);
     app = expressServer.getApp();
 
-    // Get the TRPCAppRouter instance from DI
-    const trpcAppRouter = container.get(TRPCAppRouter);
+    // Get the TRPCServer instance from DI
+    const trpcServer = container.get(TRPCServer);
     
-    // Add routers to the TRPCAppRouter using dynamically loaded controllers
+    // Add routers to the TRPCServer using dynamically loaded controllers
     for (const controller of controllers) {
       const controllerInstance = container.get(controller) as any;
-      trpcAppRouter.addRouter(controllerInstance.sectorName, controllerInstance.createRouter());
+      trpcServer.addRouter(controllerInstance.sectorName, controllerInstance.createRouter());
     }
 
-    // Create tRPC middleware using TRPCAppRouter
-    const trpcMiddleware = trpcAppRouter.createExpressMiddleware();
+    // Create tRPC middleware using TRPCServer
+    const trpcMiddleware = trpcServer.createExpressMiddleware();
 
     // Mount tRPC on the configured base path
-    app.use(trpcAppRouter.getBasePath(), trpcMiddleware);
+    app.use(trpcServer.getBasePath(), trpcMiddleware);
 
     // Start the server on a random port
     server = app.listen(0);
@@ -73,7 +73,7 @@ describe('tRPC API Integration Tests', () => {
     client = createTRPCProxyClient({
       links: [
         httpBatchLink({
-          url: `http://localhost:${port}${trpcAppRouter.getBasePath()}`,
+          url: `http://localhost:${port}${trpcServer.getBasePath()}`,
         }),
       ],
     });

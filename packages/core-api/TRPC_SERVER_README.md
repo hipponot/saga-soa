@@ -1,6 +1,6 @@
-# TRPCAppRouter
+# TRPCServer
 
-The `TRPCAppRouter` class provides a centralized, injectable way to manage tRPC routers in the saga-soa framework. It solves the problem of multiple `initTRPC` calls by providing a single tRPC instance that can be shared across all sector routers.
+The `TRPCServer` class provides a centralized, injectable way to manage tRPC routers in the saga-soa framework. It solves the problem of multiple `initTRPC` calls by providing a single tRPC instance that can be shared across all sector routers.
 
 ## Key Features
 
@@ -16,10 +16,10 @@ The `TRPCAppRouter` class provides a centralized, injectable way to manage tRPC 
 ### 1. Configuration
 
 ```typescript
-import { TRPCAppRouterSchema } from '@saga-soa/core-api/trpc-app-router-schema';
+import { TRPCServerSchema } from '@saga-soa/core-api/trpc-server-schema';
 
-const trpcConfig = TRPCAppRouterSchema.parse({
-  configType: 'TRPC_APP_ROUTER',
+const trpcConfig = TRPCServerSchema.parse({
+  configType: 'TRPC_SERVER',
   name: 'My tRPC API',
   basePath: '/api/trpc', // optional, defaults to '/trpc'
   contextFactory: async () => ({ user: 'current-user' }), // optional
@@ -30,35 +30,35 @@ const trpcConfig = TRPCAppRouterSchema.parse({
 
 ```typescript
 import { Container } from 'inversify';
-import { TRPCAppRouter } from '@saga-soa/core-api/trpc-app-router';
+import { TRPCServer } from '@saga-soa/core-api/trpc-server';
 
 const container = new Container();
 
 // Bind configuration
-container.bind('TRPCAppRouterConfig').toConstantValue(trpcConfig);
+container.bind('TRPCServerConfig').toConstantValue(trpcConfig);
 container.bind('ILogger').to(PinoLogger); // or MockLogger for tests
-container.bind(TRPCAppRouter).toSelf();
+container.bind(TRPCServer).toSelf();
 ```
 
 ### 3. Creating Sector Routers
 
 ```typescript
-// Get the TRPCAppRouter instance
-const trpcAppRouter = container.get(TRPCAppRouter);
+// Get the TRPCServer instance
+const trpcServer = container.get(TRPCServer);
 
 // Create sector routers using the shared tRPC instance
-const userRouter = trpcAppRouter.router({
-  getAll: trpcAppRouter.procedures.query(() => {
+const userRouter = trpcServer.router({
+  getAll: trpcServer.procedures.query(() => {
     return getAllUsers();
   }),
   
-  getById: trpcAppRouter.procedures
+  getById: trpcServer.procedures
     .input(z.object({ id: z.string() }))
     .query(({ input }) => {
       return getUserById(input.id);
     }),
     
-  create: trpcAppRouter.procedures
+  create: trpcServer.procedures
     .input(z.object({
       name: z.string().min(1),
       email: z.string().email(),
@@ -68,8 +68,8 @@ const userRouter = trpcAppRouter.router({
     }),
 });
 
-const projectRouter = trpcAppRouter.router({
-  getAll: trpcAppRouter.procedures.query(() => {
+const projectRouter = trpcServer.router({
+  getAll: trpcServer.procedures.query(() => {
     return getAllProjects();
   }),
   
@@ -81,11 +81,11 @@ const projectRouter = trpcAppRouter.router({
 
 ```typescript
 // Add individual routers
-trpcAppRouter.addRouter('user', userRouter);
-trpcAppRouter.addRouter('project', projectRouter);
+trpcServer.addRouter('user', userRouter);
+trpcServer.addRouter('project', projectRouter);
 
 // Or add multiple routers at once
-trpcAppRouter.addRouters({
+trpcServer.addRouters({
   user: userRouter,
   project: projectRouter,
 });
