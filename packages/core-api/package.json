@@ -50,10 +50,7 @@
       "types": "./dist/utils/loadControllers.d.ts",
       "default": "./dist/utils/loadControllers.js"
     },
-    "./utils/controller-patterns": {
-      "types": "./dist/utils/controller-patterns.d.ts",
-      "default": "./dist/utils/controller-patterns.js"
-    },
+
     "./trpc-server": {
       "types": "./dist/trpc-server.d.ts",
       "default": "./dist/trpc-server.js"

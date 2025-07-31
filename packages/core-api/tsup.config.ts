@@ -12,7 +12,6 @@ export default defineConfig({
     'src/trpc-server-schema.ts',
     'src/sectors-controller.ts',
     'src/utils/loadControllers.ts',
-    'src/utils/controller-patterns.ts',
     'src/abstract-gql-controller.ts',
   ],
   format: ['esm'],

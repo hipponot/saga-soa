@@ -6,6 +6,14 @@ import type { ILogger } from '@saga-soa/logger';
 
 @injectable()
 export class ControllerLoader {
+  private readonly ERROR_MESSAGES = {
+    NO_REST_CONTROLLERS: 'No REST controllers found. Ensure you have files matching the expected pattern.',
+    NO_GRAPHQL_RESOLVERS: 'No GraphQL resolvers found. Ensure you have files matching the expected pattern.',
+    NO_TRPC_CONTROLLERS: 'No tRPC controllers found. Ensure you have files matching the expected pattern.',
+    INVALID_CONTROLLER: 'Invalid controller structure. Controller must extend the appropriate base class.',
+    LOAD_ERROR: 'Failed to load controllers from file:',
+  } as const;
+
   constructor(@inject('ILogger') private logger: ILogger) {}
 
   async loadControllers<TBase>(
@@ -63,7 +71,7 @@ export class ControllerLoader {
       }
 
       if (controllers.length === 0) {
-        const errorMsg = `No valid controllers found for patterns: ${patterns.join(', ')}`;
+        const errorMsg = `No valid controllers found for patterns: ${patterns.join(', ')}. Ensure you have files matching the expected pattern.`;
         this.logger.error(errorMsg);
         throw new Error(errorMsg);
       }
