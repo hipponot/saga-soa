@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { injectable, inject, Container } from 'inversify';
 import { initTRPC, type AnyRouter, type CreateContextCallback } from '@trpc/server';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import { expressHandler } from 'trpc-playground/handlers/express';
@@ -20,6 +20,27 @@ export class TRPCServer {
     // Log playground configuration
     if (this.config.enablePlayground) {
       this.logger.info(`tRPC Playground enabled at ${this.config.playgroundPath}`);
+    }
+  }
+
+  /**
+   * Initialize the tRPC server with controllers
+   */
+  public async init(container: Container, controllers: Array<new (...args: any[]) => any>): Promise<void> {
+    // Bind all controllers to the container
+    for (const ControllerClass of controllers) {
+      container.bind(ControllerClass).toSelf().inSingletonScope();
+    }
+
+    // Instantiate and initialize all controllers, then add their routers
+    for (const ControllerClass of controllers) {
+      const controllerInstance = await container.getAsync<any>(ControllerClass);
+      if (typeof controllerInstance.init === 'function') {
+        await controllerInstance.init();
+      }
+      
+      // Add the controller's router to the tRPC server
+      this.addRouter(controllerInstance.sectorName, controllerInstance.createRouter());
     }
   }
 

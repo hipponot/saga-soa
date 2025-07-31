@@ -15,42 +15,30 @@ const __dirname = path.dirname(__filename);
 async function start() {
   const logger = container.get<ILogger>('ILogger');
 
-  // Dynamically load all tRPC controllers
-  const trpcControllers = await loadControllers(
-    path.resolve(__dirname, './sectors/*/trpc/*.router.js'),
-    AbstractTRPCController
-  );
-
-  logger.info('Loaded tRPC controllers:', trpcControllers.map(c => c.name));
-
   // Dynamically load all REST controllers
   const restControllers = await loadControllers(
     path.resolve(__dirname, './sectors/*/rest/*-routes.js'),
     AbstractRestController
   );
-
   logger.info('Loaded REST controllers:', restControllers.map(c => c.name));
-
-  // Bind all loaded controllers to the DI container
-  for (const controller of [...trpcControllers, ...restControllers]) {
-    container.bind(controller).toSelf().inSingletonScope();
-  }
 
   // Get the ExpressServer instance from DI
   const expressServer = container.get(ExpressServer);
-
-  // Initialize the Express server (let it handle controller loading)
-  await expressServer.init(container, []);
+  // Initialize the Express server with REST controllers
+  await expressServer.init(container, restControllers);
   const app = expressServer.getApp();
+
+  // Dynamically load all tRPC controllers
+  const trpcControllers = await loadControllers(
+    path.resolve(__dirname, './sectors/*/trpc/*.router.js'),
+    AbstractTRPCController
+  );
+  logger.info('Loaded tRPC controllers:', trpcControllers.map(c => c.name));
 
   // Get the TRPCServer instance from DI
   const trpcServer = container.get(TRPCServer);
-
-  // Add routers to the TRPCServer using dynamically loaded controllers
-  for (const controller of trpcControllers) {
-    const controllerInstance = container.get(controller) as any;
-    trpcServer.addRouter(controllerInstance.sectorName, controllerInstance.createRouter());
-  }
+  // Initialize the tRPC server with tRPC controllers
+  await trpcServer.init(container, trpcControllers);
 
   // Mount tRPC and playground middleware with basePath support
   await trpcServer.mountToApp(app, '/saga-soa/v1');

@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { injectable, inject, Container } from 'inversify';
 import type { GQLServerConfig } from './gql-server-schema.js';
 import type { ILogger } from '@saga-soa/logger';
 import { ApolloServer } from '@apollo/server';
@@ -15,10 +15,23 @@ export class GQLServer {
     @inject('ILogger') private logger: ILogger
   ) {}
 
-  public async init(container: any, resolvers: Array<new (...args: any[]) => any>): Promise<void> {
+  public async init(container: Container, resolvers: Array<new (...args: any[]) => any>): Promise<void> {
     // Ensure we have at least one resolver
     if (resolvers.length === 0) {
       throw new Error('At least one resolver is required');
+    }
+
+    // Bind all resolvers to the container
+    for (const ResolverClass of resolvers) {
+      container.bind(ResolverClass).toSelf().inSingletonScope();
+    }
+
+    // Instantiate and initialize all resolvers
+    for (const ResolverClass of resolvers) {
+      const resolverInstance = await container.getAsync<any>(ResolverClass);
+      if (typeof resolverInstance.init === 'function') {
+        await resolverInstance.init();
+      }
     }
 
     // Build TypeGraphQL schema with dynamically loaded resolvers
