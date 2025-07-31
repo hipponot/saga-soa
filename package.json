@@ -13,7 +13,8 @@
     "clean": "pnpm -r --if-present clean",
     "dep:list": "pnpm syncpack list",
     "dep:fix": "pnpm syncpack fix",
-    "check": "turbo run build --no-cache --force && pnpm test"
+    "check": "turbo run build --no-cache --force && pnpm test",
+    "generate-types": "cd packages/trpc-types && pnpm generate-types"
   },
   "devDependencies": {
     "prettier": "^3.5.3",

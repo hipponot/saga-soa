@@ -511,6 +511,24 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
+  packages/trpc-types:
+    devDependencies:
+      '@saga/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^24.0.12
+        version: 24.1.0
+      glob:
+        specifier: ^10.3.10
+        version: 10.4.5
+      tsup:
+        specifier: ^8.5.0
+        version: 8.5.0(@swc/core@1.12.6(@swc/helpers@0.5.17))(postcss@8.5.6)(tsx@4.20.3)(typescript@5.8.3)(yaml@2.8.0)
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
   packages/typescript-config:
     dependencies:
       reflect-metadata:
