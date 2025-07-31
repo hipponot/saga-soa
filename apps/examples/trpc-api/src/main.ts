@@ -3,6 +3,7 @@ import { ExpressServer } from '@saga-soa/core-api/express-server';
 import { TRPCServer } from '@saga-soa/core-api/trpc-server';
 import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
 import { AbstractTRPCController } from '@saga-soa/core-api/abstract-trpc-controller';
+import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
 import { container } from './inversify.config.js';
 import type { ILogger } from '@saga-soa/logger';
 import path from 'node:path';
@@ -15,22 +16,30 @@ async function start() {
   const logger = container.get<ILogger>('ILogger');
 
   // Dynamically load all tRPC controllers
-  const controllers = await loadControllers(
+  const trpcControllers = await loadControllers(
     path.resolve(__dirname, './sectors/*/trpc/*.router.js'),
     AbstractTRPCController
   );
 
-  logger.info('Loaded tRPC controllers:', controllers.map(c => c.name));
+  logger.info('Loaded tRPC controllers:', trpcControllers.map(c => c.name));
+
+  // Dynamically load all REST controllers
+  const restControllers = await loadControllers(
+    path.resolve(__dirname, './sectors/*/rest/*-routes.js'),
+    AbstractRestController
+  );
+
+  logger.info('Loaded REST controllers:', restControllers.map(c => c.name));
 
   // Bind all loaded controllers to the DI container
-  for (const controller of controllers) {
+  for (const controller of [...trpcControllers, ...restControllers]) {
     container.bind(controller).toSelf().inSingletonScope();
   }
 
   // Get the ExpressServer instance from DI
   const expressServer = container.get(ExpressServer);
 
-  // Initialize the Express server
+  // Initialize the Express server (let it handle controller loading)
   await expressServer.init(container, []);
   const app = expressServer.getApp();
 
@@ -38,7 +47,7 @@ async function start() {
   const trpcServer = container.get(TRPCServer);
 
   // Add routers to the TRPCServer using dynamically loaded controllers
-  for (const controller of controllers) {
+  for (const controller of trpcControllers) {
     const controllerInstance = container.get(controller) as any;
     trpcServer.addRouter(controllerInstance.sectorName, controllerInstance.createRouter());
   }

@@ -15,29 +15,28 @@ import express from 'express';
 //   - __filename: the absolute path to the current module file
 //   - __dirname: the directory name of the current module file
 const __filename = fileURLToPath(import.meta.url);
+
 const __dirname = path.dirname(__filename);
 
 async function start() {
   const logger = container.get<ILogger>('ILogger');
 
-  // Dynamically load all REST controllers from user and session sectors
-  const controllers = await loadControllers(
-    [
-      path.resolve(__dirname, './sectors/user/rest/*.js'),
-      path.resolve(__dirname, './sectors/session/rest/*.js'),
-    ],
+  // Dynamically load all REST controllers
+  const restControllers = await loadControllers(
+    path.resolve(__dirname, './sectors/*/rest/*-routes.js'),
     AbstractRestController
   );
 
-  logger.info('Loaded REST controllers:', controllers.map(c => c.name));
+  logger.info('Loaded REST controllers:', restControllers.map(c => c.name));
 
   // Get the ExpressServer instance from DI
   const expressServer = container.get(ExpressServer);
   // Initialize and register REST controllers
-  await expressServer.init(container, controllers);
+  await expressServer.init(container, restControllers);
   const app = expressServer.getApp();
 
   // Add express.json() middleware before Apollo middleware
+
   app.use(express.json());
 
   // Dynamically load all GQL resolvers from user and session sectors
