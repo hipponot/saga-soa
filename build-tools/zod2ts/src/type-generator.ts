@@ -20,47 +20,49 @@ export class TypeGenerator {
     }
   }
 
-  private generateTypeDefinition(schema: z.ZodSchema): string {
+  private generateTypeDefinition(schema: any): string {
+    const typeName = (schema._def as any)?.typeName || (schema._def as any)?.type;
+    
     // Handle different Zod schema types
-    if (schema instanceof z.ZodObject) {
+    if (typeName === 'ZodObject' || typeName === 'object') {
       return this.generateObjectType(schema);
-    } else if (schema instanceof z.ZodArray) {
+    } else if (typeName === 'ZodArray' || typeName === 'array') {
       return this.generateArrayType(schema);
-    } else if (schema instanceof z.ZodUnion) {
+    } else if (typeName === 'ZodUnion' || typeName === 'union') {
       return this.generateUnionType(schema);
-    } else if (schema instanceof z.ZodOptional) {
+    } else if (typeName === 'ZodOptional' || typeName === 'optional') {
       return this.generateOptionalType(schema);
-    } else if (schema instanceof z.ZodNullable) {
+    } else if (typeName === 'ZodNullable' || typeName === 'nullable') {
       return this.generateNullableType(schema);
-    } else if (schema instanceof z.ZodEnum) {
+    } else if (typeName === 'ZodEnum' || typeName === 'enum') {
       return this.generateEnumType(schema);
-    } else if (schema instanceof z.ZodDefault) {
+    } else if (typeName === 'ZodDefault' || typeName === 'default') {
       return this.generateDefaultType(schema);
-    } else if (schema instanceof z.ZodLiteral) {
+    } else if (typeName === 'ZodLiteral' || typeName === 'literal') {
       return this.generateLiteralType(schema);
-    } else if (schema instanceof z.ZodString) {
+    } else if (typeName === 'ZodString' || typeName === 'string') {
       return 'string';
-    } else if (schema instanceof z.ZodNumber) {
+    } else if (typeName === 'ZodNumber' || typeName === 'number') {
       return 'number';
-    } else if (schema instanceof z.ZodBoolean) {
+    } else if (typeName === 'ZodBoolean' || typeName === 'boolean') {
       return 'boolean';
-    } else if (schema instanceof z.ZodDate) {
+    } else if (typeName === 'ZodDate' || typeName === 'date') {
       return 'Date';
-    } else if (schema instanceof z.ZodNull) {
+    } else if (typeName === 'ZodNull' || typeName === 'null') {
       return 'null';
-    } else if (schema instanceof z.ZodUndefined) {
+    } else if (typeName === 'ZodUndefined' || typeName === 'undefined') {
       return 'undefined';
-    } else if (schema instanceof z.ZodAny) {
+    } else if (typeName === 'ZodAny' || typeName === 'any') {
       return 'any';
-    } else if (schema instanceof z.ZodUnknown) {
+    } else if (typeName === 'ZodUnknown' || typeName === 'unknown') {
       return 'unknown';
     } else {
       return 'any';
     }
   }
 
-  private generateObjectType(schema: z.ZodObject<any>): string {
-    const shape = schema.shape;
+  private generateObjectType(schema: any): string {
+    const shape = (schema as z.ZodObject<any>).shape;
     const properties: string[] = [];
 
     for (const [key, value] of Object.entries(shape)) {
@@ -71,40 +73,50 @@ export class TypeGenerator {
     return `{\n${properties.join('\n')}\n}`;
   }
 
-  private generateArrayType(schema: z.ZodArray<any>): string {
-    const elementType = this.generateTypeDefinition(schema.element);
+  private generateArrayType(schema: any): string {
+    const elementType = this.generateTypeDefinition((schema as z.ZodArray<any>).element);
     return `${elementType}[]`;
   }
 
-  private generateUnionType(schema: z.ZodUnion<any>): string {
-    const types = schema.options.map((option: z.ZodSchema) => this.generateTypeDefinition(option));
+  private generateUnionType(schema: any): string {
+    const types = (schema as z.ZodUnion<any>).options.map((option: any) => this.generateTypeDefinition(option));
     return types.join(' | ');
   }
 
-  private generateOptionalType(schema: z.ZodOptional<any>): string {
-    const innerType = this.generateTypeDefinition(schema.unwrap());
+  private generateOptionalType(schema: any): string {
+    const innerType = this.generateTypeDefinition((schema as z.ZodOptional<any>).unwrap());
     return `${innerType} | undefined`;
   }
 
-  private generateNullableType(schema: z.ZodNullable<any>): string {
-    const innerType = this.generateTypeDefinition(schema.unwrap());
+  private generateNullableType(schema: any): string {
+    const innerType = this.generateTypeDefinition((schema as z.ZodNullable<any>).unwrap());
     return `${innerType} | null`;
   }
 
-  private generateEnumType(schema: z.ZodEnum<any>): string {
-    const options = schema.options.map((option: string) => `'${option}'`);
+  private generateEnumType(schema: any): string {
+    const options = (schema as z.ZodEnum<any>).options.map((option: string) => `'${option}'`);
     return options.join(' | ');
   }
 
   private generateDefaultType(schema: any): string {
     // For default values, we just return the inner type
     // The default value doesn't affect the TypeScript type
-    const innerType = this.generateTypeDefinition(schema.unwrap() as any);
-    return innerType;
+    if (typeof schema.unwrap === 'function') {
+      const innerType = this.generateTypeDefinition(schema.unwrap());
+      return innerType;
+    } else {
+      // If unwrap doesn't exist, try to get the inner type from _def
+      const innerDef = (schema._def as any)?.innerType;
+      if (innerDef) {
+        return this.generateTypeDefinition(innerDef);
+      } else {
+        return 'any';
+      }
+    }
   }
 
-  private generateLiteralType(schema: z.ZodLiteral<any>): string {
-    const value = schema.value;
+  private generateLiteralType(schema: any): string {
+    const value = (schema as z.ZodLiteral<any>).value;
     if (typeof value === 'string') {
       return `'${value}'`;
     }
