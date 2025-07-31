@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { ExpressServer } from '@saga-soa/core-api/express-server';
 import { GQLServer } from '@saga-soa/core-api/gql-server';
 import { container } from './inversify.config.js';
-import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
+import { ControllerLoader } from '@saga-soa/core-api/utils/controller-loader';
 import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
 import { AbstractGQLController } from '@saga-soa/core-api/abstract-gql-controller';
 import type { ILogger } from '@saga-soa/logger';
@@ -13,15 +13,23 @@ import express from 'express';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Define glob patterns for this API
+const GLOB_PATTERNS = {
+  REST: './sectors/*/rest/*-routes.js',
+  GRAPHQL: './sectors/*/gql/*.resolver.js',
+} as const;
+
 async function start() {
   const logger = container.get<ILogger>('ILogger');
 
+  // Get the ControllerLoader from DI
+  const controllerLoader = container.get(ControllerLoader);
+
   // Dynamically load all REST controllers
-  const restControllers = await loadControllers(
-    path.resolve(__dirname, './sectors/*/rest/*-routes.js'),
+  const restControllers = await controllerLoader.loadControllers(
+    path.resolve(__dirname, GLOB_PATTERNS.REST),
     AbstractRestController
   );
-  logger.info('Loaded REST controllers:', restControllers.map(c => c.name));
 
   // Get the ExpressServer instance from DI
   const expressServer = container.get(ExpressServer);
@@ -33,11 +41,10 @@ async function start() {
   app.use(express.json());
 
   // Dynamically load all GQL resolvers
-  const gqlResolvers = await loadControllers(
-    path.resolve(__dirname, './sectors/*/gql/*.js'),
+  const gqlResolvers = await controllerLoader.loadControllers(
+    path.resolve(__dirname, GLOB_PATTERNS.GRAPHQL),
     AbstractGQLController
   );
-  logger.info('Loaded GraphQL resolvers:', gqlResolvers.map(c => c.name));
 
   // Get the GQLServer instance from DI and initialize it
   const gqlServer = container.get(GQLServer);

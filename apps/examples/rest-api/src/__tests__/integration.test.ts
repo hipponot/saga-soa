@@ -3,7 +3,7 @@ import request from 'supertest';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { ExpressServer } from '@saga-soa/core-api/express-server';
-import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
+import { ControllerLoader } from '@saga-soa/core-api/utils/controller-loader';
 import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
 import { container } from '../inversify.config.js';
 import express from 'express';
@@ -14,14 +14,18 @@ beforeAll(async () => {
   // Dynamically load all sector controllers (match main.ts logic)
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  const controllers = await loadControllers(
+  
+  // Get the ControllerLoader from DI
+  const controllerLoader = container.get(ControllerLoader);
+  
+  const controllers = await controllerLoader.loadControllers(
     // Note this is a vitest so we load the TS files - vitest uses esbuild to transpile ts files on the fly for testing
     path.resolve(__dirname, '../sectors/*.ts'),
     AbstractRestController
   );
   console.log(
     'Loaded controllers:',
-    controllers.map(c => c.name)
+    controllers.map((c: any) => c.name)
   );
 
   // Use ExpressServer from DI, initialize with controllers, and get the app instance

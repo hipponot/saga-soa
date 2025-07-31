@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { ExpressServer } from '@saga-soa/core-api/express-server';
 import { TRPCServer } from '@saga-soa/core-api/trpc-server';
-import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
+import { ControllerLoader } from '@saga-soa/core-api/utils/controller-loader';
 import { AbstractTRPCController } from '@saga-soa/core-api/abstract-trpc-controller';
 import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
 import { container } from './inversify.config.js';
@@ -12,15 +12,23 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Define glob patterns for this API
+const GLOB_PATTERNS = {
+  REST: './sectors/*/rest/*-routes.js',
+  TRPC: './sectors/*/trpc/*.router.js',
+} as const;
+
 async function start() {
   const logger = container.get<ILogger>('ILogger');
 
+  // Get the ControllerLoader from DI
+  const controllerLoader = container.get(ControllerLoader);
+
   // Dynamically load all REST controllers
-  const restControllers = await loadControllers(
-    path.resolve(__dirname, './sectors/*/rest/*-routes.js'),
+  const restControllers = await controllerLoader.loadControllers(
+    path.resolve(__dirname, GLOB_PATTERNS.REST),
     AbstractRestController
   );
-  logger.info('Loaded REST controllers:', restControllers.map(c => c.name));
 
   // Get the ExpressServer instance from DI
   const expressServer = container.get(ExpressServer);
@@ -29,11 +37,10 @@ async function start() {
   const app = expressServer.getApp();
 
   // Dynamically load all tRPC controllers
-  const trpcControllers = await loadControllers(
-    path.resolve(__dirname, './sectors/*/trpc/*.router.js'),
+  const trpcControllers = await controllerLoader.loadControllers(
+    path.resolve(__dirname, GLOB_PATTERNS.TRPC),
     AbstractTRPCController
   );
-  logger.info('Loaded tRPC controllers:', trpcControllers.map(c => c.name));
 
   // Get the TRPCServer instance from DI
   const trpcServer = container.get(TRPCServer);

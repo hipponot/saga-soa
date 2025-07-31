@@ -5,7 +5,7 @@ import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import type { ILogger } from '@saga-soa/logger';
 import { ExpressServer } from '@saga-soa/core-api/express-server';
 import { TRPCServer } from '@saga-soa/core-api/trpc-server';
-import { loadControllers } from '@saga-soa/core-api/utils/loadControllers';
+import { ControllerLoader } from '@saga-soa/core-api/utils/controller-loader';
 import { AbstractTRPCController } from '@saga-soa/core-api/abstract-trpc-controller';
 import type { TRPCServerConfig } from '@saga-soa/core-api/trpc-server-schema';
 import { container } from '../inversify.config.js';
@@ -22,15 +22,18 @@ describe('tRPC API Integration Tests', () => {
   let server: any;
 
   beforeAll(async () => {
+    // Get the ControllerLoader from DI
+    const controllerLoader = container.get(ControllerLoader);
+    
     // Dynamically load all tRPC controllers
-    const controllers = await loadControllers(
+    const controllers = await controllerLoader.loadControllers(
       path.resolve(__dirname, '../sectors/*/trpc/*.router.ts'),
       AbstractTRPCController
     );
 
     console.log(
       'Loaded tRPC controllers:',
-      controllers.map(c => c.name)
+      controllers.map((c: any) => c.name)
     );
 
     // Bind all loaded controllers to the DI container

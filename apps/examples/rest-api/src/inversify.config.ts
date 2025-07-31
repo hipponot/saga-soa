@@ -6,6 +6,7 @@ import { MockMongoProvider } from '@saga-soa/db/mocks/mock-mongo-provider';
 import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
 import { PinoLogger } from '@saga-soa/logger';
 import { ExpressServer } from '@saga-soa/core-api/express-server';
+import { ControllerLoader } from '@saga-soa/core-api/utils/controller-loader';
 import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
 
 const container = new Container();
@@ -53,5 +54,8 @@ container
   .inSingletonScope();
 
 container.bind(ExpressServer).toSelf().inSingletonScope();
+
+// Bind ControllerLoader
+container.bind(ControllerLoader).toSelf().inSingletonScope();
 
 export { container };
