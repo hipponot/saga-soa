@@ -6,6 +6,7 @@ import { AbstractTRPCController } from '@saga-soa/core-api/abstract-trpc-control
 import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
 import { container } from './inversify.config.js';
 import type { ILogger } from '@saga-soa/logger';
+import type { Request, Response } from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -51,7 +52,7 @@ async function start() {
   await trpcServer.mountToApp(app, '/saga-soa/v1');
 
   // Add a simple health check (at root level for easy access)
-  app.get('/health', (req, res) => {
+  app.get('/health', (req: Request, res: Response) => {
     res.json({ status: 'ok', service: 'tRPC API' });
   });
 

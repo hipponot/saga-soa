@@ -5,7 +5,8 @@ export default defineConfig((options: Options) => ({
   clean: true,
   format: ['esm'],
   sourcemap: true,
-  dts: true,
+  // Disable DTS generation for this example app
+  dts: false,
   outDir: 'dist',
   splitting: false,
   skipNodeModulesBundle: true,
