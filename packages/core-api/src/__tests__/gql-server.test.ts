@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import 'reflect-metadata';
-import { injectable, inject, Container } from 'inversify';
+import { injectable, Container } from 'inversify';
 import type { ILogger } from '@saga-soa/logger';
 import { fetch } from 'undici';
 import express from 'express';
@@ -49,6 +49,7 @@ describe('GQLServer (integration)', () => {
       mountPoint: '/graphql',
       logLevel: 'info' as const,
       name: 'Test GraphQL Server',
+      emitSchema: false, // Disable SDL emission during tests
     };
 
     container.bind('GQLServerConfig').toConstantValue(config);
@@ -67,6 +68,7 @@ describe('GQLServer (integration)', () => {
       mountPoint: '/graphql',
       logLevel: 'info' as const,
       name: 'Test GraphQL Server',
+      emitSchema: false, // Disable SDL emission during tests
     };
 
     container.bind('GQLServerConfig').toConstantValue(config);
@@ -84,6 +86,7 @@ describe('GQLServer (integration)', () => {
       mountPoint: '/graphql',
       logLevel: 'info' as const,
       name: 'Test GraphQL Server',
+      emitSchema: false, // Disable SDL emission during tests
     };
 
     container.bind('GQLServerConfig').toConstantValue(config);
@@ -104,6 +107,7 @@ describe('GQLServer (integration)', () => {
       mountPoint: '/graphql',
       logLevel: 'info' as const,
       name: 'Test GraphQL Server',
+      emitSchema: false, // Disable SDL emission during tests
     };
 
     container.bind('GQLServerConfig').toConstantValue(config);
@@ -125,6 +129,7 @@ describe('GQLServer (integration)', () => {
       mountPoint: '/graphql',
       logLevel: 'info' as const,
       name: 'Test GraphQL Server',
+      emitSchema: false, // Disable SDL emission during tests
     };
 
     container.bind('GQLServerConfig').toConstantValue(config);
@@ -146,6 +151,7 @@ describe('GQLServer (integration)', () => {
       mountPoint: '/api/graphql',
       logLevel: 'info' as const,
       name: 'Test GraphQL Server',
+      emitSchema: false, // Disable SDL emission during tests
     };
 
     container.bind('GQLServerConfig').toConstantValue(config);
@@ -167,6 +173,7 @@ describe('GQLServer (integration)', () => {
       mountPoint: '/graphql',
       logLevel: 'info' as const,
       name: 'Test GraphQL Server',
+      emitSchema: false, // Disable SDL emission during tests
     };
 
     container.bind('GQLServerConfig').toConstantValue(config);
@@ -218,6 +225,7 @@ describe('GQLServer (integration)', () => {
       mountPoint: '/graphql',
       logLevel: 'info' as const,
       name: 'Test GraphQL Server',
+      emitSchema: false, // Disable SDL emission during tests
     };
 
     container.bind('GQLServerConfig').toConstantValue(config);
@@ -266,6 +274,7 @@ describe('GQLServer (integration)', () => {
       mountPoint: '/api/v1/graphql',
       logLevel: 'info' as const,
       name: 'Test GraphQL Server',
+      emitSchema: false, // Disable SDL emission during tests
     };
 
     container.bind('GQLServerConfig').toConstantValue(config);
@@ -326,6 +335,7 @@ describe('GQLServer (integration)', () => {
       logLevel: 'info' as const,
       name: 'Test GraphQL Server',
       enablePlayground: true,
+      emitSchema: false, // Disable SDL emission during tests
     };
 
     container.bind('GQLServerConfig').toConstantValue(config);
@@ -382,6 +392,7 @@ describe('GQLServer (integration)', () => {
       mountPoint: '/graphql',
       logLevel: 'info' as const,
       name: 'Test GraphQL Server',
+      emitSchema: false, // Disable SDL emission during tests
     };
 
     container.bind('GQLServerConfig').toConstantValue(config);
@@ -429,6 +440,7 @@ describe('GQLServer (integration)', () => {
       mountPoint: 'graphql', // Missing leading slash
       logLevel: 'info' as const,
       name: 'Test GraphQL Server',
+      emitSchema: false, // Disable SDL emission during tests
     };
 
     // The schema validation happens when the config is used, not when bound
@@ -455,6 +467,7 @@ describe('GQLServer (integration)', () => {
       mountPoint: '/graphql',
       logLevel: 'info' as const,
       name: 'Test GraphQL Server',
+      emitSchema: false, // Disable SDL emission during tests
     };
 
     container.bind('GQLServerConfig').toConstantValue(config);

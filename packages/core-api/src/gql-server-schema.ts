@@ -26,6 +26,8 @@ export const GQLServerSchema = z.object({
       return val.endsWith('/') ? val.slice(0, -1) : val;
     })
     .default('/playground'),
+  emitSchema: z.boolean().default(true),
+  schemaDir: z.string().default('dist/schema'),
 });
 
 export type GQLServerConfig = z.infer<typeof GQLServerSchema>;

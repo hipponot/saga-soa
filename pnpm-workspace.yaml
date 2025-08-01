@@ -1,6 +1,6 @@
 packages:
-  - 'apps/examples/rest-api'
-  - 'apps/examples/graphql-api'
+  - 'apps/examples/rest/rest-api'
+  - 'examples/graphql/graphql-api'
   - 'apps/examples/trpc-api'
   - 'apps/examples/web-client'
   - 'apps/web'
