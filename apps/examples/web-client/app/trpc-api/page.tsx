@@ -176,7 +176,7 @@ export default function TrpcApiPage() {
       
       let response;
       if (selectedEndpoint.method === 'GET') {
-        const url = inputData.trim() 
+        const url = inputData.trim()
           ? `${fullUrl}?input=${encodeURIComponent(inputData)}`
           : fullUrl;
         response = await fetch(url);
@@ -216,11 +216,11 @@ export default function TrpcApiPage() {
           Interactive demonstration of tRPC API endpoints with type-safe invocations
         </p>
         
-        <div className={styles.content}>
+        <div className={styles.content} style={{ fontFamily: 'sans-serif' }}>
           <div style={{ marginBottom: '2rem' }}>
             <h2 style={{ color: 'var(--foreground)' }}>Select Endpoint</h2>
-                           <select 
-                 value={selectedEndpoint?.id || ''} 
+                           <select
+                 value={selectedEndpoint?.id || ''}
                  onChange={(e) => handleEndpointChange(e.target.value)}
                  style={{
                    width: '100%',
@@ -241,17 +241,17 @@ export default function TrpcApiPage() {
             </select>
           </div>
 
-          {selectedEndpoint && (
-            <>
-              <div style={{ marginBottom: '2rem' }}>
-                <h3 style={{ color: 'var(--foreground)' }}>Endpoint Details</h3>
-                                 <div style={{ 
-                   padding: '1rem', 
-                   backgroundColor: 'var(--gray-alpha-100)', 
-                   borderRadius: '4px',
-                   border: '1px solid var(--gray-alpha-200)',
-                   color: 'var(--foreground)'
-                 }}>
+                    <div style={{ marginBottom: '2rem' }}>
+            <h3 style={{ color: 'var(--foreground)' }}>Endpoint Details</h3>
+            <div style={{
+              padding: '1rem',
+              backgroundColor: 'var(--gray-alpha-100)',
+              borderRadius: '4px',
+              border: '1px solid var(--gray-alpha-200)',
+              color: 'var(--foreground)'
+            }}>
+              {selectedEndpoint ? (
+                <>
                   <p><strong>Name:</strong> {selectedEndpoint.name}</p>
                   <p><strong>Method:</strong> {selectedEndpoint.method}</p>
                   <p><strong>Description:</strong> {selectedEndpoint.description}</p>
@@ -259,118 +259,152 @@ export default function TrpcApiPage() {
                   {selectedEndpoint.inputType && (
                     <p><strong>Input Type:</strong> <code>{selectedEndpoint.inputType}</code></p>
                   )}
-                </div>
-              </div>
+                </>
+              ) : (
+                <p style={{ color: 'var(--gray-alpha-200)', fontStyle: 'italic' }}>
+                  Select an endpoint from the dropdown above to see details
+                </p>
+              )}
+            </div>
+          </div>
 
-              <div style={{ marginBottom: '2rem' }}>
-                <h3 style={{ color: 'var(--foreground)' }}>Input Data (JSON)</h3>
-                                  <textarea
-                    value={inputData}
-                    onChange={(e) => setInputData(e.target.value)}
-                    placeholder="Enter JSON input data..."
-                    style={{
-                      width: '100%',
-                      minHeight: '120px',
-                      padding: '0.75rem',
-                      fontSize: '0.9rem',
-                      fontFamily: 'monospace',
-                      border: '1px solid var(--gray-alpha-200)',
-                      borderRadius: '4px',
-                      backgroundColor: 'var(--gray-alpha-100)',
-                      color: 'var(--foreground)'
-                    }}
-                  />
-              </div>
+          <div style={{ marginBottom: '2rem' }}>
+            <h3 style={{ color: 'var(--foreground)' }}>Input Data (JSON)</h3>
+            <textarea
+              value={inputData}
+              onChange={(e) => setInputData(e.target.value)}
+              placeholder={selectedEndpoint ? "Enter JSON input data..." : "Select an endpoint to enable input"}
+              disabled={!selectedEndpoint}
+              style={{
+                width: '100%',
+                minHeight: '120px',
+                padding: '0.75rem',
+                fontSize: '0.9rem',
+                fontFamily: 'monospace',
+                border: '1px solid var(--gray-alpha-200)',
+                borderRadius: '4px',
+                                 backgroundColor: selectedEndpoint ? 'var(--gray-alpha-100)' : 'var(--gray-alpha-100)',
+                color: 'var(--foreground)',
+                opacity: selectedEndpoint ? 1 : 0.6
+              }}
+            />
+          </div>
 
-              <div style={{ marginBottom: '2rem' }}>
-                <h3 style={{ color: 'var(--foreground)' }}>Generated Code</h3>
-                                 <div style={{
-                   padding: '1rem',
-                   backgroundColor: 'var(--gray-alpha-100)',
-                   color: 'var(--foreground)',
-                   borderRadius: '4px',
-                   fontFamily: 'monospace',
-                   fontSize: '0.9rem',
-                   overflowX: 'auto',
-                   border: '1px solid var(--gray-alpha-200)'
-                 }}>
-                  <div 
-                    dangerouslySetInnerHTML={{ 
-                      __html: syntaxHighlight(generateCode(selectedEndpoint, inputData)) 
-                    }} 
-                  />
-                </div>
-              </div>
-
-              <div style={{ marginBottom: '2rem' }}>
-                <button 
-                  onClick={executeEndpoint}
-                  disabled={isLoading}
-                                     style={{ 
-                     marginRight: '1rem',
-                     padding: '0.75rem 1.5rem',
-                     backgroundColor: 'var(--foreground)',
-                     color: 'var(--background)',
-                     border: 'none',
-                     borderRadius: '4px',
-                     cursor: isLoading ? 'not-allowed' : 'pointer',
-                     opacity: isLoading ? 0.6 : 1
-                   }}
-                >
-                  {isLoading ? 'Executing...' : 'Execute Endpoint'}
-                </button>
-                <button 
-                  onClick={() => {
-                    setResponse('');
-                    setError('');
+          <div style={{ marginBottom: '2rem' }}>
+            <h3 style={{ color: 'var(--foreground)' }}>Generated Code</h3>
+            <div style={{
+              padding: '1rem',
+              backgroundColor: 'var(--gray-alpha-100)',
+              color: 'var(--foreground)',
+              borderRadius: '4px',
+              fontFamily: 'monospace',
+              fontSize: '0.9rem',
+              overflowX: 'auto',
+              border: '1px solid var(--gray-alpha-200)',
+              minHeight: '80px'
+            }}>
+              {selectedEndpoint ? (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: syntaxHighlight(generateCode(selectedEndpoint, inputData))
                   }}
-                                     style={{
-                     padding: '0.75rem 1.5rem',
-                     backgroundColor: 'transparent',
-                     color: 'var(--foreground)',
-                     border: '1px solid var(--gray-alpha-200)',
-                     borderRadius: '4px',
-                     cursor: 'pointer'
-                   }}
-                >
-                  Clear Response
-                </button>
+                />
+              ) : (
+                <div style={{ color: 'var(--gray-alpha-200)', fontStyle: 'italic', fontFamily: 'sans-serif' }}>
+                  Select an endpoint to see the generated curl command
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '2rem' }}>
+            <button
+              onClick={executeEndpoint}
+              disabled={!selectedEndpoint || isLoading}
+              style={{
+                marginRight: '1rem',
+                padding: '0.75rem 1.5rem',
+                backgroundColor: selectedEndpoint ? 'var(--foreground)' : 'var(--gray-alpha-200)',
+                color: selectedEndpoint ? 'var(--background)' : 'var(--gray-alpha-200)',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: selectedEndpoint && !isLoading ? 'pointer' : 'not-allowed',
+                opacity: isLoading ? 0.6 : 1
+              }}
+            >
+              {isLoading ? 'Executing...' : 'Execute Endpoint'}
+            </button>
+            <button
+              onClick={() => {
+                setResponse('');
+                setError('');
+              }}
+              disabled={!selectedEndpoint}
+              style={{
+                padding: '0.75rem 1.5rem',
+                backgroundColor: 'transparent',
+                color: selectedEndpoint ? 'var(--foreground)' : 'var(--gray-alpha-200)',
+                border: `1px solid ${selectedEndpoint ? 'var(--gray-alpha-200)' : 'var(--gray-alpha-100)'}`,
+                borderRadius: '4px',
+                cursor: selectedEndpoint ? 'pointer' : 'not-allowed'
+              }}
+            >
+              Clear Response
+            </button>
+          </div>
+
+          {error && (
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{ color: 'var(--foreground)' }}>Error</h3>
+              <div style={{
+                padding: '1rem',
+                backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                color: '#dc2626',
+                borderRadius: '4px',
+                border: '1px solid rgba(220, 38, 38, 0.2)'
+              }}>
+                {error}
               </div>
+            </div>
+          )}
 
-              {error && (
-                <div style={{ marginBottom: '2rem' }}>
-                  <h3 style={{ color: 'var(--foreground)' }}>Error</h3>
-                                     <div style={{
-                     padding: '1rem',
-                     backgroundColor: 'rgba(220, 38, 38, 0.1)',
-                     color: '#dc2626',
-                     borderRadius: '4px',
-                     border: '1px solid rgba(220, 38, 38, 0.2)'
-                   }}>
-                    {error}
-                  </div>
-                </div>
-              )}
+          {response && (
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{ color: 'var(--foreground)' }}>Response</h3>
+              <div style={{
+                padding: '1rem',
+                backgroundColor: 'var(--gray-alpha-100)',
+                borderRadius: '4px',
+                border: '1px solid var(--gray-alpha-200)',
+                fontFamily: 'monospace',
+                fontSize: '0.9rem',
+                whiteSpace: 'pre-wrap',
+                overflowX: 'auto',
+                color: 'var(--foreground)'
+              }}>
+                {response}
+              </div>
+            </div>
+          )}
 
-              {response && (
-                <div style={{ marginBottom: '2rem' }}>
-                  <h3 style={{ color: 'var(--foreground)' }}>Response</h3>
-                                     <div style={{
-                     padding: '1rem',
-                     backgroundColor: 'var(--gray-alpha-100)',
-                     borderRadius: '4px',
-                     border: '1px solid var(--gray-alpha-200)',
-                     fontFamily: 'monospace',
-                     fontSize: '0.9rem',
-                     whiteSpace: 'pre-wrap',
-                     overflowX: 'auto',
-                     color: 'var(--foreground)'
-                   }}>
-                    {response}
-                  </div>
-                </div>
-              )}
-            </>
+          {!selectedEndpoint && !error && !response && (
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{ color: 'var(--foreground)' }}>Response</h3>
+              <div style={{
+                padding: '1rem',
+                backgroundColor: 'var(--gray-alpha-100)',
+                borderRadius: '4px',
+                border: '1px solid var(--gray-alpha-200)',
+                fontSize: '0.9rem',
+                color: 'var(--gray-alpha-200)',
+                fontStyle: 'italic',
+                minHeight: '80px',
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                Execute an endpoint to see the response here
+              </div>
+            </div>
           )}
         </div>
 
@@ -385,4 +419,4 @@ export default function TrpcApiPage() {
       </main>
     </div>
   );
-} 
+}
