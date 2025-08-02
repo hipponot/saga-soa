@@ -37,6 +37,20 @@ async function start() {
   await expressServer.init(container, restControllers);
   const app = expressServer.getApp();
 
+  // Add CORS middleware
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
+    if (req.method === 'OPTIONS') {
+      res.sendStatus(200);
+    } else {
+      next();
+    }
+  });
+
   // Dynamically load all tRPC controllers
   const trpcControllers = await controllerLoader.loadControllers(
     path.resolve(__dirname, GLOB_PATTERNS.TRPC),
@@ -48,8 +62,8 @@ async function start() {
   // Initialize the tRPC server with tRPC controllers
   await trpcServer.init(container, trpcControllers);
 
-  // Mount tRPC and playground middleware with basePath support
-  await trpcServer.mountToApp(app, '/saga-soa/v1');
+  // Mount tRPC middleware
+  await trpcServer.mountToApp(app);
 
   // Add a simple health check (at root level for easy access)
   app.get('/health', (req: Request, res: Response) => {
@@ -59,6 +73,17 @@ async function start() {
   // Start the server
   expressServer.start();
 }
+
+// Add global error handlers
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
 
 start().catch(error => {
   const logger = container.get<ILogger>('ILogger');

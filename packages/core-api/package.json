@@ -50,7 +50,6 @@
       "types": "./dist/utils/loadControllers.d.ts",
       "default": "./dist/utils/loadControllers.js"
     },
-
     "./trpc-server": {
       "types": "./dist/trpc-server.d.ts",
       "default": "./dist/trpc-server.js"
@@ -69,6 +68,7 @@
   "dependencies": {
     "@apollo/server": "^4.10.0",
     "@trpc/server": "^11.0.0",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "fast-glob": "^3.3.3",
     "figlet": "^1.8.1",
@@ -82,6 +82,7 @@
   },
   "devDependencies": {
     "@saga-soa/logger": "workspace:*",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/figlet": "^1.7.0",
     "@types/graphql": "^14.5.0",

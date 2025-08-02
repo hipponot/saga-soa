@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+import cors from 'cors';
 import { injectable, inject } from 'inversify';
 import type { ExpressServerConfig } from './express-server-schema.js';
 import type { ILogger } from '@saga-soa/logger';
@@ -22,6 +23,14 @@ export class ExpressServer {
     container: Container,
     controllers: Array<new (...args: any[]) => any>
   ): Promise<void> {
+    // Add CORS middleware to allow tRPC playground requests
+    this.app.use(cors({
+      origin: true, // Allow all origins for development
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    }));
+
     // Ensure routing-controllers uses Inversify for controller resolution
     useContainer(container);
 
