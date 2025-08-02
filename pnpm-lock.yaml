@@ -182,6 +182,9 @@ importers:
       '@saga/ui':
         specifier: workspace:*
         version: link:../../../packages/ui
+      '@trpc/client':
+        specifier: ^11.0.0
+        version: 11.4.3(@trpc/server@11.4.3(typescript@5.8.2))(typescript@5.8.2)
       next:
         specifier: ^15.3.0
         version: 15.4.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -6080,10 +6083,19 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
+  '@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.8.2))(typescript@5.8.2)':
+    dependencies:
+      '@trpc/server': 11.4.3(typescript@5.8.2)
+      typescript: 5.8.2
+
   '@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3)':
     dependencies:
       '@trpc/server': 11.4.3(typescript@5.8.3)
       typescript: 5.8.3
+
+  '@trpc/server@11.4.3(typescript@5.8.2)':
+    dependencies:
+      typescript: 5.8.2
 
   '@trpc/server@11.4.3(typescript@5.8.3)':
     dependencies:
