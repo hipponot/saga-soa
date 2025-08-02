@@ -212,7 +212,7 @@ export default function TrpcApiPage() {
     <div className={styles.page}>
       <main className={styles.main}>
         <h1 className={styles.title}>tRPC API Demo</h1>
-        <p className={styles.description}>
+        <p className={styles.description} style={{ color: '#D2691E' }}>
           Interactive demonstration of tRPC API endpoints with type-safe invocations
         </p>
         
@@ -242,7 +242,7 @@ export default function TrpcApiPage() {
           </div>
 
                     <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ color: 'var(--foreground)' }}>Endpoint Details</h3>
+            <h3 style={{ color: '#D2691E', marginBottom: '10px' }}>Endpoint Details</h3>
             <div style={{
               padding: '1rem',
               backgroundColor: 'var(--gray-alpha-100)',
@@ -269,7 +269,7 @@ export default function TrpcApiPage() {
           </div>
 
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ color: 'var(--foreground)' }}>Input Data (JSON)</h3>
+            <h3 style={{ color: '#D2691E', marginBottom: '10px' }}>Input Data (JSON)</h3>
             <textarea
               value={inputData}
               onChange={(e) => setInputData(e.target.value)}
@@ -291,7 +291,7 @@ export default function TrpcApiPage() {
           </div>
 
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ color: 'var(--foreground)' }}>Generated Code</h3>
+            <h3 style={{ color: '#D2691E', marginBottom: '10px' }}>Generated Code</h3>
             <div style={{
               padding: '1rem',
               backgroundColor: 'var(--gray-alpha-100)',
@@ -355,7 +355,7 @@ export default function TrpcApiPage() {
 
           {error && (
             <div style={{ marginBottom: '2rem' }}>
-              <h3 style={{ color: 'var(--foreground)' }}>Error</h3>
+              <h3 style={{ color: '#D2691E', marginBottom: '10px' }}>Error</h3>
               <div style={{
                 padding: '1rem',
                 backgroundColor: 'rgba(220, 38, 38, 0.1)',
@@ -370,7 +370,7 @@ export default function TrpcApiPage() {
 
           {response && (
             <div style={{ marginBottom: '2rem' }}>
-              <h3 style={{ color: 'var(--foreground)' }}>Response</h3>
+              <h3 style={{ color: '#D2691E', marginBottom: '10px' }}>Response</h3>
               <div style={{
                 padding: '1rem',
                 backgroundColor: 'var(--gray-alpha-100)',
@@ -389,7 +389,7 @@ export default function TrpcApiPage() {
 
           {!selectedEndpoint && !error && !response && (
             <div style={{ marginBottom: '2rem' }}>
-              <h3 style={{ color: 'var(--foreground)' }}>Response</h3>
+              <h3 style={{ color: '#D2691E', marginBottom: '10px' }}>Response</h3>
               <div style={{
                 padding: '1rem',
                 backgroundColor: 'var(--gray-alpha-100)',
