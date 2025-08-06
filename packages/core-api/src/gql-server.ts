@@ -70,7 +70,8 @@ export class GQLServer {
     await this.apolloServer.start();
 
     // Emit schemas if enabled
-    if (this.config.emitSchema !== false) { // default to true
+    if (this.config.emitSchema !== false) {
+      // default to true
       const schemaDir = this.config.schemaDir || 'dist/schema';
       await this.emitSchemas(resolverInstances, schemaDir);
     }
@@ -79,7 +80,10 @@ export class GQLServer {
   /**
    * Emit SDL files for all sectors (grouped by sector name)
    */
-  private async emitSchemas(resolverInstances: AbstractGQLController[], schemaDir: string): Promise<void> {
+  private async emitSchemas(
+    resolverInstances: AbstractGQLController[],
+    schemaDir: string
+  ): Promise<void> {
     try {
       this.logger.info(`🔍 Emitting sector schemas to ${schemaDir}...`);
 
@@ -88,7 +92,7 @@ export class GQLServer {
 
       // Group resolvers by sector name
       const sectorGroups = new Map<string, AbstractGQLController[]>();
-      
+
       for (const resolver of resolverInstances) {
         const sectorName = resolver.sectorName;
         if (!sectorGroups.has(sectorName)) {
@@ -101,12 +105,13 @@ export class GQLServer {
       for (const [sectorName, resolvers] of sectorGroups) {
         const fileName = `${sectorName}.graphql`;
         const outputPath = path.join(schemaDir, fileName);
-        
+
         await this.emitSectorSDL(sectorName, resolvers, outputPath);
       }
 
-      this.logger.info(`✅ Successfully emitted ${sectorGroups.size} sector schema file(s) to ${schemaDir}`);
-
+      this.logger.info(
+        `✅ Successfully emitted ${sectorGroups.size} sector schema file(s) to ${schemaDir}`
+      );
     } catch (error) {
       this.logger.error('❌ Failed to emit schemas:', error as Error);
       throw error;
@@ -116,9 +121,15 @@ export class GQLServer {
   /**
    * Emit SDL for a specific sector containing multiple resolvers
    */
-  private async emitSectorSDL(sectorName: string, resolvers: AbstractGQLController[], outputPath: string): Promise<void> {
+  private async emitSectorSDL(
+    sectorName: string,
+    resolvers: AbstractGQLController[],
+    outputPath: string
+  ): Promise<void> {
     try {
-      this.logger.debug(`Emitting SDL for sector '${sectorName}' with ${resolvers.length} resolver(s) to ${outputPath}`);
+      this.logger.debug(
+        `Emitting SDL for sector '${sectorName}' with ${resolvers.length} resolver(s) to ${outputPath}`
+      );
 
       // Build schema with all resolvers in this sector
       const resolverClasses = resolvers.map(r => r.constructor);
@@ -139,7 +150,6 @@ export class GQLServer {
 
       this.logger.info(`✅ Emitted SDL for sector '${sectorName}' to ${outputPath}`);
       this.logger.debug(`📊 Schema size: ${sdl.length} characters`);
-
     } catch (error) {
       this.logger.error(`❌ Failed to emit SDL for sector '${sectorName}':`, error as Error);
       throw error;

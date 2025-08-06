@@ -57,10 +57,10 @@ export default function Home() {
             </div>
             
             <div className={styles.apiCard}>
-              <h3>GraphQL API</h3>
-              <p>GraphQL schema with resolver-based architecture</p>
-              <a href="/graphql-api" className={styles.apiLink}>
-                View GraphQL API Example →
+              <h3>TypeGraphQL API</h3>
+              <p>TypeGraphQL schema with resolver-based architecture</p>
+              <a href="/tgql-api" className={styles.apiLink}>
+                View TypeGraphQL API Example →
               </a>
             </div>
           </div>

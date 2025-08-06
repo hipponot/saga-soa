@@ -1,6 +1,6 @@
 # Web Client Example
 
-This is a [Next.js](https://nextjs.org) web client example for the saga-soa project, demonstrating how to build a frontend application that can consume the various API examples (REST, GraphQL, tRPC).
+This is a [Next.js](https://nextjs.org) web client example for the saga-soa project, demonstrating how to build a frontend application that can consume the various API examples (REST, TypeGraphQL, tRPC).
 
 ## Getting Started
 
@@ -34,7 +34,7 @@ This example demonstrates:
 
 This web client is part of the saga-soa monorepo and can be used to:
 - Consume REST API endpoints from `rest-api` example
-- Query GraphQL API from `graphql-api` example  
+- Query TypeGraphQL API from `tgql-api` example  
 - Call tRPC procedures from `trpc-api` example
 - Use shared UI components from `@saga/ui` package
 

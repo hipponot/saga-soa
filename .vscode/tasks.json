@@ -36,12 +36,12 @@
       "problemMatcher": []
     },
     {
-      "label": "Build graphql-api",
+      "label": "Build tgql-api",
       "type": "shell",
       "command": "pnpm",
       "args": ["build"],
       "options": {
-        "cwd": "${workspaceFolder}/apps/examples/graphql-api"
+        "cwd": "${workspaceFolder}/apps/examples/tgql/tgql-api"
       },
       "group": "build",
       "presentation": {

@@ -52,7 +52,7 @@
         "tsx",  
         "scripts/emit-schema.ts"
       ],
-      "cwd": "${workspaceFolder}/apps/examples/graphql-api",
+      "cwd": "${workspaceFolder}/apps/examples/tgql/tgql-api",
       "skipFiles": ["<node_internals>/**"]
     }
   ]
