@@ -1,4 +1,5 @@
 // Auto-generated - do not edit
+// This file is dynamically generated based on sectors in src/sectors/*/trpc/
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
 import * as projectSchemas from './schemas/project.schemas.js';
