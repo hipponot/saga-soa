@@ -8,7 +8,7 @@ import {
   type CreateProjectInput,
   type UpdateProjectInput,
   type GetProjectInput,
-} from './project.types.js';
+} from './project.schemas.js';
 import {
   getAllProjects,
   getProjectById,

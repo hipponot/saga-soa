@@ -7,7 +7,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsup --watch --onSuccess \"node dist/main.js\"",
-    "build": "tsup",
+    "build": "npm run build:types && tsup",
+    "build:types": "cd trpc-types && npm run build",
     "start": "node dist/main.js",
     "check-types": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts\" --fix",
@@ -16,10 +17,11 @@
     "test": "vitest run",
     "clean": "rm -rf dist"
   },
-  "dependencies": {
+    "dependencies": {
     "@saga-soa/core-api": "workspace:*",
     "@saga-soa/db": "workspace:*",
     "@saga-soa/logger": "workspace:^",
+    "@saga-soa/trpc-types": "workspace:*",
     "@trpc/client": "^11.4.3",
     "@trpc/server": "^11.0.0",
     "@types/mongodb": "^4.0.7",

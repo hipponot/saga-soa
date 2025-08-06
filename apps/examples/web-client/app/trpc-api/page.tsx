@@ -1,13 +1,11 @@
 'use client';
 
-import { Button } from '@saga/ui/button';
 import Link from 'next/link';
 import { useState } from 'react';
 import styles from '../page.module.css';
 import { ENDPOINTS } from '../../src/services/endpoints';
 import { TrpcCurlService } from '../../src/services/trpc-curl-service';
 import { TrpcClientService } from '../../src/services/trpc-client-service';
-import type { Endpoint } from '../../src/services/types';
 
 type EndpointType = typeof ENDPOINTS[0];
 

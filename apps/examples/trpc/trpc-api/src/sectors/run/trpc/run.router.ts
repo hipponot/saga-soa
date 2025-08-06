@@ -8,7 +8,7 @@ import {
   type CreateRunInput,
   type UpdateRunInput,
   type GetRunInput,
-} from './run.types.js';
+} from './run.schemas.js';
 import { getAllRuns, getRunById, createRun, updateRun, deleteRun } from './run.data.js';
 
 @injectable()

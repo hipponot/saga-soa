@@ -26,13 +26,13 @@ export interface Endpoint {
   method: 'GET' | 'POST';
   description: string;
   inputType: string | null;
-  sampleInput: any;
+  sampleInput: unknown;
   url: string;
 }
 
 export interface ApiResponse {
   success: boolean;
-  data?: any;
+  data?: unknown;
   error?: string;
 }
 

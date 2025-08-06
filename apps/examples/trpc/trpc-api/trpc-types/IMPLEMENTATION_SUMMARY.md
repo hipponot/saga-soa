@@ -19,7 +19,7 @@ packages/trpc-types/
 │   ├── generate-all-types.js    # Type generation script
 │   └── validate-no-server-imports.ts  # Security validation
 ├── examples/
-│   └── web-client-usage.ts      # Usage examples
+│   └── (examples removed - superseded by integration tests)
 └── README.md                # Documentation
 ```
 
@@ -142,7 +142,7 @@ import { CreateProjectInput } from '@saga-soa/trpc-types';
 - `packages/trpc-types/scripts/generate-all-types.js`
 - `packages/trpc-types/scripts/validate-no-server-imports.ts`
 - `packages/trpc-types/README.md`
-- `packages/trpc-types/examples/web-client-usage.ts`
+- `packages/trpc-types/examples/` (examples removed - superseded by integration tests)
 
 ### **Modified Files**
 - `package.json` (added generate-types script)
