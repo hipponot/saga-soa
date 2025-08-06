@@ -14,15 +14,43 @@ import {
   type UpdateRunInput,
   type GetRunInput,
   type GetRunsByProjectInput,
-} from '../../schemas/index.js';
-import {
-  validCreateProjectInput,
-  validUpdateProjectInput,
-  validGetProjectInput,
-  validCreateRunInput,
-  validUpdateRunInput,
-  validGetRunInput,
-} from '../fixtures/test-data.js';
+} from '../../index.js';
+
+// Simple test data
+const validCreateProjectInput: CreateProjectInput = {
+  name: 'Test Project',
+  description: 'Test Description',
+  status: 'active',
+};
+
+const validUpdateProjectInput: UpdateProjectInput = {
+  id: '1',
+  name: 'Updated Project',
+  description: 'Updated Description',
+  status: 'inactive',
+};
+
+const validGetProjectInput: GetProjectInput = {
+  id: '1',
+};
+
+const validCreateRunInput: CreateRunInput = {
+  projectId: '1',
+  name: 'Test Run',
+  description: 'Test Description',
+  status: 'pending',
+};
+
+const validUpdateRunInput: UpdateRunInput = {
+  id: '1',
+  name: 'Updated Run',
+  description: 'Updated Description',
+  status: 'completed',
+};
+
+const validGetRunInput: GetRunInput = {
+  id: '1',
+};
 
 describe('Type Compatibility', () => {
   describe('Zod Schema and TypeScript Type Compatibility', () => {

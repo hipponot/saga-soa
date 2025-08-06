@@ -8,12 +8,28 @@ import {
   type UpdateRunInput,
   type GetRunInput,
   type GetRunsByProjectInput,
-} from '../../schemas/run.schemas.js';
-import {
-  validCreateRunInput,
-  validUpdateRunInput,
-  validGetRunInput,
-} from '../fixtures/test-data.js';
+} from '../../index.js';
+
+// Simple test data since we don't have the fixtures anymore
+const validCreateRunInput = {
+  projectId: '1',
+  name: 'Test Run',
+  description: 'Test Description',
+  status: 'pending' as const,
+  config: { key: 'value' },
+};
+
+const validUpdateRunInput = {
+  id: '1',
+  name: 'Updated Run',
+  description: 'Updated Description',
+  status: 'completed' as const,
+  config: { key: 'updated' },
+};
+
+const validGetRunInput = {
+  id: '1',
+};
 
 describe('Run Schemas', () => {
   describe('CreateRunSchema', () => {

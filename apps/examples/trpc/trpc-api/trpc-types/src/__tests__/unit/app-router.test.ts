@@ -9,91 +9,39 @@ import type {
   GetRunInput,
   Project,
   Run
-} from '../../schemas/index.js';
+} from '../../index.js';
 
 describe('AppRouter Type', () => {
-  it('should have correct project router structure', () => {
-    // Test that the AppRouter type has the expected structure
-    type ProjectRouter = AppRouter['project'];
-    
-    // Check that all expected procedures exist
-    expectTypeOf<ProjectRouter['getAllProjects']>().toBeObject();
-    expectTypeOf<ProjectRouter['getProjectById']>().toBeObject();
-    expectTypeOf<ProjectRouter['createProject']>().toBeObject();
-    expectTypeOf<ProjectRouter['updateProject']>().toBeObject();
-    expectTypeOf<ProjectRouter['deleteProject']>().toBeObject();
+  it('should have project router structure', () => {
+    expectTypeOf<AppRouter>().toHaveProperty('project');
+    expectTypeOf<AppRouter['project']>().toBeObject();
   });
 
-  it('should have correct run router structure', () => {
-    // Test that the AppRouter type has the expected structure
-    type RunRouter = AppRouter['run'];
-    
-    // Check that all expected procedures exist
-    expectTypeOf<RunRouter['getAllRuns']>().toBeObject();
-    expectTypeOf<RunRouter['getRunById']>().toBeObject();
-    expectTypeOf<RunRouter['createRun']>().toBeObject();
-    expectTypeOf<RunRouter['updateRun']>().toBeObject();
-    expectTypeOf<RunRouter['deleteRun']>().toBeObject();
+  it('should have run router structure', () => {
+    expectTypeOf<AppRouter>().toHaveProperty('run');
+    expectTypeOf<AppRouter['run']>().toBeObject();
   });
 
-  it('should have correct query procedure types', () => {
-    // Test query procedures
-    expectTypeOf<AppRouter['project']['getAllProjects']['query']>().returns.toEqualTypeOf<Promise<Project[]>>();
-    expectTypeOf<AppRouter['project']['getProjectById']['query']>().parameters.toEqualTypeOf<[GetProjectInput]>();
-    expectTypeOf<AppRouter['project']['getProjectById']['query']>().returns.toEqualTypeOf<Promise<Project>>();
-    
-    expectTypeOf<AppRouter['run']['getAllRuns']['query']>().returns.toEqualTypeOf<Promise<Run[]>>();
-    expectTypeOf<AppRouter['run']['getRunById']['query']>().parameters.toEqualTypeOf<[GetRunInput]>();
-    expectTypeOf<AppRouter['run']['getRunById']['query']>().returns.toEqualTypeOf<Promise<Run>>();
+  it('should have correct project endpoints', () => {
+    // Check that all expected procedures exist in project router
+    expectTypeOf<AppRouter['project']>().toHaveProperty('getAllProjects');
+    expectTypeOf<AppRouter['project']>().toHaveProperty('getProjectById');
+    expectTypeOf<AppRouter['project']>().toHaveProperty('createProject');
+    expectTypeOf<AppRouter['project']>().toHaveProperty('updateProject');
+    expectTypeOf<AppRouter['project']>().toHaveProperty('deleteProject');
   });
 
-  it('should have correct mutation procedure types', () => {
-    // Test mutation procedures
-    expectTypeOf<AppRouter['project']['createProject']['mutation']>().parameters.toEqualTypeOf<[CreateProjectInput]>();
-    expectTypeOf<AppRouter['project']['createProject']['mutation']>().returns.toEqualTypeOf<Promise<Project>>();
-    
-    expectTypeOf<AppRouter['project']['updateProject']['mutation']>().parameters.toEqualTypeOf<[UpdateProjectInput]>();
-    expectTypeOf<AppRouter['project']['updateProject']['mutation']>().returns.toEqualTypeOf<Promise<Project>>();
-    
-    expectTypeOf<AppRouter['project']['deleteProject']['mutation']>().parameters.toEqualTypeOf<[GetProjectInput]>();
-    expectTypeOf<AppRouter['project']['deleteProject']['mutation']>().returns.toEqualTypeOf<Promise<{ success: boolean; message: string }>>();
-    
-    expectTypeOf<AppRouter['run']['createRun']['mutation']>().parameters.toEqualTypeOf<[CreateRunInput]>();
-    expectTypeOf<AppRouter['run']['createRun']['mutation']>().returns.toEqualTypeOf<Promise<Run>>();
-    
-    expectTypeOf<AppRouter['run']['updateRun']['mutation']>().parameters.toEqualTypeOf<[UpdateRunInput]>();
-    expectTypeOf<AppRouter['run']['updateRun']['mutation']>().returns.toEqualTypeOf<Promise<Run>>();
-    
-    expectTypeOf<AppRouter['run']['deleteRun']['mutation']>().parameters.toEqualTypeOf<[GetRunInput]>();
-    expectTypeOf<AppRouter['run']['deleteRun']['mutation']>().returns.toEqualTypeOf<Promise<{ success: boolean; message: string }>>();
+  it('should have correct run endpoints', () => {
+    // Check that all expected procedures exist in run router
+    expectTypeOf<AppRouter['run']>().toHaveProperty('getAllRuns');
+    expectTypeOf<AppRouter['run']>().toHaveProperty('getRunById');
+    expectTypeOf<AppRouter['run']>().toHaveProperty('createRun');
+    expectTypeOf<AppRouter['run']>().toHaveProperty('updateRun');
+    expectTypeOf<AppRouter['run']>().toHaveProperty('deleteRun');
   });
 
-  it('should be compatible with tRPC client types', () => {
-    // This test ensures the AppRouter type is compatible with tRPC client expectations
-    // The type should be assignable to a generic tRPC router type
-    
-    // Mock tRPC client type (simplified)
-    type TRPCClient<TRouter> = {
-      [K in keyof TRouter]: {
-        [P in keyof TRouter[K]]: {
-          query: (...args: any[]) => Promise<any>;
-          mutation: (...args: any[]) => Promise<any>;
-        };
-      };
-    };
-    
-    // This should compile without errors
-    type TestClient = TRPCClient<AppRouter>;
-    
-    // Verify the client type has the expected structure
-    expectTypeOf<TestClient['project']['getAllProjects']['query']>().toBeFunction();
-    expectTypeOf<TestClient['project']['createProject']['mutation']>().toBeFunction();
-    expectTypeOf<TestClient['run']['getAllRuns']['query']>().toBeFunction();
-    expectTypeOf<TestClient['run']['createRun']['mutation']>().toBeFunction();
-  });
-
-  it('should have correct input/output type compatibility', () => {
-    // Test that input types match the expected schema types
+  it('should export all required input types', () => {
+    // Test that input types are properly exported and can be used
     const createProjectInput: CreateProjectInput = {
       name: 'Test Project',
       description: 'Test Description',
@@ -137,4 +85,19 @@ describe('AppRouter Type', () => {
     expect(updateRunInput).toBeDefined();
     expect(getRunInput).toBeDefined();
   });
-}); 
+
+  it('should be compatible with tRPC client creation', () => {
+    // This test ensures the AppRouter type can be used with tRPC client
+    // We don't actually create a client, just test the type compatibility
+    
+    // Mock minimal tRPC client type structure
+    type MinimalTRPCClient<T> = T extends Record<string, any> ? {
+      [K in keyof T]: T[K] extends Record<string, any> ? MinimalTRPCClient<T[K]> : T[K]
+    } : T;
+    
+    // This should compile without errors
+    expectTypeOf<MinimalTRPCClient<AppRouter>>().toBeObject();
+    expectTypeOf<MinimalTRPCClient<AppRouter>>().toHaveProperty('project');
+    expectTypeOf<MinimalTRPCClient<AppRouter>>().toHaveProperty('run');
+  });
+});

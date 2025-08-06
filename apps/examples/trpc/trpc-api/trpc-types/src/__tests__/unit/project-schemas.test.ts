@@ -6,15 +6,29 @@ import {
   type CreateProjectInput,
   type UpdateProjectInput,
   type GetProjectInput,
-} from '../../schemas/project.schemas.js';
-import {
-  validCreateProjectInput,
-  validUpdateProjectInput,
-  validGetProjectInput,
-  invalidCreateProjectInput,
-  invalidUpdateProjectInput,
-  invalidGetProjectInput,
-} from '../fixtures/test-data.js';
+} from '../../index.js';
+
+// Simple test data since we don't have the fixtures anymore
+const validCreateProjectInput = {
+  name: 'Test Project',
+  description: 'Test Description',
+  status: 'active' as const,
+};
+
+const validUpdateProjectInput = {
+  id: '1',
+  name: 'Updated Project',
+  description: 'Updated Description',
+  status: 'inactive' as const,
+};
+
+const validGetProjectInput = {
+  id: '1',
+};
+
+const invalidGetProjectInput = {
+  id: '',
+};
 
 describe('Project Schemas', () => {
   describe('CreateProjectSchema', () => {

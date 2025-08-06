@@ -69,35 +69,32 @@ const trpcControllers = await controllerLoader.loadControllers(
 
 ### Static Type Generation (trpc-types)
 
-The `trpc-types` subproject generates static types for client consumption, but uses a **hybrid approach**:
+The `trpc-types` subproject generates static types for client consumption using **fully dynamic generation**:
 
-#### Dynamic Discovery Phase
+#### Dynamic Discovery & Analysis
 ```typescript
-// scripts/generate-router.ts (lines 21-37)
+// scripts/generate-router.ts discovers sectors and parses router files
 const sectors = await fs.readdir(TRPC_API_SECTORS_DIR);
 for (const sector of sectors) {
-  const trpcDir = path.join(sectorPath, 'trpc');
-  try {
-    await fs.access(trpcDir);
-    routerSectors.push(sector);  // Dynamic discovery
-  } catch {
-    // Skip non-tRPC sectors
-  }
+  const sectorInfo = await parseSectorRouter(sector);  // ✅ Parse actual router files
+  sectorInfos.push(sectorInfo);
 }
 ```
 
-#### Static Code Generation Phase  
+#### Dynamic Code Generation
 ```typescript
-// scripts/generate-router.ts (lines 42-68)
-const routerContent = `
-import * as projectSchemas from './schemas/project.schemas.js';  // ❌ Hardcoded
-import * as runSchemas from './schemas/run.schemas.js';          // ❌ Hardcoded
+// Generate dynamic imports based on discovered sectors
+const imports = sectorInfos.map(sector => 
+  `import * as ${sector.name}Schemas from './schemas/${sector.name}.schemas.js';`
+).join('\n');
 
-export const staticAppRouter = t.router({
-  project: t.router({ /* hardcoded structure */ }),              // ❌ Hardcoded
-  run: t.router({ /* hardcoded structure */ }),                  // ❌ Hardcoded
-});
-`;
+// Generate dynamic router structure based on parsed endpoints
+const routerSections = sectorInfos.map(sector => {
+  const endpointDefinitions = sector.endpoints.map(endpoint =>
+    generateEndpointDefinition(endpoint, sector.name)
+  ).join('\n');
+  return `  ${sector.name}: t.router({\n${endpointDefinitions}\n  })`;
+}).join(',\n');
 ```
 
 ## Type Sharing with web-client
@@ -135,82 +132,70 @@ const newRun = await client.run.createRun.mutate({
 });
 ```
 
-## Current Limitations & Inconsistencies
+## Dynamic Parity Achievement
 
-### ⚠️ Static vs Dynamic Mismatch
+### ✅ Fully Dynamic Type Generation
 
-**Problem**: The `trpc-types` generation is **not fully dynamic** like the runtime router loading.
+The type generation now matches the runtime router loading approach:
 
 - **Runtime (trpc-api)**: ✅ Truly dynamic - automatically handles new sectors
-- **Type generation (trpc-types)**: ❌ Semi-dynamic - discovers sectors but generates hardcoded imports/structure
+- **Type generation (trpc-types)**: ✅ **Fully dynamic** - discovers sectors, parses router files, and generates complete type structure
 
-### Specific Issues
+### Key Features
 
-1. **Hardcoded Imports**: 
+1. **Dynamic Sector Discovery**: 
    ```typescript
-   // Generated code has hardcoded imports
-   import * as projectSchemas from './schemas/project.schemas.js';
-   import * as runSchemas from './schemas/run.schemas.js';
+   // Automatically finds all sectors with tRPC directories
+   const sectors = await fs.readdir(TRPC_API_SECTORS_DIR);
    ```
 
-2. **Hardcoded Router Structure**:
+2. **Router File Parsing**:
    ```typescript
-   // Generated router has hardcoded sector definitions
-   export const staticAppRouter = t.router({
-     project: t.router({...}),  // Must manually add new sectors here
-     run: t.router({...}),      // Must manually add new sectors here  
-   });
+   // Parses actual router files to extract endpoint definitions
+   async function parseSectorRouter(sectorName: string): Promise<SectorInfo> {
+     const routerContent = await fs.readFile(routerFilePath, 'utf-8');
+     // Extract endpoints with regex parsing of createRouter() method
+   }
    ```
 
-3. **Manual Maintenance**: Adding a new sector requires updating the generation script
+3. **Dynamic Code Generation**: All imports and router structure generated based on discovered sectors and parsed endpoints
 
-### 🎯 Recommended Improvements
+### Zero Manual Maintenance
 
-To achieve **true dynamic parity** between runtime and type generation:
+**Result**: Adding a new sector to `trpc-api` requires **no manual updates** to `trpc-types` other than running `npm run build`.
 
-1. **Dynamic Import Generation**: Generate imports based on discovered sectors
-   ```typescript
-   // Should generate dynamically:
-   ${routerSectors.map(sector => 
-     `import * as ${sector}Schemas from './schemas/${sector}.schemas.js';`
-   ).join('\\n')}
-   ```
-
-2. **Dynamic Router Structure**: Generate router based on discovered endpoints  
-   ```typescript
-   // Should generate dynamically:  
-   export const staticAppRouter = t.router({
-     ${routerSectors.map(sector => `${sector}: t.router({...})`).join(',\\n')}
-   });
-   ```
-
-3. **Schema Analysis**: Parse actual router files to extract endpoint definitions rather than hardcoding them
+The system automatically:
+- Discovers new sectors
+- Copies their schemas
+- Parses their router endpoints 
+- Generates appropriate imports and type definitions
+- Builds complete `AppRouter` type
 
 ## Build Pipeline
 
 ### Current Process
 
-1. **`generate:schemas`** - Copy schemas from sectors to `generated/schemas/`
-2. **`generate:router`** - Create static AppRouter (semi-dynamic)
+1. **`generate:schemas`** - Copy schemas from sectors to `generated/schemas/` (fully dynamic)
+2. **`generate:router`** - Parse router files and generate dynamic AppRouter (fully dynamic) 
 3. **`tsup`** - Build final package with proper exports
 
 ### Generated Artifacts
 
 ```
-trpc-types/generated/
-├── schemas/           # Copied from sectors (✅ fully dynamic)
+trpc-types/generated/           # ⚠️ In .gitignore - auto-generated
+├── schemas/                    # Copied from sectors (✅ fully dynamic)
 │   ├── project.schemas.ts
 │   ├── run.schemas.ts  
 │   └── index.ts
-└── router.ts          # Static AppRouter (❌ semi-dynamic)
+└── router.ts                   # Dynamic AppRouter (✅ fully dynamic)
 ```
 
 ## Future Enhancements
 
-1. **Full Dynamic Type Generation**: Make `generate-router.ts` truly dynamic to match runtime behavior
-2. **Endpoint Discovery**: Parse router files to extract actual endpoint definitions
-3. **Schema Validation**: Ensure generated types match runtime router structure
-4. **Hot Reload Support**: Watch for sector changes during development
-5. **Documentation Generation**: Auto-generate API docs from sector definitions
+1. **Schema Validation**: Ensure generated types match runtime router structure  
+2. **Hot Reload Support**: Watch for sector changes during development
+3. **Documentation Generation**: Auto-generate API docs from sector definitions
+4. **Enhanced Parsing**: Support more complex router patterns and middleware
+5. **Build Optimization**: Cache parsing results for faster regeneration
 
-This architecture provides a solid foundation for a scalable, type-safe tRPC API, but the type generation component needs enhancement to fully match the dynamic runtime capabilities.
+This architecture now provides a **fully scalable, type-safe tRPC API** with complete dynamic parity between runtime and type generation. The system automatically adapts to new sectors without any manual intervention.

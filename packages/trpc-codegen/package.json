@@ -1,0 +1,48 @@
+{
+  "name": "@saga-soa/trpc-codegen",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Reusable tRPC code generation utilities for saga-soa monorepo",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "trpc-codegen": "./bin/trpc-codegen.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "bin",
+    "templates"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "chokidar": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "tsup": "^8.3.5",
+    "typescript": "5.8.2",
+    "vitest": "^2.1.8"
+  },
+  "keywords": [
+    "trpc",
+    "codegen",
+    "typescript",
+    "saga-soa"
+  ],
+  "author": "saga-soa",
+  "license": "MIT"
+}

@@ -13,20 +13,12 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
-    "outDir": "./dist",
-    "rootDir": "./",
+    "outDir": "dist",
+    "rootDir": "src",
     "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": [
-    "src/**/*",
-    "generated/**/*"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules"
-  ]
-} 
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules", "**/*.test.ts"]
+}
