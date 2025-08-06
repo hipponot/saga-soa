@@ -1,25 +1,11 @@
 {
+  "extends": "../../../../../packages/typescript-config/base.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "preserve",
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
     "outDir": "./dist",
     "rootDir": "./",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "jsx": "preserve"
   },
   "include": [
     "src/**/*",
@@ -29,4 +15,4 @@
     "dist",
     "node_modules"
   ]
-} 
+}
