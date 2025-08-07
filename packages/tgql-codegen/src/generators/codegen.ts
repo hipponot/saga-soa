@@ -3,21 +3,21 @@ import type { GenerationResult } from '../types/sector.js';
 import { SectorParser } from '../parsers/sector-parser.js';
 import { ResolverParser } from '../parsers/resolver-parser.js';
 import { TypeParser } from '../parsers/type-parser.js';
-import { SchemaGenerator } from './schema-generator.js';
 import { SDLGenerator } from './sdl-generator.js';
+import { GraphQLCodeGenGenerator } from './graphql-codegen-generator.js';
 
 export class TGQLCodegen {
   private sectorParser: SectorParser;
-  private schemaGenerator: SchemaGenerator;
   private sdlGenerator: SDLGenerator;
+  private graphqlCodegenGenerator: GraphQLCodeGenGenerator;
 
   constructor(private config: TGQLCodegenConfig) {
     const resolverParser = new ResolverParser(config);
     const typeParser = new TypeParser(config);
     
     this.sectorParser = new SectorParser(config, resolverParser, typeParser);
-    this.schemaGenerator = new SchemaGenerator(config);
     this.sdlGenerator = new SDLGenerator(config);
+    this.graphqlCodegenGenerator = new GraphQLCodeGenGenerator(config);
   }
 
   async generate(): Promise<GenerationResult> {
@@ -34,19 +34,23 @@ export class TGQLCodegen {
 
       console.log(`📊 Found ${sectors.length} sectors with GraphQL definitions`);
       
-      // Generate schema and type files
-      const result = await this.schemaGenerator.generateSchema(sectors);
-      
-      console.log('✅ Code generation completed successfully!');
-      console.log(`📁 Schema file: ${result.schemaFile}`);
-      console.log(`📁 Type files: ${result.typeFiles.length} generated`);
-      
-      // Generate SDL if enabled
+      // Phase 1: Generate SDL files
       if (this.config.sdl.enabled) {
         await this.generateSDL(sectors);
       }
       
-      return result;
+      // Phase 2: Generate TypeScript types from SDL
+      if (this.config.graphqlCodegen.enabled) {
+        await this.graphqlCodegenGenerator.generateTypes();
+      }
+      
+      console.log('✅ Code generation completed successfully!');
+      
+      return {
+        schemaFile: 'generated/schema',
+        typeFiles: ['generated/types'],
+        sectorCount: sectors.length
+      };
     } catch (error) {
       console.error('❌ Code generation failed:', error);
       throw error;
@@ -73,6 +77,20 @@ export class TGQLCodegen {
       console.log('✅ SDL generation completed successfully!');
     } catch (error) {
       console.error('❌ SDL generation failed:', error);
+      throw error;
+    }
+  }
+
+  async generateTypesOnly(): Promise<void> {
+    console.log('🚀 Starting types-only generation...');
+    
+    try {
+      // Generate TypeScript types from SDL
+      await this.graphqlCodegenGenerator.generateTypes();
+      
+      console.log('✅ Type generation completed successfully!');
+    } catch (error) {
+      console.error('❌ Type generation failed:', error);
       throw error;
     }
   }

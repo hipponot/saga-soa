@@ -18,12 +18,18 @@ program
   .description('Generate tRPC types and router')
   .option('-c, --config <path>', 'Path to config file')
   .option('-p, --project <path>', 'Project directory path', process.cwd())
+  .option('-o, --output-dir <path>', 'Output directory for generated files')
   .action(async (options) => {
     try {
       console.log('🚀 tRPC Code Generation starting...\n');
       
       const config = await ConfigLoader.loadConfig(options.config, options.project);
       ConfigLoader.validateConfig(config);
+      
+      // Override output directory if specified
+      if (options.outputDir) {
+        config.generation.outputDir = options.outputDir;
+      }
       
       const codegen = new TRPCCodegen(config, options.project);
       const result = await codegen.generate();
@@ -46,12 +52,18 @@ program
   .description('Watch for changes and regenerate automatically')
   .option('-c, --config <path>', 'Path to config file')
   .option('-p, --project <path>', 'Project directory path', process.cwd())
+  .option('-o, --output-dir <path>', 'Output directory for generated files')
   .action(async (options) => {
     try {
       console.log('👀 Starting tRPC Code Generation in watch mode...\n');
       
       const config = await ConfigLoader.loadConfig(options.config, options.project);
       ConfigLoader.validateConfig(config);
+      
+      // Override output directory if specified
+      if (options.outputDir) {
+        config.generation.outputDir = options.outputDir;
+      }
       
       const codegen = new TRPCCodegen(config, options.project);
       

@@ -13,24 +13,38 @@ program
 
 program
   .command('generate')
-  .description('Generate TypeScript types from GraphQL resolvers')
+  .description('Generate SDL files and TypeScript types from GraphQL resolvers')
   .option('-c, --config <path>', 'Path to configuration file')
-  .option('--include-sdl', 'Include SDL generation')
   .option('--sdl-only', 'Generate only SDL files (skip types)')
+  .option('--types-only', 'Generate only TypeScript types from SDL (skip SDL generation)')
+  .option('-o, --output-dir <path>', 'Output directory for generated files')
   .action(async (options) => {
     try {
       const config = await ConfigLoader.load(options.config);
       
-      // Update config based on CLI options
-      if (options.includeSdl) {
-        config.sdl.enabled = true;
+      // Override output directory if specified
+      if (options.outputDir) {
+        config.generation.outputDir = options.outputDir;
+        config.sdl.outputDir = `${options.outputDir}/schema`;
+        config.graphqlCodegen.outputDir = `${options.outputDir}/types`;
       }
       
       const codegen = new TGQLCodegen(config);
       
       if (options.sdlOnly) {
+        // Enable SDL generation, disable type generation
+        config.sdl.enabled = true;
+        config.graphqlCodegen.enabled = false;
         await codegen.generateSDLOnly();
+      } else if (options.typesOnly) {
+        // Enable type generation, disable SDL generation
+        config.sdl.enabled = false;
+        config.graphqlCodegen.enabled = true;
+        await codegen.generateTypesOnly();
       } else {
+        // Enable both phases
+        config.sdl.enabled = true;
+        config.graphqlCodegen.enabled = true;
         await codegen.generate();
       }
     } catch (error) {
@@ -52,6 +66,7 @@ program
       
       // Update config based on CLI options
       config.sdl.enabled = true;
+      config.graphqlCodegen.enabled = false;
       
       if (options.output) {
         config.sdl.outputDir = options.output;
@@ -72,12 +87,51 @@ program
   });
 
 program
-  .command('watch')
-  .description('Watch for file changes and regenerate types')
+  .command('emit-types')
+  .description('Generate TypeScript types from GraphQL SDL files using graphql-codegen')
   .option('-c, --config <path>', 'Path to configuration file')
+  .option('-s, --schema <path>', 'Path to GraphQL schema files')
+  .option('-o, --output <dir>', 'Output directory for type files')
   .action(async (options) => {
     try {
       const config = await ConfigLoader.load(options.config);
+      
+      // Update config based on CLI options
+      config.sdl.enabled = false;
+      config.graphqlCodegen.enabled = true;
+      
+      if (options.schema) {
+        config.graphqlCodegen.schemaPath = options.schema;
+      }
+      
+      if (options.output) {
+        config.graphqlCodegen.outputDir = options.output;
+      }
+      
+      const codegen = new TGQLCodegen(config);
+      await codegen.generateTypesOnly();
+    } catch (error) {
+      console.error('Type generation failed:', error);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('watch')
+  .description('Watch for file changes and regenerate types')
+  .option('-c, --config <path>', 'Path to configuration file')
+  .option('-o, --output-dir <path>', 'Output directory for generated files')
+  .action(async (options) => {
+    try {
+      const config = await ConfigLoader.load(options.config);
+      
+      // Override output directory if specified
+      if (options.outputDir) {
+        config.generation.outputDir = options.outputDir;
+        config.sdl.outputDir = `${options.outputDir}/schema`;
+        config.graphqlCodegen.outputDir = `${options.outputDir}/types`;
+      }
+      
       const codegen = new TGQLCodegen(config);
       await codegen.watch();
     } catch (error) {

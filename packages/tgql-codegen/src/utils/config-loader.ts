@@ -38,6 +38,7 @@ export class ConfigLoader {
       generation: { ...DEFAULT_CONFIG.generation, ...(userConfig?.generation || {}) },
       parsing: { ...DEFAULT_CONFIG.parsing, ...(userConfig?.parsing || {}) },
       sdl: { ...DEFAULT_CONFIG.sdl, ...(userConfig?.sdl || {}) },
+      graphqlCodegen: { ...DEFAULT_CONFIG.graphqlCodegen, ...(userConfig?.graphqlCodegen || {}) },
     };
 
     // If we have a config file path, resolve relative paths relative to the config file
@@ -62,6 +63,12 @@ export class ConfigLoader {
       if (userConfig.sdl?.outputDir && !userConfig.sdl.outputDir.startsWith('/')) {
         mergedConfig.sdl.outputDir = resolve(configDir, userConfig.sdl.outputDir);
         console.log(`ConfigLoader debug: resolved sdl.outputDir=${mergedConfig.sdl.outputDir}`);
+      }
+
+      // Resolve GraphQL CodeGen outputDir relative to config file if it's not absolute
+      if (userConfig.graphqlCodegen?.outputDir && !userConfig.graphqlCodegen.outputDir.startsWith('/')) {
+        mergedConfig.graphqlCodegen.outputDir = resolve(configDir, userConfig.graphqlCodegen.outputDir);
+        console.log(`ConfigLoader debug: resolved graphqlCodegen.outputDir=${mergedConfig.graphqlCodegen.outputDir}`);
       }
     }
 

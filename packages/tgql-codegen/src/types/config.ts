@@ -22,6 +22,14 @@ export interface TGQLCodegenConfig {
     emitBySector: boolean;
     sectorFileNamePattern?: string;
   };
+  graphqlCodegen: {
+    enabled: boolean;
+    schemaPath: string;
+    documents?: string;
+    outputDir: string;
+    plugins: string[];
+    config?: Record<string, any>;
+  };
 }
 
 export const DEFAULT_CONFIG: TGQLCodegenConfig = {
@@ -47,5 +55,22 @@ export const DEFAULT_CONFIG: TGQLCodegenConfig = {
     fileName: 'schema.graphql',
     emitBySector: true,
     sectorFileNamePattern: '{sector}.graphql'
+  },
+  graphqlCodegen: {
+    enabled: false,
+    schemaPath: './generated/schema/*.graphql',
+    outputDir: './generated/types',
+    plugins: ['typescript', 'typescript-operations'],
+    config: {
+      scalars: {
+        ID: 'string',
+        DateTime: 'Date'
+      },
+      avoidOptionals: {
+        field: true,
+        inputValue: false,
+        object: false
+      }
+    }
   }
 };
