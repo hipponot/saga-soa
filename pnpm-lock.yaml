@@ -158,6 +158,9 @@ importers:
 
   apps/examples/tgql-api/tgql-types:
     dependencies:
+      '@saga-soa/core-api':
+        specifier: workspace:*
+        version: link:../../../../packages/core-api
       graphql:
         specifier: ^16.8.1
         version: 16.11.0

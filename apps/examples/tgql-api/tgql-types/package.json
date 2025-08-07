@@ -30,6 +30,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@saga-soa/core-api": "workspace:*",
     "type-graphql": "^2.0.0-rc.2",
     "graphql": "^16.8.1"
   },
