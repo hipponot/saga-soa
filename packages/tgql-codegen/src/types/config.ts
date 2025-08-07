@@ -15,6 +15,13 @@ export interface TGQLCodegenConfig {
     queryPattern: RegExp;
     mutationPattern: RegExp;
   };
+  sdl: {
+    enabled: boolean;
+    outputDir: string;
+    fileName?: string;
+    emitBySector: boolean;
+    sectorFileNamePattern?: string;
+  };
 }
 
 export const DEFAULT_CONFIG: TGQLCodegenConfig = {
@@ -33,5 +40,12 @@ export const DEFAULT_CONFIG: TGQLCodegenConfig = {
     resolverPattern: /@Resolver\(\s*\(\)\s*=>\s*(\w+)\s*\)/g,
     queryPattern: /@Query\(\s*\(\)\s*=>\s*(\[?)(\w+)(\]?)/g,
     mutationPattern: /@Mutation\(\s*\(\)\s*=>\s*(\[?)(\w+)(\]?)/g,
+  },
+  sdl: {
+    enabled: false,
+    outputDir: './generated/schema',
+    fileName: 'schema.graphql',
+    emitBySector: true,
+    sectorFileNamePattern: '{sector}.graphql'
   }
 };

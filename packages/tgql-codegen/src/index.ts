@@ -5,6 +5,7 @@ export { SectorParser } from './parsers/sector-parser.js';
 export { ResolverParser } from './parsers/resolver-parser.js';
 export { TypeParser } from './parsers/type-parser.js';
 export { SchemaGenerator } from './generators/schema-generator.js';
+export { SDLGenerator } from './generators/sdl-generator.js';
 
 // Type exports
 export type { TGQLCodegenConfig } from './types/config.js';

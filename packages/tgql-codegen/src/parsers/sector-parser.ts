@@ -46,16 +46,16 @@ export class SectorParser {
     
     console.log(`🔍 Parsing sector: ${sectorName}`);
     
-    // Find resolver files
-    const resolverPattern = join(sectorPath, this.config.source.resolverPattern);
+    // Find resolver files - remove the leading */ from the pattern since we're already in the sector directory
+    const resolverPattern = join(sectorPath, this.config.source.resolverPattern.replace(/^\*\/?/, ''));
     const resolverFiles = await glob(resolverPattern);
     
     // Find type files
-    const typePattern = join(sectorPath, this.config.source.typePattern);
+    const typePattern = join(sectorPath, this.config.source.typePattern.replace(/^\*\/?/, ''));
     const typeFiles = await glob(typePattern);
     
     // Find input files
-    const inputPattern = join(sectorPath, this.config.source.inputPattern);
+    const inputPattern = join(sectorPath, this.config.source.inputPattern.replace(/^\*\/?/, ''));
     const inputFiles = await glob(inputPattern);
 
     console.log(`  📄 Resolver files: ${resolverFiles.length}`);

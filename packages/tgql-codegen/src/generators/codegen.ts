@@ -4,10 +4,12 @@ import { SectorParser } from '../parsers/sector-parser.js';
 import { ResolverParser } from '../parsers/resolver-parser.js';
 import { TypeParser } from '../parsers/type-parser.js';
 import { SchemaGenerator } from './schema-generator.js';
+import { SDLGenerator } from './sdl-generator.js';
 
 export class TGQLCodegen {
   private sectorParser: SectorParser;
   private schemaGenerator: SchemaGenerator;
+  private sdlGenerator: SDLGenerator;
 
   constructor(private config: TGQLCodegenConfig) {
     const resolverParser = new ResolverParser(config);
@@ -15,6 +17,7 @@ export class TGQLCodegen {
     
     this.sectorParser = new SectorParser(config, resolverParser, typeParser);
     this.schemaGenerator = new SchemaGenerator(config);
+    this.sdlGenerator = new SDLGenerator(config);
   }
 
   async generate(): Promise<GenerationResult> {
@@ -38,9 +41,80 @@ export class TGQLCodegen {
       console.log(`📁 Schema file: ${result.schemaFile}`);
       console.log(`📁 Type files: ${result.typeFiles.length} generated`);
       
+      // Generate SDL if enabled
+      if (this.config.sdl.enabled) {
+        await this.generateSDL(sectors);
+      }
+      
       return result;
     } catch (error) {
       console.error('❌ Code generation failed:', error);
+      throw error;
+    }
+  }
+
+  async generateSDLOnly(): Promise<void> {
+    console.log('🚀 Starting SDL-only generation...');
+    
+    try {
+      // Parse all sectors
+      const sectors = await this.sectorParser.parseSectors();
+      
+      if (sectors.length === 0) {
+        console.warn('⚠️  No sectors found with GraphQL resolvers');
+        throw new Error('No sectors found with GraphQL resolvers');
+      }
+
+      console.log(`📊 Found ${sectors.length} sectors with GraphQL definitions`);
+      
+      // Generate SDL
+      await this.generateSDL(sectors);
+      
+      console.log('✅ SDL generation completed successfully!');
+    } catch (error) {
+      console.error('❌ SDL generation failed:', error);
+      throw error;
+    }
+  }
+
+  private async generateSDL(sectors: any[]): Promise<void> {
+    // Extract resolver information from sectors
+    const resolvers: Array<{ sectorName: string; constructor: Function }> = [];
+    
+    for (const sector of sectors) {
+      for (const resolver of sector.resolvers) {
+        // We need to dynamically import the resolver class
+        const resolverModule = await this.dynamicImport(resolver.filePath);
+        const resolverClass = resolverModule[resolver.className];
+        
+        if (resolverClass) {
+          resolvers.push({
+            sectorName: sector.name,
+            constructor: resolverClass
+          });
+        }
+      }
+    }
+
+    if (this.config.sdl.emitBySector) {
+      // Group resolvers by sector and emit separate files
+      const sectorGroups = this.sdlGenerator.groupResolversBySector(resolvers);
+      await this.sdlGenerator.emitSectorSDL(sectorGroups, this.config.sdl.outputDir);
+    } else {
+      // Emit single unified schema
+      const resolverClasses = resolvers.map(r => r.constructor);
+      const outputPath = `${this.config.sdl.outputDir}/${this.config.sdl.fileName}`;
+      await this.sdlGenerator.emitSDL(resolverClasses, outputPath);
+    }
+  }
+
+  private async dynamicImport(filePath: string): Promise<any> {
+    try {
+      // Convert .ts to .js and look in dist directory
+      const jsPath = filePath.replace(/\.ts$/, '.js').replace('/src/', '/dist/');
+      return await import(jsPath);
+    } catch (error) {
+      console.error(`Failed to import resolver from ${filePath}:`, error);
       throw error;
     }
   }

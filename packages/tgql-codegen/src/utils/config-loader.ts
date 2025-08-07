@@ -37,6 +37,7 @@ export class ConfigLoader {
       source: { ...DEFAULT_CONFIG.source, ...(userConfig?.source || {}) },
       generation: { ...DEFAULT_CONFIG.generation, ...(userConfig?.generation || {}) },
       parsing: { ...DEFAULT_CONFIG.parsing, ...(userConfig?.parsing || {}) },
+      sdl: { ...DEFAULT_CONFIG.sdl, ...(userConfig?.sdl || {}) },
     };
 
     // If we have a config file path, resolve relative paths relative to the config file
@@ -55,6 +56,12 @@ export class ConfigLoader {
       if (userConfig.generation?.outputDir && !userConfig.generation.outputDir.startsWith('/')) {
         mergedConfig.generation.outputDir = resolve(configDir, userConfig.generation.outputDir);
         console.log(`ConfigLoader debug: resolved outputDir=${mergedConfig.generation.outputDir}`);
+      }
+
+      // Resolve SDL outputDir relative to config file if it's not absolute
+      if (userConfig.sdl?.outputDir && !userConfig.sdl.outputDir.startsWith('/')) {
+        mergedConfig.sdl.outputDir = resolve(configDir, userConfig.sdl.outputDir);
+        console.log(`ConfigLoader debug: resolved sdl.outputDir=${mergedConfig.sdl.outputDir}`);
       }
     }
 
