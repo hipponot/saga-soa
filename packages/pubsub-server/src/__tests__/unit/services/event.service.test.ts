@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { Container } from 'inversify';
-import { EventService } from '../../services/event.service.js';
-import { MockLogger } from '../../__tests__/mocks/mock-logger.js';
-import { TYPES } from '../../types/index.js';
+import { EventService } from '../../../services/event.service.js';
+import { MockLogger } from '../../../__tests__/mocks/mock-logger.js';
+import { TYPES } from '../../../types/index.js';
 import { z } from 'zod';
 import type { EventDefinition } from '@saga-soa/pubsub-core';
 

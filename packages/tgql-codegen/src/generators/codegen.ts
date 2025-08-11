@@ -46,9 +46,20 @@ export class TGQLCodegen {
       
       console.log('✅ Code generation completed successfully!');
       
+      // Build the actual file paths based on what was generated
+      const schemaFile = this.config.sdl.enabled 
+        ? this.config.sdl.emitBySector 
+          ? `${this.config.sdl.outputDir}/schema` // Directory containing sector files
+          : `${this.config.sdl.outputDir}/${this.config.sdl.fileName || 'schema.graphql'}` // Single schema file
+        : '';
+
+      const typeFiles = this.config.graphqlCodegen.enabled
+        ? [`${this.config.graphqlCodegen.outputDir}/index.ts`] // Main types file
+        : [];
+
       return {
-        schemaFile: 'generated/schema',
-        typeFiles: ['generated/types'],
+        schemaFile,
+        typeFiles,
         sectorCount: sectors.length
       };
     } catch (error) {

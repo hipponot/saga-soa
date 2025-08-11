@@ -9,5 +9,18 @@ export default {
     outputDir: './generated',
     packageName: '@saga-soa/tgql-types',
     schemaName: 'AppSchema'
+  },
+  sdl: {
+    enabled: true,
+    outputDir: './generated/schema',
+    fileName: 'schema.graphql',
+    emitBySector: true,
+    sectorFileNamePattern: '{sector}.graphql'
+  },
+  graphqlCodegen: {
+    enabled: true,
+    schemaPath: './generated/schema/*.graphql',
+    outputDir: './generated/types',
+    plugins: ['typescript', 'typescript-operations']
   }
 };
