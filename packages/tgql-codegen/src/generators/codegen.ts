@@ -1,10 +1,12 @@
 import type { TGQLCodegenConfig } from '../types/config.js';
-import type { GenerationResult } from '../types/sector.js';
+import type { GenerationResult, CodegenManifest } from '../types/sector.js';
 import { SectorParser } from '../parsers/sector-parser.js';
 import { ResolverParser } from '../parsers/resolver-parser.js';
 import { TypeParser } from '../parsers/type-parser.js';
 import { SDLGenerator } from './sdl-generator.js';
 import { GraphQLCodeGenGenerator } from './graphql-codegen-generator.js';
+import { writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
 export class TGQLCodegen {
   private sectorParser: SectorParser;
@@ -45,6 +47,9 @@ export class TGQLCodegen {
       }
       
       console.log('✅ Code generation completed successfully!');
+      
+      // Generate manifest
+      await this.generateManifest(sectors);
       
       // Build the actual file paths based on what was generated
       const schemaFile = this.config.sdl.enabled 
@@ -134,6 +139,68 @@ export class TGQLCodegen {
       const resolverClasses = resolvers.map(r => r.constructor);
       const outputPath = `${this.config.sdl.outputDir}/${this.config.sdl.fileName}`;
       await this.sdlGenerator.emitSDL(resolverClasses, outputPath);
+    }
+  }
+
+  private async generateManifest(sectors: any[]): Promise<void> {
+    try {
+      const manifest: CodegenManifest = {
+        generatedAt: new Date().toISOString(),
+        config: {
+          source: {
+            sectorsDir: this.config.source.sectorsDir,
+            resolverPattern: this.config.source.resolverPattern,
+            typePattern: this.config.source.typePattern,
+            inputPattern: this.config.source.inputPattern,
+          },
+          generation: {
+            outputDir: this.config.generation.outputDir,
+            packageName: this.config.generation.packageName,
+            schemaName: this.config.generation.schemaName,
+          },
+          sdl: {
+            enabled: this.config.sdl.enabled,
+            outputDir: this.config.sdl.outputDir,
+            fileName: this.config.sdl.fileName,
+            emitBySector: this.config.sdl.emitBySector,
+          },
+          graphqlCodegen: {
+            enabled: this.config.graphqlCodegen.enabled,
+            schemaPath: this.config.graphqlCodegen.schemaPath,
+            outputDir: this.config.graphqlCodegen.outputDir,
+            plugins: this.config.graphqlCodegen.plugins,
+          },
+        },
+        sources: {
+          sectors: sectors.map(sector => ({
+            name: sector.name,
+            resolvers: sector.resolvers.map((r: any) => r.filePath),
+            types: sector.types.map((t: any) => t.filePath),
+            inputs: sector.inputs.map((i: any) => i.filePath),
+          })),
+        },
+        outputs: {
+          schema: {
+            directory: this.config.sdl.enabled ? this.config.sdl.outputDir : '',
+            files: this.config.sdl.enabled && this.config.sdl.emitBySector 
+              ? sectors.map(s => `${s.name}.graphql`)
+              : this.config.sdl.fileName ? [this.config.sdl.fileName] : [],
+          },
+          types: {
+            directory: this.config.graphqlCodegen.enabled ? this.config.graphqlCodegen.outputDir : '',
+            files: this.config.graphqlCodegen.enabled 
+              ? ['index.ts', ...sectors.map(s => `${s.name}.types.ts`)]
+              : [],
+          },
+        },
+      };
+
+      const manifestPath = join(this.config.generation.outputDir, 'manifest.json');
+      await writeFile(manifestPath, JSON.stringify(manifest, null, 2), 'utf-8');
+      console.log(`📋 Generated manifest at ${manifestPath}`);
+    } catch (error) {
+      console.error('❌ Failed to generate manifest:', error);
+      // Don't throw - manifest generation failure shouldn't break the main process
     }
   }
 

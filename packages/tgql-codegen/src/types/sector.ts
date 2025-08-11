@@ -53,3 +53,51 @@ export interface GenerationResult {
   typeFiles: string[];
   sectorCount: number;
 }
+
+export interface ManifestEntry {
+  name: string;
+  resolvers: string[];
+  types: string[];
+  inputs: string[];
+}
+
+export interface OutputInfo {
+  directory: string;
+  files: string[];
+}
+
+export interface CodegenManifest {
+  generatedAt: string;
+  config: {
+    source: {
+      sectorsDir: string;
+      resolverPattern: string;
+      typePattern: string;
+      inputPattern: string;
+    };
+    generation: {
+      outputDir: string;
+      packageName: string;
+      schemaName?: string;
+    };
+    sdl: {
+      enabled: boolean;
+      outputDir: string;
+      fileName?: string;
+      emitBySector: boolean;
+    };
+    graphqlCodegen: {
+      enabled: boolean;
+      schemaPath: string;
+      outputDir: string;
+      plugins: string[];
+    };
+  };
+  sources: {
+    sectors: ManifestEntry[];
+  };
+  outputs: {
+    schema: OutputInfo;
+    types: OutputInfo;
+  };
+}
