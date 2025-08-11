@@ -1,0 +1,12 @@
+{
+  "extends": "../../packages/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "rootDir": "src",
+    "types": ["vitest"]
+  },
+  "include": ["src"],
+  "exclude": ["**/node_modules/**", "dist", "**/__tests__/**/mocks/**"]
+} 
