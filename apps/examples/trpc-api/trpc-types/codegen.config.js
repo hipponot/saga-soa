@@ -2,8 +2,8 @@ export default {
   // Source configuration
   source: {
     sectorsDir: '../src/sectors',
-    routerPattern: '*/trpc/*.router.ts',
-    schemaPattern: '*/trpc/*.schemas.ts'
+    routerPattern: '*/trpc/*-router.ts',
+    schemaPattern: '*/trpc/schema/*.schemas.ts'
   },
   
   // Generation configuration  

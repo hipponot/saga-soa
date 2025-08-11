@@ -8,21 +8,17 @@ import {
   type CreateProjectInput,
   type UpdateProjectInput,
   type GetProjectInput,
-} from './project.schemas.js';
-import {
-  getAllProjects,
-  getProjectById,
-  createProject,
-  updateProject,
-  deleteProject,
-} from './project.data.js';
+} from './schema/project.schemas.js';
+import { ProjectHelper } from './project-helper.js';
 
 @injectable()
 export class ProjectController extends AbstractTRPCController {
   readonly sectorName = 'project';
+  private projectHelper: ProjectHelper;
 
   constructor(@inject('ILogger') logger: ILogger) {
     super(logger);
+    this.projectHelper = new ProjectHelper();
   }
 
   createRouter() {
@@ -31,12 +27,12 @@ export class ProjectController extends AbstractTRPCController {
     return router({
       // Get all projects
       getAllProjects: t.query(() => {
-        return getAllProjects();
+        return this.projectHelper.getAllProjects();
       }),
 
       // Get project by ID
       getProjectById: t.input(GetProjectSchema).query(({ input }: { input: GetProjectInput }) => {
-        const project = getProjectById(input.id);
+        const project = this.projectHelper.getProjectById(input.id);
         if (!project) {
           throw new Error('Project not found');
         }
@@ -47,14 +43,14 @@ export class ProjectController extends AbstractTRPCController {
       createProject: t
         .input(CreateProjectSchema)
         .mutation(({ input }: { input: CreateProjectInput }) => {
-          return createProject(input);
+          return this.projectHelper.createProject(input);
         }),
 
       // Update project
       updateProject: t
         .input(UpdateProjectSchema)
         .mutation(({ input }: { input: UpdateProjectInput }) => {
-          const updatedProject = updateProject(input);
+          const updatedProject = this.projectHelper.updateProject(input);
           if (!updatedProject) {
             throw new Error('Project not found');
           }
@@ -63,7 +59,7 @@ export class ProjectController extends AbstractTRPCController {
 
       // Delete project
       deleteProject: t.input(GetProjectSchema).mutation(({ input }: { input: GetProjectInput }) => {
-        const success = deleteProject(input.id);
+        const success = this.projectHelper.deleteProject(input.id);
         if (!success) {
           throw new Error('Project not found');
         }

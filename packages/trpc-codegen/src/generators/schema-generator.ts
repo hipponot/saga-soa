@@ -19,7 +19,11 @@ export class SchemaGenerator {
     
     // Copy schema files from each sector
     for (const sector of sectorInfos) {
-      const sourceSchemaFile = path.join(sectorsDir, sector.name, 'trpc', `${sector.name}.schemas.ts`);
+      // Use the configured schema pattern to find the schema file
+      const schemaPattern = this.config.source.schemaPattern
+        .replace('*', sector.name)
+        .replace('*', sector.name);
+      const sourceSchemaFile = path.join(sectorsDir, schemaPattern);
       const targetSchemaFile = path.join(outputSchemasDir, `${sector.name}.schemas.ts`);
       
       try {

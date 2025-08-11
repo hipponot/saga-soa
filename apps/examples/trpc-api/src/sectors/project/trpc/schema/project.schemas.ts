@@ -22,13 +22,3 @@ export const GetProjectSchema = z.object({
 export type CreateProjectInput = z.infer<typeof CreateProjectSchema>;
 export type UpdateProjectInput = z.infer<typeof UpdateProjectSchema>;
 export type GetProjectInput = z.infer<typeof GetProjectSchema>;
-
-// Project entity type
-export interface Project {
-  id: string;
-  name: string;
-  description?: string;
-  status: 'active' | 'inactive' | 'archived';
-  createdAt: Date;
-  updatedAt: Date;
-} 

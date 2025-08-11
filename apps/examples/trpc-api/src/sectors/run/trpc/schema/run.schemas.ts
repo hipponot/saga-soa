@@ -30,17 +30,3 @@ export type CreateRunInput = z.infer<typeof CreateRunSchema>;
 export type UpdateRunInput = z.infer<typeof UpdateRunSchema>;
 export type GetRunInput = z.infer<typeof GetRunSchema>;
 export type GetRunsByProjectInput = z.infer<typeof GetRunsByProjectSchema>;
-
-// Run entity type
-export interface Run {
-  id: string;
-  projectId: string;
-  name: string;
-  description?: string;
-  status: 'pending' | 'running' | 'completed' | 'failed';
-  config?: Record<string, unknown>;
-  createdAt: Date;
-  updatedAt: Date;
-  startedAt?: Date;
-  completedAt?: Date;
-} 

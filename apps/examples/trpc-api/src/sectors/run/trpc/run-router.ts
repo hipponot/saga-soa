@@ -8,15 +8,17 @@ import {
   type CreateRunInput,
   type UpdateRunInput,
   type GetRunInput,
-} from './run.schemas.js';
-import { getAllRuns, getRunById, createRun, updateRun, deleteRun } from './run.data.js';
+} from './schema/run.schemas.js';
+import { RunHelper } from './run-helper.js';
 
 @injectable()
 export class RunController extends AbstractTRPCController {
   readonly sectorName = 'run';
+  private runHelper: RunHelper;
 
   constructor(@inject('ILogger') logger: ILogger) {
     super(logger);
+    this.runHelper = new RunHelper();
   }
 
   createRouter() {
@@ -25,12 +27,12 @@ export class RunController extends AbstractTRPCController {
     return router({
       // Get all runs
       getAllRuns: t.query(() => {
-        return getAllRuns();
+        return this.runHelper.getAllRuns();
       }),
 
       // Get run by ID
       getRunById: t.input(GetRunSchema).query(({ input }: { input: GetRunInput }) => {
-        const run = getRunById(input.id);
+        const run = this.runHelper.getRunById(input.id);
         if (!run) {
           throw new Error('Run not found');
         }
@@ -39,12 +41,12 @@ export class RunController extends AbstractTRPCController {
 
       // Create run
       createRun: t.input(CreateRunSchema).mutation(({ input }: { input: CreateRunInput }) => {
-        return createRun(input);
+        return this.runHelper.createRun(input);
       }),
 
       // Update run
       updateRun: t.input(UpdateRunSchema).mutation(({ input }: { input: UpdateRunInput }) => {
-        const updatedRun = updateRun(input);
+        const updatedRun = this.runHelper.updateRun(input);
         if (!updatedRun) {
           throw new Error('Run not found');
         }
@@ -53,7 +55,7 @@ export class RunController extends AbstractTRPCController {
 
       // Delete run
       deleteRun: t.input(GetRunSchema).mutation(({ input }: { input: GetRunInput }) => {
-        const success = deleteRun(input.id);
+        const success = this.runHelper.deleteRun(input.id);
         if (!success) {
           throw new Error('Run not found');
         }

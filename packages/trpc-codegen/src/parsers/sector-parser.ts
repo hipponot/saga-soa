@@ -19,13 +19,13 @@ export class SectorParser {
         const stat = await fs.stat(sectorPath);
         
         if (stat.isDirectory()) {
-          const trpcDir = path.join(sectorPath, 'trpc');
           try {
-            await fs.access(trpcDir);
-            // Parse the router file for this sector
+            // Parse the router file for this sector using the configured pattern
             const sectorInfo = await this.parseSectorRouter(sectorsDir, sector);
-            sectorInfos.push(sectorInfo);
-            console.log(`📋 Found ${sectorInfo.endpoints.length} endpoints in ${sector} sector`);
+            if (sectorInfo.endpoints.length > 0) {
+              sectorInfos.push(sectorInfo);
+              console.log(`📋 Found ${sectorInfo.endpoints.length} endpoints in ${sector} sector`);
+            }
           } catch (error) {
             console.warn(`⚠️  Skipping ${sector}: ${error instanceof Error ? error.message : 'Unknown error'}`);
           }
@@ -45,7 +45,12 @@ export class SectorParser {
   }
 
   private async parseSectorRouter(sectorsDir: string, sectorName: string): Promise<SectorInfo> {
-    const routerFilePath = path.join(sectorsDir, sectorName, 'trpc', `${sectorName}.router.ts`);
+    // Use the configured router pattern to find the router file
+    // Replace * with sectorName in the pattern
+    const routerPattern = this.config.source.routerPattern
+      .replace('*', sectorName)
+      .replace('*', sectorName);
+    const routerFilePath = path.join(sectorsDir, routerPattern);
     
     try {
       const routerContent = await fs.readFile(routerFilePath, 'utf-8');

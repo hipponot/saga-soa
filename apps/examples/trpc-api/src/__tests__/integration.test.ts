@@ -27,7 +27,7 @@ describe('tRPC API Integration Tests', () => {
     
     // Dynamically load all tRPC controllers
     const controllers = await controllerLoader.loadControllers(
-      path.resolve(__dirname, '../sectors/*/trpc/*.router.ts'),
+      path.resolve(__dirname, '../sectors/*/trpc/*-router.ts'),
       AbstractTRPCController
     );
 
