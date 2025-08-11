@@ -18,7 +18,7 @@
     "clean": "rm -rf dist"
   },
     "dependencies": {
-    "@saga-soa/core-api": "workspace:*",
+    "@saga-soa/api-core": "workspace:*",
     "@saga-soa/db": "workspace:*",
     "@saga-soa/logger": "workspace:^",
     "@saga-soa/trpc-types": "workspace:*",

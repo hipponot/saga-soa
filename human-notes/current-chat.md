@@ -439,7 +439,7 @@ If you are satisfied with this, let me know. If you want to return to plan mode,
 
 **User**
 
-Can you read core-api.md in core-api/memory-bank.  Lets start by planning the implementation of express-server.ts.  The description in core-api.md currently covers configuration we should probably include a logger service that gets injected into ExpressServer. I'd like you to think about how to test this component in isolation and suggest an approach.
+Can you read api-core.md in api-core/memory-bank.  Lets start by planning the implementation of express-server.ts.  The description in api-core.md currently covers configuration we should probably include a logger service that gets injected into ExpressServer. I'd like you to think about how to test this component in isolation and suggest an approach.
 
 ---
 
@@ -447,11 +447,11 @@ Can you read core-api.md in core-api/memory-bank.  Lets start by planning the im
 
 # Mode: PLAN
 
-I will start by outlining a plan to implement and test the `express-server.ts` component for the `core-api` package.
+I will start by outlining a plan to implement and test the `express-server.ts` component for the `api-core` package.
 
-First, I need to understand the existing context. I will locate and read the `core-api.md` file you mentioned. Since its location isn't in the project layout, I will perform a search for it.
+First, I need to understand the existing context. I will locate and read the `api-core.md` file you mentioned. Since its location isn't in the project layout, I will perform a search for it.
 
-Okay, I have located the file at `packages/core-api/memory-bank/core-api.md`. Now, I will read its contents to understand the initial requirements.
+Okay, I have located the file at `packages/api-core/memory-bank/api-core.md`. Now, I will read its contents to understand the initial requirements.
 
 Excellent. Based on the file content and your requirements, here is the plan for implementing `express-server.ts`.
 
@@ -459,16 +459,16 @@ Excellent. Based on the file content and your requirements, here is the plan for
 
 ## Plan: `express-server.ts` Implementation and Testing
 
-### 1. Define Interfaces (`core-api/src/i-logger.ts`)
+### 1. Define Interfaces (`api-core/src/i-logger.ts`)
 
 - **`ILogger`**: Create a simple logger interface with methods like `info`, `warn`, `error`, and `debug`. This ensures any logger implementation can be used interchangeably.
 - **`LogLevel`**: Define a log level enum (`'info'`, `'warn'`, `'error'`, `'debug'`).
 
-### 2. Implement a Logger (`core-api/src/logger.ts`)
+### 2. Implement a Logger (`api-core/src/logger.ts`)
 
 - **`ConsoleLogger`**: Create a basic `ConsoleLogger` class that implements `ILogger` and writes messages to the console. It will take a `LogLevel` in its constructor to control output verbosity.
 
-### 3. Define Server Configuration (`core-api/src/express-server-schema.ts`)
+### 3. Define Server Configuration (`api-core/src/express-server-schema.ts`)
 
 - **`ExpressServerSchema`**: Create a Zod schema that extends `HasConfigType` (similar to `MongoProviderSchema`).
   - `configType`: `z.literal('EXPRESS_SERVER')`
@@ -477,7 +477,7 @@ Excellent. Based on the file content and your requirements, here is the plan for
   - `name`: `z.string().min(1)`
 - **`ExpressServerConfig`**: Export the inferred TypeScript type from the schema.
 
-### 4. Implement the Express Server (`core-api/src/express-server.ts`)
+### 4. Implement the Express Server (`api-core/src/express-server.ts`)
 
 - **`ExpressServer` class**:
   - **Dependencies**: Inject `ExpressServerConfig` and `ILogger` through the constructor using Inversify.
@@ -512,7 +512,7 @@ This plan breaks down the work into clear, manageable steps and establishes a ro
 
 **User**
 
-Can you create a logger package and an associated memory-bank subdirectory.  Lets work on the logger implementation first.  The plan for implementing express-server.ts should be remembered in core-api/memory-bank/express-server.md we'll get to that after we have finished the logger.  The logger should have a simple console implementation and a configuration based on pino.  The pino implementation will require a configuration blob and should support pino-pretty in a development environment.  The configuration schema should include whatever pino needs to setup file logging.  I"m wondering if we want to use pino-pretty for console logging in a dev environment or just have a comple console.log implementation of the i-logger interface ?
+Can you create a logger package and an associated memory-bank subdirectory.  Lets work on the logger implementation first.  The plan for implementing express-server.ts should be remembered in api-core/memory-bank/express-server.md we'll get to that after we have finished the logger.  The logger should have a simple console implementation and a configuration based on pino.  The pino implementation will require a configuration blob and should support pino-pretty in a development environment.  The configuration schema should include whatever pino needs to setup file logging.  I"m wondering if we want to use pino-pretty for console logging in a dev environment or just have a comple console.log implementation of the i-logger interface ?
 
 ---
 
@@ -522,14 +522,14 @@ Can you create a logger package and an associated memory-bank subdirectory.  Let
 
 Excellent pivot. Focusing on a robust, configurable logger is a great foundation before building the API server. I will store the plan for `express-server.ts` and then we can focus entirely on the new logger package.
 
-First, I'll save the `express-server.ts` implementation plan to `packages/core-api/memory-bank/express-server.md` as you requested. I need to create the `core-api` package structure first.
+First, I'll save the `express-server.ts` implementation plan to `packages/api-core/memory-bank/express-server.md` as you requested. I need to create the `api-core` package structure first.
 
 Now I will write the plan to the file.
 
 ```markdown
 # Plan: `express-server.ts` Implementation and Testing
 
-This document outlines the plan for implementing and testing the `express-server.ts` component within the `@saga-soa/core-api` package.
+This document outlines the plan for implementing and testing the `express-server.ts` component within the `@saga-soa/api-core` package.
 
 ## 1. Define Interfaces (`core-api/src/i-logger.ts`)
 
@@ -1779,7 +1779,7 @@ If you want to add more features, test additional scenarios, or move on to integ
 
 **User**
 
-Can you read the contents of core-api/memory-bank and come up with an implementation plan
+Can you read the contents of api-core/memory-bank and come up with an implementation plan
 
 ---
 
@@ -1787,11 +1787,11 @@ Can you read the contents of core-api/memory-bank and come up with an implementa
 
 # Mode: PLAN
 
-Based on the contents of `core-api/memory-bank/express-server.md` and `core-api.md`, here is a comprehensive implementation plan for the `@saga-soa/core-api` package:
+Based on the contents of `api-core/memory-bank/express-server.md` and `api-core.md`, here is a comprehensive implementation plan for the `@saga-soa/api-core` package:
 
 ---
 
-## Implementation Plan: `@saga-soa/core-api`
+## Implementation Plan: `@saga-soa/api-core`
 
 ### 1. **Express Server Foundation**
 
@@ -1843,7 +1843,7 @@ Based on the contents of `core-api/memory-bank/express-server.md` and `core-api.
 
 **Next Steps:**
 
-- Scaffold the `core-api` package structure and configuration schema.
+- Scaffold the `api-core` package structure and configuration schema.
 - Implement the `ExpressServer` class and its DI wiring.
 - Add boilerplate for tRPC, GraphQL, and REST integration.
 - Write comprehensive unit and integration tests.
@@ -1944,7 +1944,7 @@ export class ExpressServer {
 
 ```json
 {
-  "name": "@saga-soa/core-api",
+  "name": "@saga-soa/api-core",
   "version": "1.0.0",
   "private": true,
   "main": "dist/index.js",
@@ -1970,7 +1970,6 @@ export class ExpressServer {
     "typescript": "^5.1.6"
   }
 }
-```
 
 All dependencies are now installed and the linter errors should be resolved.  
 The `ExpressServer` class and its configuration schema are implemented.
@@ -2022,13 +2021,13 @@ If you need further configuration or want to proceed with more implementation or
 
 **User**
 
-I think the express module is missing from package.json in core-api
+I think the express module is missing from package.json in api-core
 
 ---
 
 **Cursor**
 
-The `express` module is already listed as a dependency in `packages/core-api/package.json`:
+The `express` module is already listed as a dependency in `packages/api-core/package.json`:
 
 ```json
 "dependencies": {
@@ -2368,7 +2367,7 @@ Here’s a plan for implementing a robust registry/plugin pattern for REST secto
   - `main.ts`: Entry point. Sets up Inversify container, binds sectors, creates Express app, and mounts the router.
   - `sectors/hello-rest.ts`: The Hello sector, extending `RestEndpointGroup` and decorated with `@injectable`.
   - `inversify.config.ts`: Sets up the DI container and registry for sectors.
-- **`package.json`**: Declares dependencies on `express`, `inversify`, `reflect-metadata`, and `@saga-soa/core-api`.
+- **`package.json`**: Declares dependencies on `express`, `inversify`, `reflect-metadata`, and `@saga-soa/api-core`.
 
 ---
 
@@ -2697,12 +2696,12 @@ Can we try and move the example_rest application to use commonjs in both package
 }
 ```
 
-The error is because the import path `@saga-soa/core-api/src/rest/rest-endpoint-group` is not valid for a published package or workspace dependency in CommonJS/Node.js runtime. Instead, you should import from the package root (e.g., `@saga-soa/core-api`) and use the exports field in `core-api`'s `package.json` to expose the relevant modules.
+The error is because the import path `@saga-soa/api-core/src/rest/rest-endpoint-group` is not valid for a published package or workspace dependency in CommonJS/Node.js runtime. Instead, you should import from the package root (e.g., `@saga-soa/api-core`) and use the exports field in `api-core`'s `package.json` to expose the relevant modules.
 
 **To fix this:**
 
-1. Update `packages/core-api/package.json` to add proper exports for the REST modules.
-2. Update imports in the example app to use `@saga-soa/core-api/rest/rest-endpoint-group` (or similar), not the internal `src` path.
+1. Update `packages/api-core/package.json` to add proper exports for the REST modules.
+2. Update imports in the example app to use `@saga-soa/api-core/rest/rest-endpoint-group` (or similar), not the internal `src` path.
 
 Would you like me to update the exports in `core-api` and fix the imports in the example app accordingly?
 

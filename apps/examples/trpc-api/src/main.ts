@@ -1,9 +1,9 @@
 import 'reflect-metadata';
-import { ExpressServer } from '@saga-soa/core-api/express-server';
-import { TRPCServer } from '@saga-soa/core-api/trpc-server';
-import { ControllerLoader } from '@saga-soa/core-api/utils/controller-loader';
-import { AbstractTRPCController } from '@saga-soa/core-api/abstract-trpc-controller';
-import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
+import { ExpressServer } from '@saga-soa/api-core/express-server';
+import { TRPCServer } from '@saga-soa/api-core/trpc-server';
+import { ControllerLoader } from '@saga-soa/api-core/utils/controller-loader';
+import { AbstractTRPCController } from '@saga-soa/api-core/abstract-trpc-controller';
+import { AbstractRestController } from '@saga-soa/api-core/abstract-rest-controller';
 import { container } from './inversify.config.js';
 import type { ILogger } from '@saga-soa/logger';
 import type { Request, Response } from 'express';

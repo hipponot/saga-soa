@@ -224,7 +224,7 @@ export default defineConfig({
   },
   "dependencies": {
     "@saga-soa/pubsub-core": "workspace:*",
-    "@saga-soa/core-api": "workspace:*",
+    "@saga-soa/api-core": "workspace:*",
     "@saga-soa/logger": "workspace:*",
     "@trpc/server": "^11.0.0",
     "inversify": "^6.2.2",
@@ -367,7 +367,7 @@ export default defineConfig({
 ```ts
 // apps/examples/trpc-api/src/sectors/pubsub/
 import { injectable } from 'inversify';
-import { AbstractTRPCController } from '@saga-soa/core-api';
+import { AbstractTRPCController } from '@saga-soa/api-core';
 import { PubSubService } from '@saga-soa/pubsub-server';
 
 @injectable()

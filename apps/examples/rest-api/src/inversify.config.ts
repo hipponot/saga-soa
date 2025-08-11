@@ -5,9 +5,9 @@ import type { IMongoConnMgr } from '@saga-soa/db';
 import { MockMongoProvider } from '@saga-soa/db/mocks/mock-mongo-provider';
 import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
 import { PinoLogger } from '@saga-soa/logger';
-import { ExpressServer } from '@saga-soa/core-api/express-server';
-import { ControllerLoader } from '@saga-soa/core-api/utils/controller-loader';
-import type { ExpressServerConfig } from '@saga-soa/core-api/express-server-schema';
+import { ExpressServer } from '@saga-soa/api-core/express-server';
+import { ControllerLoader } from '@saga-soa/api-core/utils/controller-loader';
+import type { ExpressServerConfig } from '@saga-soa/api-core/express-server-schema';
 
 const container = new Container();
 

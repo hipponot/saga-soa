@@ -1,6 +1,6 @@
 import { Query, Resolver, Arg, Mutation } from 'type-graphql';
 import { inject } from 'inversify';
-import { AbstractGQLController } from '@saga-soa/core-api/abstract-gql-controller';
+import { AbstractGQLController } from '@saga-soa/api-core/abstract-gql-controller';
 import type { ILogger } from '@saga-soa/logger';
 import { Session } from './session.type.js';
 import { SessionInput } from './session.input.js';

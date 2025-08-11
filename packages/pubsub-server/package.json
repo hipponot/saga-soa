@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@saga-soa/pubsub-core": "workspace:*",
-    "@saga-soa/core-api": "workspace:*",
+    "@saga-soa/api-core": "workspace:*",
     "@saga-soa/logger": "workspace:*",
     "@trpc/server": "^11.0.0",
     "inversify": "^6.2.2",

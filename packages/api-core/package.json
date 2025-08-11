@@ -1,5 +1,5 @@
 {
-  "name": "@saga-soa/core-api",
+  "name": "@saga-soa/api-core",
   "version": "1.0.0",
   "private": true,
   "type": "module",

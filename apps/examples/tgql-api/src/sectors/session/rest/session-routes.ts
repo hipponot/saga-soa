@@ -1,7 +1,7 @@
 import { Get, Controller } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
 import type { ILogger } from '@saga-soa/logger';
-import { AbstractRestController } from '@saga-soa/core-api/abstract-rest-controller';
+import { AbstractRestController } from '@saga-soa/api-core/abstract-rest-controller';
 
 const SECTOR = 'session';
 

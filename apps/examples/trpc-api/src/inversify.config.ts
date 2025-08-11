@@ -2,13 +2,13 @@ import 'reflect-metadata';
 import { Container }                      from 'inversify';
 import { PinoLogger }                     from '@saga-soa/logger';
 import { MongoProvider }                  from '@saga-soa/db';
-import { ExpressServer }                  from '@saga-soa/core-api/express-server';
-import { TRPCServer }                     from '@saga-soa/core-api/trpc-server';
-import { ControllerLoader }               from '@saga-soa/core-api/utils/controller-loader';
+import { ExpressServer }                  from '@saga-soa/api-core/express-server';
+import { TRPCServer }                     from '@saga-soa/api-core/trpc-server';
+import { ControllerLoader }               from '@saga-soa/api-core/utils/controller-loader';
 import type { ILogger, PinoLoggerConfig } from '@saga-soa/logger';
 import type { IMongoConnMgr }             from '@saga-soa/db';
-import type { TRPCServerConfig }          from '@saga-soa/core-api/trpc-server-schema';
-import type { ExpressServerConfig }       from '@saga-soa/core-api/express-server-schema';
+import type { TRPCServerConfig }          from '@saga-soa/api-core/trpc-server-schema';
+import type { ExpressServerConfig }       from '@saga-soa/api-core/express-server-schema';
 
 export const container = new Container();
 

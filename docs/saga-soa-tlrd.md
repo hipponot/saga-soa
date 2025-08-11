@@ -6,9 +6,9 @@
 
 ## 🏗️ Core Architecture
 
-### Shared Infrastructure (`@saga-soa/core-api`)
+### Shared Infrastructure (`@saga-soa/api-core`)
 
-The platform's backbone is the `core-api` package, which provides:
+The platform's backbone is the `api-core` package, which provides:
 
 - **Express Server Management**: Centralized server lifecycle, middleware, and configuration
 - **Dependency Injection**: Inversify-based DI container for service management

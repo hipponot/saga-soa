@@ -229,7 +229,7 @@ pnpm test --coverage
 ## Dependencies
 
 - **@saga-soa/pubsub-core**: Core types and interfaces
-- **@saga-soa/core-api**: Base API functionality
+- **@saga-soa/api-core**: Base API functionality
 - **@saga-soa/logger**: Logging service
 - **@trpc/server**: tRPC server implementation
 - **inversify**: Dependency injection

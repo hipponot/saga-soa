@@ -16,7 +16,7 @@ The `TRPCServer` class provides a centralized, injectable way to manage tRPC rou
 ### 1. Configuration
 
 ```typescript
-import { TRPCServerSchema } from '@saga-soa/core-api/trpc-server-schema';
+import { TRPCServerSchema } from '@saga-soa/api-core/trpc-server-schema';
 
 const trpcConfig = TRPCServerSchema.parse({
   configType: 'TRPC_SERVER',
@@ -30,7 +30,7 @@ const trpcConfig = TRPCServerSchema.parse({
 
 ```typescript
 import { Container } from 'inversify';
-import { TRPCServer } from '@saga-soa/core-api/trpc-server';
+import { TRPCServer } from '@saga-soa/api-core/trpc-server';
 
 const container = new Container();
 
@@ -94,7 +94,7 @@ trpcServer.addRouters({
 ### 5. Express Integration
 
 ```typescript
-import { ExpressServer } from '@saga-soa/core-api/express-server';
+import { ExpressServer } from '@saga-soa/api-core/express-server';
 
 // Initialize Express server
 const expressServer = container.get(ExpressServer);

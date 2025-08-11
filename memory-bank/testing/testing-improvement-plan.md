@@ -17,6 +17,6 @@
 - Add tests for log output (e.g., verify file output with spies/mocks).
 - Test logger integration with config (for file logging)
 
-## @saga-soa/core-api
+## @saga-soa/api-core
 
 - Add tests for REST controllers, error handling, and middleware.

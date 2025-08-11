@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { AbstractTRPCController, router } from '@saga-soa/core-api/abstract-trpc-controller';
+import { AbstractTRPCController, router } from '@saga-soa/api-core/abstract-trpc-controller';
 import type { ILogger } from '@saga-soa/logger';
 import {
   CreateProjectSchema,

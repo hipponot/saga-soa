@@ -1,6 +1,6 @@
 ### Background
 
-I would like to architect node/express server from reusable library components in a package called core-api. To begin with I would like to support two backend technologies specifically tRPC and type-graphql running on apollo-server.
+I would like to architect node/express server from reusable library components in a package called api-core. To begin with I would like to support two backend technologies specifically tRPC and type-graphql running on apollo-server.
 
 ```
 
