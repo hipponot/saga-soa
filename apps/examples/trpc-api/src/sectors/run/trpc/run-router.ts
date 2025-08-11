@@ -8,7 +8,7 @@ import {
   type CreateRunInput,
   type UpdateRunInput,
   type GetRunInput,
-} from './schema/run.schemas.js';
+} from './schema/run-schemas.js';
 import { RunHelper } from './run-helper.js';
 
 @injectable()

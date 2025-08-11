@@ -31,8 +31,8 @@ export interface TRPCCodegenConfig {
 export const DEFAULT_CONFIG: TRPCCodegenConfig = {
   source: {
     sectorsDir: 'src/sectors',
-    routerPattern: '*/trpc/*.router.ts',
-    schemaPattern: '*/trpc/*.schemas.ts'
+    routerPattern: '*/trpc/*-router.ts',
+    schemaPattern: '*/trpc/*-schemas.ts'
   },
   generation: {
     outputDir: './generated',

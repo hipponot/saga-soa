@@ -45,8 +45,8 @@ module.exports = {
   // Source configuration
   source: {
     sectorsDir: '../src/sectors',        // Path to sectors directory
-    routerPattern: '*/trpc/*.router.ts', // Router file pattern
-    schemaPattern: '*/trpc/*.schemas.ts' // Schema file pattern
+    routerPattern: '*/trpc/*-router.ts', // Router file pattern (hyphenated)
+    schemaPattern: '*/trpc/*-schemas.ts' // Schema file pattern (hyphenated)
   },
   
   // Generation configuration  
@@ -82,12 +82,12 @@ my-trpc-api/
 │   └── sectors/                # Sector-based organization
 │       ├── user/
 │       │   └── trpc/
-│       │       ├── user.router.ts   # Router implementation
-│       │       └── user.schemas.ts  # Zod schemas
+│       │       ├── user-router.ts   # Router implementation (hyphenated)
+│       │       └── user-schemas.ts  # Zod schemas (hyphenated)
 │       └── project/
 │           └── trpc/
-│               ├── project.router.ts
-│               └── project.schemas.ts
+│               ├── project-router.ts
+│               └── project-schemas.ts
 └── package.json
 ```
 

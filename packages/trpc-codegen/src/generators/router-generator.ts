@@ -14,7 +14,7 @@ export class RouterGenerator {
     
     // Generate dynamic imports
     const imports = sectorInfos.map(sector => 
-      `import * as ${sector.name}Schemas from './schemas/${sector.name}.schemas.js';`
+      `import * as ${sector.name}Schemas from './schemas/${sector.name}-schemas.js';`
     ).join('\n');
     
     // Generate dynamic router structure

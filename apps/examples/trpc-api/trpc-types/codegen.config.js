@@ -3,7 +3,7 @@ export default {
   source: {
     sectorsDir: '../src/sectors',
     routerPattern: '*/trpc/*-router.ts',
-    schemaPattern: '*/trpc/schema/*.schemas.ts'
+    schemaPattern: '*/trpc/schema/*-schemas.ts'
   },
   
   // Generation configuration  
@@ -15,7 +15,7 @@ export default {
   
   // Parsing configuration
   parsing: {
-    endpointPattern: /(\w+):\s*t(?:[\s\n]*\.input\((\w+Schema)\))?[\s\n]*\.(query|mutation)\(/g,
+    endpointPattern: /(\w+):\s*t(?:[\s\n]*\.input\((\w+Schema)\))?[\s\S]*?\.(query|mutation)\(/g,
     routerMethodPattern: /createRouter\(\s*\)\s*\{[\s\S]*?return\s+router\(\s*\{([\s\S]*?)\}\s*\)\s*;?\s*\}/
   }
 }; 

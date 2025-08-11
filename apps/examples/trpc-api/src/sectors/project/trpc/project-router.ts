@@ -8,7 +8,7 @@ import {
   type CreateProjectInput,
   type UpdateProjectInput,
   type GetProjectInput,
-} from './schema/project.schemas.js';
+} from './schema/project-schemas.js';
 import { ProjectHelper } from './project-helper.js';
 
 @injectable()
