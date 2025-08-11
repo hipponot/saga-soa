@@ -19,6 +19,7 @@ program
   .option('-c, --config <path>', 'Path to config file')
   .option('-p, --project <path>', 'Project directory path', process.cwd())
   .option('-o, --output-dir <path>', 'Output directory for generated files')
+  .option('--no-zod2ts', 'Disable Zod to TypeScript conversion (enabled by default)')
   .action(async (options) => {
     try {
       console.log('🚀 tRPC Code Generation starting...\n');
@@ -29,6 +30,11 @@ program
       // Override output directory if specified
       if (options.outputDir) {
         config.generation.outputDir = options.outputDir;
+      }
+      
+      // Override zod2ts setting if specified
+      if (options.zod2ts === false) {
+        config.zod2ts.enabled = false;
       }
       
       const codegen = new TRPCCodegen(config, options.project);
@@ -53,6 +59,7 @@ program
   .option('-c, --config <path>', 'Path to config file')
   .option('-p, --project <path>', 'Project directory path', process.cwd())
   .option('-o, --output-dir <path>', 'Output directory for generated files')
+  .option('--no-zod2ts', 'Disable Zod to TypeScript conversion (enabled by default)')
   .action(async (options) => {
     try {
       console.log('👀 Starting tRPC Code Generation in watch mode...\n');
@@ -63,6 +70,11 @@ program
       // Override output directory if specified
       if (options.outputDir) {
         config.generation.outputDir = options.outputDir;
+      }
+      
+      // Override zod2ts setting if specified
+      if (options.zod2ts === false) {
+        config.zod2ts.enabled = false;
       }
       
       const codegen = new TRPCCodegen(config, options.project);

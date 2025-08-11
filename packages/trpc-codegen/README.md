@@ -1,126 +1,195 @@
-# @saga-soa/trpc-codegen
+# tRPC Codegen
 
-Reusable tRPC code generation utilities for saga-soa monorepo. Automatically generates TypeScript types and router definitions from sector-based tRPC APIs.
+A powerful code generation tool for tRPC APIs that automatically discovers sectors, extracts schemas, and generates type-safe routers and TypeScript types.
 
 ## Features
 
-- 🔄 **Fully Dynamic**: Automatically discovers sectors and parses router files
-- 📦 **Reusable**: Single package supports multiple tRPC API projects
-- ⚙️ **Configurable**: Flexible configuration for different project structures
-- 🔍 **Smart Parsing**: Extracts endpoint definitions from actual router files
-- 👀 **Watch Mode**: Automatically regenerates on file changes
-- 🛠 **CLI Interface**: Easy to use command-line tools
+- 🔍 **Automatic Sector Discovery**: Automatically finds and analyzes tRPC sectors in your project
+- 📝 **Schema Extraction**: Copies and organizes Zod schemas from each sector
+- 🚀 **Router Generation**: Generates a unified tRPC router with all sector endpoints
+- 🔧 **Zod to TypeScript**: Converts Zod schemas to pure TypeScript types using zod2ts
+- 📦 **Package Generation**: Creates a complete types package with proper exports
+- 👀 **Watch Mode**: Regenerates code automatically when files change
 
 ## Installation
 
 ```bash
-# Install in your tRPC API project
 pnpm add -D @saga-soa/trpc-codegen
 ```
 
 ## Usage
 
-### CLI Commands
+### Basic Generation
 
 ```bash
-# Generate types once
-pnpm trpc-codegen generate
+# Generate from project root
+trpc-codegen generate
 
-# Watch mode for development
-pnpm trpc-codegen watch
+# Generate with custom config
+trpc-codegen generate --config ./my-config.js
 
-# Custom config file
-pnpm trpc-codegen generate --config=./my-config.js
-
-# Custom project path
-pnpm trpc-codegen generate --project=/path/to/project
+# Generate with custom output directory
+trpc-codegen generate --output-dir ./dist/types
 ```
 
-### Configuration
+### Watch Mode
 
-Create a `codegen.config.js` file in your project root:
+```bash
+# Watch for changes and regenerate automatically
+trpc-codegen watch
+
+# Watch with custom config
+trpc-codegen watch --config ./my-config.js
+```
+
+### CLI Options
+
+```bash
+trpc-codegen generate [options]
+
+Options:
+  -c, --config <path>      Path to config file
+  -p, --project <path>     Project directory path (default: current directory)
+  -o, --output-dir <path>  Output directory for generated files
+  --no-zod2ts              Disable Zod to TypeScript conversion (enabled by default)
+```
+
+## Configuration
+
+Create a `codegen.config.js` file in your project:
 
 ```javascript
-module.exports = {
+export default {
   // Source configuration
   source: {
-    sectorsDir: '../src/sectors',        // Path to sectors directory
-    routerPattern: '*/trpc/*-router.ts', // Router file pattern (hyphenated)
-    schemaPattern: '*/trpc/*-schemas.ts' // Schema file pattern (hyphenated)
+    sectorsDir: 'src/sectors',
+    routerPattern: '*/trpc/*-router.ts',
+    schemaPattern: '*/trpc/schema/*-schemas.ts'
   },
   
   // Generation configuration  
   generation: {
-    outputDir: './generated',            // Output directory
-    packageName: '@my-org/my-trpc-types', // Package name
-    routerName: 'AppRouter'              // Router type name
+    outputDir: './generated',
+    packageName: '@my-app/types',
+    routerName: 'AppRouter'
   },
   
-  // Parsing configuration (advanced)
+  // Parsing configuration
   parsing: {
-    endpointPattern: /(\w+):\s*t(?:[\s\n]*\.input\((\w+Schema)\))?[\s\n]*\.(query|mutation)\(/g,
+    endpointPattern: /(\w+):\s*t(?:[\s\n]*\.input\((\w+Schema)\))?[\s\S]*?\.(query|mutation)\(/g,
     routerMethodPattern: /createRouter\(\s*\)\s*\{[\s\S]*?return\s+router\(\s*\{([\s\S]*?)\}\s*\)\s*;?\s*\}/
+  },
+
+  // Zod2ts configuration
+  zod2ts: {
+    enabled: true,           // Enable/disable Zod to TypeScript conversion
+    outputDir: './types'     // Output directory for generated TypeScript types
   }
-};
+}
 ```
 
-### Project Structure
+### Default Configuration
 
-Your tRPC API should follow the sector-based pattern:
+If no config file is found, the tool uses these defaults:
+
+```javascript
+{
+  source: {
+    sectorsDir: 'src/sectors',
+    routerPattern: '*/trpc/*-router.ts',
+    schemaPattern: '*/trpc/*-schemas.ts'
+  },
+  generation: {
+    outputDir: './generated',
+    packageName: '@saga-soa/trpc-types',
+    routerName: 'AppRouter'
+  },
+  parsing: {
+    endpointPattern: /(\w+):\s*t(?:[\s\n]*\.input\((\w+Schema)\))?[\s\S]*?\.(query|mutation)\(/g,
+    routerMethodPattern: /createRouter\(\s*\)\s*\{[\s\S]*?return\s+router\(\s*\{([\s\S]*?)\}\s*\)\s*;?\s*\}/
+  },
+  zod2ts: {
+    enabled: true,
+    outputDir: './types'
+  }
+}
+```
+
+## Project Structure
+
+The tool expects your project to follow this structure:
 
 ```
-my-trpc-api/
-├── trpc-types/                  # Generated types package
-│   ├── package.json            # Package configuration
-│   ├── codegen.config.js       # Codegen configuration
-│   ├── generated/              # Auto-generated files (gitignored)
-│   │   ├── router.ts           # Generated router type
-│   │   ├── schemas/            # Copied schemas
-│   │   └── index.ts            # Main exports
-│   └── src/index.ts            # Package entry point
-├── src/
-│   └── sectors/                # Sector-based organization
-│       ├── user/
-│       │   └── trpc/
-│       │       ├── user-router.ts   # Router implementation (hyphenated)
-│       │       └── user-schemas.ts  # Zod schemas (hyphenated)
-│       └── project/
-│           └── trpc/
-│               ├── project-router.ts
-│               └── project-schemas.ts
-└── package.json
+src/
+└── sectors/
+    ├── project/
+    │   └── trpc/
+    │       ├── project-router.ts
+    │       └── schema/
+    │           └── project-schemas.ts
+    └── run/
+        └── trpc/
+            ├── run-router.ts
+            └── schema/
+                └── run-schemas.ts
 ```
 
 ## Generated Output
 
-The codegen automatically creates:
+After running the tool, you'll get:
 
-1. **Router Types** (`generated/router.ts`):
-   ```typescript
-   export const staticAppRouter = t.router({
-     user: t.router({
-       getUser: t.procedure.input(userSchemas.GetUserSchema).query(() => ({})),
-       createUser: t.procedure.input(userSchemas.CreateUserSchema).mutation(() => ({})),
-     }),
-     project: t.router({
-       // ... project endpoints
-     }),
-   });
-   
-   export type AppRouter = typeof staticAppRouter;
-   ```
+```
+generated/
+├── index.ts              # Main package exports
+├── router.ts             # Unified tRPC router
+├── schemas/
+│   ├── index.ts          # Schema re-exports
+│   ├── project-schemas.ts
+│   └── run-schemas.ts
+└── types/                # Pure TypeScript types (if zod2ts enabled)
+    ├── index.ts          # Types re-exports
+    ├── project/
+    │   ├── CreateProject.ts
+    │   ├── UpdateProject.ts
+    │   └── GetProject.ts
+    └── run/
+        ├── CreateRun.ts
+        ├── UpdateRun.ts
+        └── GetRun.ts
+```
 
-2. **Schema Copies** (`generated/schemas/`):
-   - Copies all `*.schemas.ts` files from sectors
-   - Creates index file with re-exports
+## Zod to TypeScript Conversion
 
-3. **Package Index** (`generated/index.ts`):
-   - Exports router and schema types
-   - Ready for consumption by client applications
+The tool integrates with [zod2ts](https://github.com/saga-soa/zod2ts) to convert Zod schemas to pure TypeScript types:
 
-## Integration with Build Process
+- **Enabled by default** - can be disabled with `--no-zod2ts` flag
+- **Configurable output** - types are generated in a separate `types/` directory
+- **Sector organization** - types are organized by sector for better structure
+- **Automatic indexing** - creates index files for easy importing
 
-Add to your `package.json`:
+### Example Conversion
+
+**Input (Zod Schema):**
+```typescript
+export const CreateProjectSchema = z.object({
+  name: z.string().min(1, 'Project name is required'),
+  description: z.string().optional(),
+  status: z.enum(['active', 'inactive', 'archived']).default('active'),
+});
+```
+
+**Output (TypeScript Type):**
+```typescript
+export type CreateProject = {
+  name: string;
+  description: string | undefined;
+  status: 'active' | 'inactive' | 'archived';
+};
+```
+
+## Integration
+
+### Package.json Scripts
 
 ```json
 {
@@ -132,29 +201,63 @@ Add to your `package.json`:
 }
 ```
 
-## Programmatic API
+### Build Tools
 
-```typescript
-import { TRPCCodegen, ConfigLoader } from '@saga-soa/trpc-codegen';
+The generated output is compatible with:
+- **tsup** - Fast TypeScript bundler
+- **tsc** - TypeScript compiler
+- **Vite** - Build tool and dev server
+- **Webpack** - Module bundler
 
-// Load configuration
-const config = await ConfigLoader.loadConfig('./codegen.config.js');
+## Advanced Usage
 
-// Generate code
-const codegen = new TRPCCodegen(config, process.cwd());
-const result = await codegen.generate();
+### Custom Endpoint Patterns
 
-console.log(`Generated ${result.generatedFiles.length} files`);
-console.log(`Processed ${result.sectors.length} sectors`);
+Customize how endpoints are detected:
+
+```javascript
+parsing: {
+  endpointPattern: /(\w+):\s*t(?:[\s\n]*\.input\((\w+Schema)\))?[\s\S]*?\.(query|mutation)\(/g,
+  routerMethodPattern: /createRouter\(\s*\)\s*\{[\s\S]*?return\s+router\(\s*\{([\s\S]*?)\}\s*\)\s*;?\s*\}/
+}
 ```
 
-## Requirements
+### Multiple Configurations
 
-- Node.js 18+
-- TypeScript 5.0+
-- Sector-based tRPC API structure
-- Router files must extend `AbstractTRPCController` pattern
-- Schema files must export Zod schemas
+Create different configs for different environments:
+
+```bash
+# Development
+trpc-codegen generate --config codegen.dev.js
+
+# Production
+trpc-codegen generate --config codegen.prod.js
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Sectors not found**: Check `sectorsDir` path in config
+2. **Schema files missing**: Verify `schemaPattern` matches your file structure
+3. **Zod2ts errors**: Ensure zod2ts is available in your project
+4. **Build failures**: Check that all generated files are properly exported
+
+### Debug Mode
+
+Enable verbose logging by setting environment variables:
+
+```bash
+DEBUG=trpc-codegen:* trpc-codegen generate
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Submit a pull request
 
 ## License
 

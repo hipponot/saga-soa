@@ -48,6 +48,10 @@ export class ConfigLoader {
       parsing: {
         ...DEFAULT_CONFIG.parsing,
         ...userConfig.parsing
+      },
+      zod2ts: {
+        ...DEFAULT_CONFIG.zod2ts,
+        ...userConfig.zod2ts
       }
     };
   }

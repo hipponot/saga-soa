@@ -4,16 +4,19 @@ import type { GenerationResult } from '../types/sector.js';
 import { SectorParser } from '../parsers/sector-parser.js';
 import { RouterGenerator } from './router-generator.js';
 import { SchemaGenerator } from './schema-generator.js';
+import { Zod2tsGenerator } from './zod2ts-generator.js';
 
 export class TRPCCodegen {
   private sectorParser: SectorParser;
   private routerGenerator: RouterGenerator;
   private schemaGenerator: SchemaGenerator;
+  private zod2tsGenerator: Zod2tsGenerator;
 
   constructor(private config: TRPCCodegenConfig, private basePath: string) {
     this.sectorParser = new SectorParser(config, basePath);
     this.routerGenerator = new RouterGenerator(config, basePath);
     this.schemaGenerator = new SchemaGenerator(config, basePath);
+    this.zod2tsGenerator = new Zod2tsGenerator(config, basePath);
   }
 
   async generate(): Promise<GenerationResult> {
@@ -47,7 +50,17 @@ export class TRPCCodegen {
         errors.push(errorMsg);
       }
 
-      // Step 4: Generate package index
+      // Step 4: Generate TypeScript types from Zod schemas
+      try {
+        const typesFiles = await this.zod2tsGenerator.generateTypes(sectors);
+        generatedFiles.push(...typesFiles);
+      } catch (error) {
+        const errorMsg = `TypeScript types generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`;
+        console.error(`❌ ${errorMsg}`);
+        errors.push(errorMsg);
+      }
+
+      // Step 5: Generate package index
       try {
         const indexFile = await this.generatePackageIndex();
         generatedFiles.push(indexFile);
@@ -94,6 +107,7 @@ export class TRPCCodegen {
 // Main exports for ${this.config.generation.packageName}
 export * from './router.js';
 export * from './schemas/index.js';
+${this.config.zod2ts.enabled ? `export * from './types/index.js';` : ''}
 `;
 
     await writeFile(indexPath, indexContent);
