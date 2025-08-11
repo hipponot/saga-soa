@@ -35,7 +35,7 @@ export const DEFAULT_CONFIG: TRPCCodegenConfig = {
     schemaPattern: '*/trpc/*.schemas.ts'
   },
   generation: {
-    outputDir: 'trpc-types/generated',
+    outputDir: './generated',
     packageName: '@saga-soa/trpc-types',
     routerName: 'AppRouter'
   },
