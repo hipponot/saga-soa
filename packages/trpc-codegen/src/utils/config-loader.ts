@@ -15,7 +15,6 @@ export class ConfigLoader {
     for (const searchPath of searchPaths) {
       try {
         await fs.access(searchPath);
-        console.log(`📋 Loading config from: ${searchPath}`);
         
         // Dynamic import for ESM/CJS compatibility
         const config = await import(path.resolve(searchPath));
@@ -31,7 +30,6 @@ export class ConfigLoader {
       }
     }
 
-    console.log('📋 No config file found, using defaults');
     return DEFAULT_CONFIG;
   }
 
@@ -68,6 +66,39 @@ export class ConfigLoader {
     }
     if (!config.generation.routerName) {
       throw new Error('generation.routerName is required');
+    }
+  }
+
+  static displayConfig(config: TRPCCodegenConfig, basePath: string, debug: boolean = false): void {
+    console.log('📋 Configuration:');
+    console.log(`  Source:`);
+    console.log(`    Sectors directory: ${config.source.sectorsDir}`);
+    console.log(`    Router pattern: ${config.source.routerPattern}`);
+    console.log(`    Schema pattern: ${config.source.schemaPattern}`);
+    
+    console.log(`  Generation:`);
+    console.log(`    Output directory: ${config.generation.outputDir}`);
+    console.log(`    Package name: ${config.generation.packageName}`);
+    console.log(`    Router name: ${config.generation.routerName}`);
+    
+    console.log(`  Parsing:`);
+    console.log(`    Endpoint pattern: ${config.parsing.endpointPattern}`);
+    console.log(`    Router method pattern: ${config.parsing.routerMethodPattern}`);
+    
+    console.log(`  Zod2TS:`);
+    console.log(`    Enabled: ${config.zod2ts.enabled}`);
+    if (config.zod2ts.enabled) {
+      console.log(`    Output directory: ${config.zod2ts.outputDir}`);
+    }
+    
+    if (debug) {
+      console.log(`  Base path: ${basePath}`);
+      console.log(`  Resolved paths:`);
+      console.log(`    Sectors: ${path.resolve(basePath, config.source.sectorsDir)}`);
+      console.log(`    Output: ${path.resolve(basePath, config.generation.outputDir)}`);
+      if (config.zod2ts.enabled) {
+        console.log(`    Types: ${path.resolve(basePath, config.zod2ts.outputDir)}`);
+      }
     }
   }
 }

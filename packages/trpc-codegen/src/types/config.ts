@@ -48,8 +48,8 @@ export const DEFAULT_CONFIG: TRPCCodegenConfig = {
     routerName: 'AppRouter'
   },
   parsing: {
-    endpointPattern: /(\w+):\s*t(?:[\s\n]*\.input\((\w+Schema)\))?[\s\S]*?\.(query|mutation)\(/g,
-    routerMethodPattern: /createRouter\(\s*\)\s*\{[\s\S]*?return\s+router\(\s*\{([\s\S]*?)\}\s*\)\s*;?\s*\}/
+    endpointPattern: /(\w+):\s*t\.procedure\s*(?:\n\s*\.input\((\w+Schema)\))?\s*\n\s*\.(query|mutation)\(/g,
+    routerMethodPattern: /(?:createRouter\(\s*\)\s*\{[\s\S]*?)?return\s+router\(\s*\{([\s\S]*)\}\s*\)\s*;?\s*\}?/
   },
   zod2ts: {
     enabled: true,

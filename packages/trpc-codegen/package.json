@@ -22,13 +22,14 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "test": "vitest",
+    "test": "vitest --run",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/"
   },
   "dependencies": {
+    "chokidar": "^3.6.0",
     "commander": "^12.1.0",
-    "chokidar": "^3.6.0"
+    "tsx": "^4.20.3"
   },
   "devDependencies": {
     "@types/node": "^22.10.1",

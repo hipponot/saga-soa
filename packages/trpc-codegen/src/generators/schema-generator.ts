@@ -7,7 +7,6 @@ export class SchemaGenerator {
   constructor(private config: TRPCCodegenConfig, private basePath: string) {}
 
   async generateSchemas(sectorInfos: SectorInfo[]): Promise<string[]> {
-    console.log('🔍 Extracting schemas from sector directories...');
     
     const sectorsDir = path.resolve(this.basePath, this.config.source.sectorsDir);
     const outputSchemasDir = path.resolve(this.basePath, this.config.generation.outputDir, 'schemas');
@@ -21,8 +20,7 @@ export class SchemaGenerator {
       for (const sector of sectorInfos) {
         // Use the configured schema pattern to find the schema file
         const schemaPattern = this.config.source.schemaPattern
-          .replace('*', sector.name)
-          .replace('*', sector.name);
+          .replace(/\*/g, sector.name);
         const sourceSchemaFile = path.join(sectorsDir, schemaPattern);
         const targetSchemaFile = path.join(outputSchemasDir, `${sector.name}-schemas.ts`);
         
@@ -30,9 +28,7 @@ export class SchemaGenerator {
           const schemaContent = await fs.readFile(sourceSchemaFile, 'utf-8');
           await fs.writeFile(targetSchemaFile, schemaContent);
           generatedFiles.push(targetSchemaFile);
-          console.log(`📋 Copying ${sector.name}-schemas.ts from ${sector.name} sector...`);
         } catch (error) {
-          console.warn(`⚠️  Could not copy schema for ${sector.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
       }
     
@@ -40,7 +36,6 @@ export class SchemaGenerator {
     const indexPath = await this.generateSchemasIndex(sectorInfos, outputSchemasDir);
     generatedFiles.push(indexPath);
     
-    console.log('✅ Schemas generated successfully!');
     return generatedFiles;
   }
 

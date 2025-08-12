@@ -12,7 +12,6 @@ export function parseRouterFile(
   const createRouterMatch = routerContent.match(parsingConfig.routerMethodPattern);
   
   if (!createRouterMatch) {
-    console.warn(`⚠️  Could not find router definition in router file`);
     return endpoints;
   }
   

@@ -10,49 +10,42 @@ A TypeScript command line tool that extracts fully realized TypeScript types fro
 - Follows naming convention: `FooSchema` → `Foo.ts`
 - Provides detailed error messages and validation
 
-**Note**: This tool now generates fully resolved TypeScript types from Zod schemas using direct schema introspection. It supports complex Zod types including objects, arrays, unions, enums, literals, and more.
+**Note**: This tool uses a **bundled dependencies approach** with string replacement to ensure it works reliably in any environment without requiring external zod installations. It generates fully resolved TypeScript types from Zod schemas using direct schema introspection and supports complex Zod types including objects, arrays, unions, enums, literals, and more.
+
+## Key Benefits
+
+🚀 **Zero Dependencies**: No need to install zod in your project - everything is bundled
+⚡ **Universal Compatibility**: Works in any Node.js environment  
+🔧 **Flexible Input**: Supports both TypeScript (.ts) and JavaScript (.js) schema files
+🛡️ **Safe Execution**: Controlled evaluation environment prevents security issues
+📦 **Self-Contained**: Single executable with all dependencies bundled
 
 ## Installation
 
-This tool is part of the saga-soa monorepo. Install dependencies from the root:
+This tool is part of the saga-soa monorepo and comes with a **self-contained bundled version** that requires no external dependencies.
+
+### For saga-soa Development
+
+Install dependencies from the root:
 
 ```bash
 pnpm install
 ```
 
-### Prerequisites
+### For External Use
 
-The tool requires `tsx` to be installed globally for TypeScript execution:
-
-```bash
-# Install tsx globally
-npm install -g tsx
-# or
-pnpm add -g tsx
-```
-
-The bin stubs will automatically check for tsx and provide helpful error messages if it's not installed.
-
-### Available Commands
-
-- `./tools/zod2ts/zod2ts` - Convenience script (recommended)
-- `zod2ts` - Main command name
+The tool works out-of-the-box without any installation requirements - simply use the bundled CLI binary.
 
 ## Usage
 
 ### Basic Usage
 
 ```bash
-# Using the convenience script (recommended)
-./tools/zod2ts/zod2ts --zod-path ./src/schemas/user.ts --output-dir ./src/types
+# Using the bundled CLI (works anywhere)
+/path/to/build-tools/zod2ts/bin/zod2ts --zod-path ./src/schemas/user.ts --output-dir ./src/types
 
-# Using the bin stub
-tools/zod2ts/bin/zod2ts --zod-path ./src/schemas/user.ts --output-dir ./src/types
-
-
-
-# Or using tsx directly
-tsx tools/zod2ts/src/index.ts --zod-path ./src/schemas/user.ts --output-dir ./src/types
+# From within saga-soa project
+./bin/zod2ts --zod-path ./src/schemas/user.ts --output-dir ./src/types
 ```
 
 ### Parameters
@@ -94,7 +87,7 @@ export const OrderSchema = z.object({
 Running:
 
 ```bash
-./tools/zod2ts/zod2ts --zod-path ./schemas/mixed.ts --output-dir ./types
+./bin/zod2ts --zod-path ./schemas/mixed.ts --output-dir ./types
 ```
 
 Will generate:
@@ -106,7 +99,7 @@ Will generate:
 #### Using Type Name Override
 
 ```bash
-./tools/zod2ts/zod2ts --zod-path ./schemas/mixed.ts --output-dir ./types --type-name CustomType
+./bin/zod2ts --zod-path ./schemas/mixed.ts --output-dir ./types --type-name CustomType
 ```
 
 Will generate:
@@ -156,7 +149,7 @@ export const ComplexSchema = z.object({
 Running:
 
 ```bash
-./tools/zod2ts/zod2ts --zod-path ./schemas/complex.ts --output-dir ./types
+./bin/zod2ts --zod-path ./schemas/complex.ts --output-dir ./types
 ```
 
 Will generate:
@@ -313,19 +306,32 @@ The tool uses a modular architecture with clear separation of concerns:
 
 ## Technical Details
 
-This tool uses:
+### Bundled Dependencies Approach
 
-- **Zod**: For schema validation and type introspection
+zod2ts uses a **string replacement + bundled dependencies** approach that ensures universal compatibility:
+
+- **✅ No external dependencies required** - zod is bundled into the CLI
+- **✅ Works anywhere Node.js runs** - no zod installation needed in target projects  
+- **✅ Handles both TypeScript and JavaScript** schema files
+- **✅ Self-contained executable** - single binary with all dependencies
+
+For detailed technical information about this approach, see: [Bundled Zod Approach Documentation](./docs/bundled-zod-approach.md)
+
+### Core Technologies
+
+- **Zod**: Bundled for schema validation and type introspection
+- **zod-to-ts**: Bundled for TypeScript type generation  
 - **commander**: For CLI argument parsing
-- **tsx**: For running TypeScript directly
 
-The extraction process:
+### Extraction Process
 
-1. Dynamically imports the TypeScript file containing Zod schemas
-2. Identifies all exported variables ending with `Schema`
-3. Validates that they are valid Zod schema instances
-4. Generates fully resolved TypeScript types using direct schema introspection
-5. Writes individual TypeScript files for each schema
+1. **Reads schema file content** as plain text (supports both .ts and .js)
+2. **Replaces zod imports** with bundled references using string replacement
+3. **Transforms ES modules** to CommonJS format for evaluation
+4. **Safely evaluates** the transformed code in a controlled environment
+5. **Extracts Zod schemas** from the module exports
+6. **Generates TypeScript types** using bundled zod-to-ts
+7. **Writes individual files** for each schema
 
 ### Type Generation Approach
 

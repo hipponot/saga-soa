@@ -24,10 +24,8 @@ export class SectorParser {
             const sectorInfo = await this.parseSectorRouter(sectorsDir, sector);
             if (sectorInfo.endpoints.length > 0) {
               sectorInfos.push(sectorInfo);
-              console.log(`📋 Found ${sectorInfo.endpoints.length} endpoints in ${sector} sector`);
             }
           } catch (error) {
-            console.warn(`⚠️  Skipping ${sector}: ${error instanceof Error ? error.message : 'Unknown error'}`);
           }
         }
       }
@@ -36,7 +34,6 @@ export class SectorParser {
         throw new Error(`No sectors with tRPC routers found in ${sectorsDir}`);
       }
       
-      console.log(`📋 Found sectors with tRPC routers: ${sectorInfos.map(s => s.name).join(', ')}`);
       return sectorInfos;
       
     } catch (error) {
@@ -61,7 +58,6 @@ export class SectorParser {
         endpoints
       };
     } catch (error) {
-      console.warn(`⚠️  Could not parse router file for ${sectorName}: ${error instanceof Error ? error.message : 'Unknown error'}`);
       return {
         name: sectorName,
         endpoints: []

@@ -9,11 +9,9 @@ export class Zod2tsGenerator {
 
   async generateTypes(sectorInfos: SectorInfo[]): Promise<string[]> {
     if (!this.config.zod2ts.enabled) {
-      console.log('⏭️  Zod2ts generation skipped (disabled in config)');
       return [];
     }
 
-    console.log('🔧 Generating TypeScript types from Zod schemas...');
     
     const outputPath = path.resolve(this.basePath, this.config.generation.outputDir);
     const typesOutputDir = path.join(outputPath, this.config.zod2ts.outputDir);
@@ -32,7 +30,6 @@ export class Zod2tsGenerator {
         try {
           await fs.access(schemaFilePath);
         } catch (error) {
-          console.warn(`⚠️  Schema file not found for ${sector.name}: ${schemaFilePath}`);
           continue;
         }
         
@@ -44,12 +41,14 @@ export class Zod2tsGenerator {
           const result = await this.runZod2ts(schemaFilePath, sectorTypesDir);
           if (result.success && result.files) {
             generatedFiles.push(...result.files);
-            console.log(`📋 Generated types for ${sector.name} sector`);
+            
+            // Generate index file for this sector
+            const sectorIndexPath = await this.generateSectorIndex(sector.name, sectorTypesDir, result.files);
+            generatedFiles.push(sectorIndexPath);
+            
           } else {
-            console.warn(`⚠️  Failed to generate types for ${sector.name}: ${result.error}`);
           }
         } catch (error) {
-          console.warn(`⚠️  Error generating types for ${sector.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
       }
       
@@ -57,7 +56,6 @@ export class Zod2tsGenerator {
       const typesIndexPath = await this.generateTypesIndex(sectorInfos, typesOutputDir);
       generatedFiles.push(typesIndexPath);
       
-      console.log('✅ TypeScript types generated successfully!');
       return generatedFiles;
       
     } catch (error) {
@@ -71,23 +69,23 @@ export class Zod2tsGenerator {
     return new Promise(async (resolve) => {
       // Try to find zod2ts in the project - look for it relative to the project root
       // The basePath might be apps/examples/trpc-api, so we need to go up to the project root
-      let zod2tsPath = path.resolve(this.basePath, '../../build-tools/zod2ts/bin/zod2ts');
+      let zod2tsPath = path.resolve(this.basePath, '../../build-tools/zod2ts/src/index.ts');
       
       // If that doesn't exist, try alternative paths
       try {
         await fs.access(zod2tsPath);
       } catch {
         try {
-          zod2tsPath = path.resolve(this.basePath, '../../../build-tools/zod2ts/bin/zod2ts');
+          zod2tsPath = path.resolve(this.basePath, '../../../build-tools/zod2ts/src/index.ts');
           await fs.access(zod2tsPath);
         } catch {
           try {
-            zod2tsPath = path.resolve(this.basePath, '../../../../build-tools/zod2ts/bin/zod2ts');
+            zod2tsPath = path.resolve(this.basePath, '../../../../build-tools/zod2ts/src/index.ts');
             await fs.access(zod2tsPath);
           } catch {
             resolve({ 
               success: false, 
-              error: `Could not find zod2ts binary. Tried paths: ${path.resolve(this.basePath, '../../build-tools/zod2ts/bin/zod2ts')}, ${path.resolve(this.basePath, '../../../build-tools/zod2ts/bin/zod2ts')}, ${path.resolve(this.basePath, '../../../../build-tools/zod2ts/bin/zod2ts')}` 
+              error: `Could not find zod2ts source. Tried paths: ${path.resolve(this.basePath, '../../build-tools/zod2ts/src/index.ts')}, ${path.resolve(this.basePath, '../../../build-tools/zod2ts/src/index.ts')}, ${path.resolve(this.basePath, '../../../../build-tools/zod2ts/src/index.ts')}` 
             });
             return;
           }
@@ -99,7 +97,8 @@ export class Zod2tsGenerator {
         '--output-dir', outputDir
       ];
       
-      const child = spawn('node', [zod2tsPath, ...args], {
+      // Use tsx to run the TypeScript source directly
+      const child = spawn('npx', ['tsx', zod2tsPath, ...args], {
         stdio: ['pipe', 'pipe', 'pipe'],
         cwd: this.basePath
       });
@@ -150,6 +149,29 @@ export class Zod2tsGenerator {
     } catch (error) {
       return [];
     }
+  }
+
+  private async generateSectorIndex(sectorName: string, sectorTypesDir: string, generatedFiles: string[]): Promise<string> {
+    const indexPath = path.join(sectorTypesDir, 'index.ts');
+    
+    // Get the relative paths of all generated TypeScript files in this directory
+    const typeFiles = generatedFiles
+      .filter(file => file.endsWith('.ts') && path.dirname(file) === sectorTypesDir)
+      .map(file => path.basename(file, '.ts'))
+      .filter(name => name !== 'index'); // Don't export the index file itself
+    
+    // Generate re-exports for all types in this sector
+    const exports = typeFiles.map(typeName => 
+      `export * from './${typeName}.js';`
+    ).join('\n');
+    
+    const indexContent = `// Auto-generated - do not edit
+// This file re-exports all TypeScript types for ${sectorName} sector
+${exports}
+`;
+    
+    await fs.writeFile(indexPath, indexContent);
+    return indexPath;
   }
 
   private async generateTypesIndex(sectorInfos: SectorInfo[], typesOutputDir: string): Promise<string> {

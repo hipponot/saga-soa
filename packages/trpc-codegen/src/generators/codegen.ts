@@ -11,23 +11,31 @@ export class TRPCCodegen {
   private routerGenerator: RouterGenerator;
   private schemaGenerator: SchemaGenerator;
   private zod2tsGenerator: Zod2tsGenerator;
+  private debug: boolean;
 
-  constructor(private config: TRPCCodegenConfig, private basePath: string) {
+  constructor(private config: TRPCCodegenConfig, private basePath: string, debug: boolean = false) {
+    this.debug = debug;
     this.sectorParser = new SectorParser(config, basePath);
     this.routerGenerator = new RouterGenerator(config, basePath);
     this.schemaGenerator = new SchemaGenerator(config, basePath);
     this.zod2tsGenerator = new Zod2tsGenerator(config, basePath);
   }
 
+  private log(message: string): void {
+    if (this.debug) {
+      console.log(message);
+    }
+  }
+
   async generate(): Promise<GenerationResult> {
-    console.log('🚀 Starting tRPC code generation...');
+    this.log('🚀 Starting tRPC code generation...');
     
     const errors: string[] = [];
     const generatedFiles: string[] = [];
 
     try {
       // Step 1: Discover and parse sectors
-      console.log('🔍 Analyzing sector routers...');
+      this.log('🔍 Analyzing sector routers...');
       const sectors = await this.sectorParser.discoverSectors();
 
       // Step 2: Generate schemas
@@ -71,12 +79,7 @@ export class TRPCCodegen {
       }
 
       if (errors.length === 0) {
-        console.log('✅ tRPC code generation completed successfully!');
-        console.log(`   - Generated ${generatedFiles.length} files`);
-        console.log(`   - Processed ${sectors.length} sectors`);
-        console.log(`   - Total endpoints: ${sectors.reduce((sum, s) => sum + s.endpoints.length, 0)}`);
       } else {
-        console.log(`⚠️  tRPC code generation completed with ${errors.length} errors`);
       }
 
       return {
@@ -94,6 +97,10 @@ export class TRPCCodegen {
         errors: [errorMsg]
       };
     }
+  }
+
+  async dryRun(): Promise<void> {
+    // Dry run functionality removed - use --debug flag for detailed output
   }
 
   private async generatePackageIndex(): Promise<string> {

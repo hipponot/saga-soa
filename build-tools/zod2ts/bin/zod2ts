@@ -1,49 +1,37 @@
 #!/usr/bin/env node
 
-// This is a bin stub that allows running the tool directly
-// It uses tsx to execute the TypeScript source directly
+// This is a bin stub that runs the bundled CLI version
+// It uses the pre-built bundled JavaScript file
 
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { access } from 'node:fs/promises';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Path to the main TypeScript file
-const mainFile = join(__dirname, '..', 'src', 'index.ts');
-
-// Check if tsx is available
-async function checkTsx() {
-  try {
-    const { execSync } = await import('node:child_process');
-    execSync('tsx --version', { stdio: 'ignore' });
-    return true;
-  } catch {
-    return false;
-  }
-}
+// Path to the bundled CLI file
+const bundledFile = join(__dirname, '..', 'dist', 'cli', 'index.cjs');
 
 // Main execution function
 async function main() {
-  const tsxAvailable = await checkTsx();
-  
-  if (!tsxAvailable) {
-    console.error('❌ Error: tsx is not installed. Please install it globally:');
-    console.error('   npm install -g tsx');
-    console.error('   or');
-    console.error('   pnpm add -g tsx');
+  // Check if bundled file exists
+  try {
+    await access(bundledFile);
+  } catch (error) {
+    console.error('❌ Error: Bundled CLI not found. Please run "npm run build" first.');
+    console.error(`   Looking for: ${bundledFile}`);
     process.exit(1);
   }
 
-  // Spawn tsx process with the main file and all arguments
-  const child = spawn('tsx', [mainFile, ...process.argv.slice(2)], {
+  // Run the bundled CLI directly with Node.js
+  const child = spawn('node', [bundledFile, ...process.argv.slice(2)], {
     stdio: 'inherit',
-    shell: true
   });
 
   child.on('error', (error) => {
-    console.error('❌ Error executing tsx:', error.message);
+    console.error('❌ Error executing zod2ts:', error.message);
     process.exit(1);
   });
 

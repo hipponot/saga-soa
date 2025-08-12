@@ -43,9 +43,6 @@ export type ${this.config.generation.routerName} = typeof static${this.config.ge
     
     await fs.writeFile(outputPath, routerContent);
     
-    console.log('✅ Static router generated successfully!');
-    console.log(`   - Generated router with ${sectorInfos.length} sectors`);
-    console.log(`   - Total endpoints: ${sectorInfos.reduce((sum, s) => sum + s.endpoints.length, 0)}`);
     
     return outputPath;
   }
