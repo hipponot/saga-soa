@@ -9,4 +9,3 @@ export { Zod2tsGenerator } from './generators/zod2ts-generator.js';
 // Type exports
 export type { TRPCCodegenConfig } from './types/config.js';
 export type { SectorInfo, EndpointInfo, GenerationResult } from './types/sector.js';
-export { DEFAULT_CONFIG } from './types/config.js';

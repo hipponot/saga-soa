@@ -35,24 +35,3 @@ export interface TRPCCodegenConfig {
     outputDir: string;
   };
 }
-
-export const DEFAULT_CONFIG: TRPCCodegenConfig = {
-  source: {
-    sectorsDir: 'src/sectors',
-    routerPattern: '*/trpc/*-router.ts',
-    schemaPattern: '*/trpc/*-schemas.ts'
-  },
-  generation: {
-    outputDir: './generated',
-    packageName: '@saga-soa/trpc-types',
-    routerName: 'AppRouter'
-  },
-  parsing: {
-    endpointPattern: /(\w+):\s*t\.procedure\s*(?:\n\s*\.input\((\w+Schema)\))?\s*\n\s*\.(query|mutation)\(/g,
-    routerMethodPattern: /(?:createRouter\(\s*\)\s*\{[\s\S]*?)?return\s+router\(\s*\{([\s\S]*)\}\s*\)\s*;?\s*\}?/
-  },
-  zod2ts: {
-    enabled: true,
-    outputDir: './types'
-  }
-};

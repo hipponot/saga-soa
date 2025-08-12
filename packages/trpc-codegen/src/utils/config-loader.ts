@@ -1,71 +1,57 @@
 import fs from 'fs/promises';
 import path from 'path';
 import type { TRPCCodegenConfig } from '../types/config.js';
-import { DEFAULT_CONFIG } from '../types/config.js';
 
 export class ConfigLoader {
-  static async loadConfig(configPath?: string, basePath?: string): Promise<TRPCCodegenConfig> {
-    const searchPaths = [
-      configPath,
-      path.join(basePath || process.cwd(), 'codegen.config.js'),
-      path.join(basePath || process.cwd(), 'trpc-codegen.config.js'),
-      path.join(basePath || process.cwd(), '.trpc-codegen.js'),
-    ].filter(Boolean) as string[];
-
-    for (const searchPath of searchPaths) {
-      try {
-        await fs.access(searchPath);
-        
-        // Dynamic import for ESM/CJS compatibility
-        const config = await import(path.resolve(searchPath));
-        const loadedConfig = config.default || config;
-        
-        // Merge with defaults
-        return this.mergeWithDefaults(loadedConfig);
-      } catch (error) {
-        // Continue searching if file not found
-        if (error instanceof Error && 'code' in error && error.code !== 'ENOENT') {
-          throw new Error(`Error loading config from ${searchPath}: ${error.message}`);
-        }
-      }
+  static async loadConfig(configPath: string, basePath?: string): Promise<TRPCCodegenConfig> {
+    if (!configPath) {
+      throw new Error('Config file path is required');
     }
 
-    return DEFAULT_CONFIG;
-  }
-
-  private static mergeWithDefaults(userConfig: Partial<TRPCCodegenConfig>): TRPCCodegenConfig {
-    return {
-      source: {
-        ...DEFAULT_CONFIG.source,
-        ...userConfig.source
-      },
-      generation: {
-        ...DEFAULT_CONFIG.generation,
-        ...userConfig.generation
-      },
-      parsing: {
-        ...DEFAULT_CONFIG.parsing,
-        ...userConfig.parsing
-      },
-      zod2ts: {
-        ...DEFAULT_CONFIG.zod2ts,
-        ...userConfig.zod2ts
+    try {
+      // Dynamic import for ESM/CJS compatibility
+      const config = await import(path.resolve(configPath));
+      const loadedConfig = config.default || config;
+      
+      // Validate the loaded config
+      this.validateConfig(loadedConfig);
+      
+      return loadedConfig;
+    } catch (error) {
+      if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+        throw new Error(`Config file not found: ${configPath}`);
       }
-    };
+      if (error instanceof Error && error.message.includes('Failed to load url')) {
+        throw new Error(`Config file not found: ${configPath}`);
+      }
+      throw new Error(`Error loading config from ${configPath}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   static validateConfig(config: TRPCCodegenConfig): void {
-    if (!config.source.sectorsDir) {
+    if (!config.source?.sectorsDir) {
       throw new Error('source.sectorsDir is required');
     }
-    if (!config.generation.outputDir) {
+    if (!config.generation?.outputDir) {
       throw new Error('generation.outputDir is required');
     }
-    if (!config.generation.packageName) {
+    if (!config.generation?.packageName) {
       throw new Error('generation.packageName is required');
     }
-    if (!config.generation.routerName) {
+    if (!config.generation?.routerName) {
       throw new Error('generation.routerName is required');
+    }
+    if (!config.parsing?.endpointPattern) {
+      throw new Error('parsing.endpointPattern is required');
+    }
+    if (!config.parsing?.routerMethodPattern) {
+      throw new Error('parsing.routerMethodPattern is required');
+    }
+    if (config.zod2ts?.enabled === undefined) {
+      throw new Error('zod2ts.enabled is required');
+    }
+    if (!config.zod2ts?.outputDir) {
+      throw new Error('zod2ts.outputDir is required');
     }
   }
 

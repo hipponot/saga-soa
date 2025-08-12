@@ -15,7 +15,7 @@ A TypeScript command line tool that extracts fully realized TypeScript types fro
 ## Key Benefits
 
 🚀 **Zero Dependencies**: No need to install zod in your project - everything is bundled
-⚡ **Universal Compatibility**: Works in any Node.js environment  
+⚡ **Universal Compatibility**: Works in any Node.js environment
 🔧 **Flexible Input**: Supports both TypeScript (.ts) and JavaScript (.js) schema files
 🛡️ **Safe Execution**: Controlled evaluation environment prevents security issues
 📦 **Self-Contained**: Single executable with all dependencies bundled
@@ -311,7 +311,7 @@ The tool uses a modular architecture with clear separation of concerns:
 zod2ts uses a **string replacement + bundled dependencies** approach that ensures universal compatibility:
 
 - **✅ No external dependencies required** - zod is bundled into the CLI
-- **✅ Works anywhere Node.js runs** - no zod installation needed in target projects  
+- **✅ Works anywhere Node.js runs** - no zod installation needed in target projects
 - **✅ Handles both TypeScript and JavaScript** schema files
 - **✅ Self-contained executable** - single binary with all dependencies
 
@@ -320,7 +320,7 @@ For detailed technical information about this approach, see: [Bundled Zod Approa
 ### Core Technologies
 
 - **Zod**: Bundled for schema validation and type introspection
-- **zod-to-ts**: Bundled for TypeScript type generation  
+- **zod-to-ts**: Bundled for TypeScript type generation
 - **commander**: For CLI argument parsing
 
 ### Extraction Process
