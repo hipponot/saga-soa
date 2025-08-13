@@ -1,9 +1,8 @@
-import fs from 'fs/promises';
 import path from 'path';
 import type { TRPCCodegenConfig } from '../types/config.js';
 
 export class ConfigLoader {
-  static async loadConfig(configPath: string, basePath?: string): Promise<TRPCCodegenConfig> {
+  static async loadConfig(configPath: string, _basePath?: string): Promise<TRPCCodegenConfig> {
     if (!configPath) {
       throw new Error('Config file path is required');
     }

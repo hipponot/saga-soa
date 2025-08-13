@@ -7,8 +7,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsup --watch --onSuccess \"node dist/main.js\"",
-    "build": "npm run build:types && tsup",
-    "build:types": "cd trpc-types && npm run build",
+    "build": "pnpm run build:types && tsup",
+    "build:types": "cd trpc-types && pnpm run build",
     "start": "node dist/main.js",
     "check-types": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts\" --fix",

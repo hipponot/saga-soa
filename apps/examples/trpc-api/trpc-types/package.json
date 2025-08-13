@@ -20,9 +20,9 @@
     }
   },
   "scripts": {
-    "dev": "trpc-codegen watch",
+    "dev": "trpc-codegen watch -c codegen.config.js",
     "build": "pnpm generate && tsup",
-    "generate": "trpc-codegen generate",
+    "generate": "trpc-codegen generate -c codegen.config.js",
     "clean": "rm -rf dist generated",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
