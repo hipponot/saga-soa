@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 // Define glob patterns for this API
 const GLOB_PATTERNS = {
   REST: './sectors/*/rest/*-routes.js',
-  TRPC: './sectors/*/trpc/*.router.js',
+  TRPC: './sectors/*/trpc/*-router.js',
 } as const;
 
 async function start() {

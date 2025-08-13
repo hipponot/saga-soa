@@ -1,4 +1,5 @@
-import type { EventEnvelope, PubSubAdapter } from '@saga-soa/pubsub-core';
+import type { EventEnvelope } from '@saga-soa/pubsub-core';
+import type { PubSubAdapter } from '../../adapters/base-adapter.js';
 
 export class MockPubSubAdapter implements PubSubAdapter {
   private events: EventEnvelope[] = [];

@@ -13,7 +13,7 @@ import type {
   Logger
 } from '../types/index.js';
 import type { PubSubService } from '../services/index.js';
-import type { PubSubAdapter } from '@saga-soa/pubsub-core';
+import type { PubSubAdapter } from '../adapters/base-adapter.js';
 
 export class PubSubServer implements IPubSubServer {
   public router: any;

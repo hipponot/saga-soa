@@ -2,10 +2,10 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../types/index.js';
 import type { 
   EventDefinition, 
-  EventEnvelope, 
-  PubSubAdapter,
+  EventEnvelope,
   ActionCtx 
 } from '@saga-soa/pubsub-core';
+import type { PubSubAdapter } from '../adapters/base-adapter.js';
 import type { 
   Logger,
   SendEventInput,
