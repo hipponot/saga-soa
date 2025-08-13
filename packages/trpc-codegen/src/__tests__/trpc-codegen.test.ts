@@ -22,7 +22,7 @@ describe('TRPCCodegen', () => {
     outputDir = await fs.mkdtemp(path.join(os.tmpdir(), 'trpc-codegen-test-'));
     
     // Load base config and override output directory
-    const configPath = path.join(__dirname, 'fixtures', 'test-config.js');
+    const configPath = path.resolve(basePath, 'src/__tests__/fixtures/test-config.js');
     const baseConfig = await ConfigLoader.loadConfig(configPath, basePath);
     testConfig = {
       ...baseConfig,

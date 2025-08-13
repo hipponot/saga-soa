@@ -14,7 +14,8 @@ describe('TRPCCodegen Integration', () => {
   beforeEach(async () => {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     basePath = path.resolve(__dirname, '..', '..'); // Go up to package root
-    testConfig = await ConfigLoader.loadConfig('./src/__tests__/fixtures/test-config.js', basePath);
+    const configPath = path.resolve(basePath, 'src/__tests__/fixtures/test-config.js');
+    testConfig = await ConfigLoader.loadConfig(configPath, basePath);
     codegen = new TRPCCodegen(testConfig, basePath);
     outputDir = path.resolve(basePath, testConfig.generation.outputDir);
   });

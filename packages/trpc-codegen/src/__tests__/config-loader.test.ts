@@ -14,7 +14,8 @@ describe('ConfigLoader', () => {
 
   describe('loadConfig()', () => {
     it('should load test config file successfully', async () => {
-      const config = await ConfigLoader.loadConfig('./src/__tests__/fixtures/test-config.js', basePath);
+      const configPath = path.resolve(basePath, 'src/__tests__/fixtures/test-config.js');
+      const config = await ConfigLoader.loadConfig(configPath, basePath);
       
       expect(config).toBeDefined();
       expect(config.source.sectorsDir).toBe('src/__tests__/fixtures/sectors');
@@ -34,7 +35,8 @@ describe('ConfigLoader', () => {
 
     it('should handle ESM and CJS config exports', async () => {
       // Test both default and named exports
-      const config = await ConfigLoader.loadConfig('./src/__tests__/fixtures/test-config.js', basePath);
+      const configPath = path.resolve(basePath, 'src/__tests__/fixtures/test-config.js');
+      const config = await ConfigLoader.loadConfig(configPath, basePath);
       
       expect(config).toBeDefined();
       expect(config.source.sectorsDir).toBe('src/__tests__/fixtures/sectors');
